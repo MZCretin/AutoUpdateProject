@@ -1,5 +1,9 @@
 #AutoUpdateProject
+
+
 ##V1.0.2版本
+
+
 在小伙伴的使用过程中，发现这个插件不能支持Android 7.0系统，于是我意识到，这是Android 7.0在Android apk做了处理，不能用以前的方式来进行Apk的安装了，所以急急忙忙的进行了升级和更新。
 
 更新说明：
@@ -41,6 +45,8 @@ dependencies {
 
 
 ##V1.0版本
+
+
 版本更新library，提供两种模式的版本更新，一种是对话框显示下载进度，一种是通知栏显示后台默默下载形式。
 特点概述
 
@@ -173,10 +179,7 @@ public class UpdateEntity {
     "versionName": "2.1.1", 
     "downurl": "http://120.24.5.102/Webconfig/frj01_211_jiagu_sign.apk", 
     "hasAffectCodes": "11|12|13|14|15|16|17", 
-    "updateLog": "1、修复bug
-			2、完善部分功能点
-			3、系统升级，强制更新
-			", 
+    "updateLog": "1、修复bug 2、完善部分功能点 3、系统升级，强制更新",
     "size": 10291218
 }
 ```
