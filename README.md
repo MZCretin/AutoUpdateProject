@@ -1,16 +1,62 @@
 #AutoUpdateProject
-**1.0版本**
+##V1.0.2版本
+在小伙伴的使用过程中，发现这个插件不能支持Android 7.0系统，于是我意识到，这是Android 7.0在Android apk做了处理，不能用以前的方式来进行Apk的安装了，所以急急忙忙的进行了升级和更新。
+
+更新说明：
+
+**1、** 现在最新版是v1.0.2，如果你之前没有使用过，请先看下面的集成步骤，再看这里的更新说明
+
+**2、** 添加依赖的时候注意版本
+```gradle
+dependencies {
+	        compile 'com.github.MZCretin:AutoUpdateProject:v1.0.2'
+	}
+```
+
+**3、** 在app module 的 res下建立一个xml文件夹，新建一个install_file.xml，在该文件内填写以下内容：
+``` xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <paths>
+        <external-path path="Android/data/$(applicationId)/"  name="files_root" />
+        <external-path path="." name="cretin_install" />
+    </paths>
+```
+
+**4、** 在AndroidManifest.xml文件的application标签内填下以下内容
+``` xml
+    <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="${applicationId}.fileprovider"
+                android:grantUriPermissions="true"
+                android:exported="false"
+                >
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/install_file" />
+            </provider>
+```
+
+
+
+
+
+##V1.0版本
 版本更新library，提供两种模式的版本更新，一种是对话框显示下载进度，一种是通知栏显示后台默默下载形式。
-**特点概述**
+特点概述
+
 **一、**:可从后台主动控制本地app强制更新，主要适用场合是某个版本有bug，会严重影响用户的使用，此时用这种模式，只要用户打开app，提醒强制更新，否则不能进入app；
+
 **二、**:根据后台返回受影响的版本号，可控制多个版本同时被强制更新；
+
 **三、**:后台返回最新安装包大小，本地判断安装包是否下载，防止多次下载；
+
 **四、**:内部处理，忽略此版本更新提示
+
 **五、**:library采用无第三方工具类，下载使用HttpURLConnextion，本地存储使用SharedPrefference，以免使用此library带来第三方插件冲突
 
 -------------------
 
-**使用方式：**
+##使用方式：
 
 -------------------
 
@@ -19,7 +65,10 @@
 allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
 ```
 
-**Step 2.** Add the dependency dependencies { compile 'com.github.MZCretin:AutoUpdateProject:v1.0' }
+**Step 2.** Add the dependency
+```gradle
+dependencies { compile 'com.github.MZCretin:AutoUpdateProject:v1.0' }
+```
 
 **Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).There are two ways you can chose.
 
@@ -44,7 +93,8 @@ CretinAutoUpdateUtils.init(builder);
 //CretinAutoUpdateUtils.init("http://120.24.5.102/weixin/app/getversion");
 ```
 
-**Step 4.**Add below codes to your app module's AndroidManifest file where under tags.**
+
+**Step 4.** Add below codes to your app module's AndroidManifest file where under tags.
 ```xml
 <application
         android:name=".BaseApp"
@@ -60,18 +110,20 @@ CretinAutoUpdateUtils.init(builder);
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-	<!--these codes-->
+
         <service android:name="com.cretin.www.cretinautoupdatelibrary.utils.DownloadService"/>
     </application>
 ```
 
-**Step 5.**Start using it wherever you want as below. 
+**Step 5.** Start using it wherever you want as below.
 
 ```java
 CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
 ```
 
-###使用说明
+
+##使用说明
+
 -------------------
 此library的使用需要与后台联动配合，下面是后台需要返回给我们使用的字段说明：
 
@@ -128,5 +180,7 @@ public class UpdateEntity {
     "size": 10291218
 }
 ```
+
 ####有什么意见或者建议欢迎与我交流，觉得不错欢迎Star
+
 PS:如果显示异常，欢迎移步 http://blog.csdn.net/u010998327/article/details/62036622
