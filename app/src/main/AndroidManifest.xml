@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.cretin.www.autoupdateproject">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -22,6 +23,17 @@
         </activity>
 
         <service android:name="com.cretin.www.cretinautoupdatelibrary.utils.DownloadService"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/install_file" />
+        </provider>
     </application>
 
 </manifest>
