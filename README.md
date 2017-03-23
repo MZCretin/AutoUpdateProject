@@ -186,4 +186,6 @@ public class UpdateEntity {
 
 ####有什么意见或者建议欢迎与我交流，觉得不错欢迎Star
 
+使用过程中如果有什么问题或者建议 欢迎在issue中提出来或者直接联系我 792075058 嘿嘿
+
 PS:如果显示异常，欢迎移步 http://blog.csdn.net/u010998327/article/details/62036622

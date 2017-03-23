@@ -21,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.os.Build.VERSION_CODES.M;
 
 
 /**
@@ -66,6 +69,8 @@ public class CretinAutoUpdateUtils {
     private static int iconRes;
     //appName
     private static String appName;
+    //是否开启日志输出
+    private static boolean showLog = true;
 
     //私有化构造方法
     private CretinAutoUpdateUtils() {
@@ -164,6 +169,9 @@ public class CretinAutoUpdateUtils {
                     }
                     is.close();
                 }
+                if ( showLog ) {
+                    Log.e("cretinautoupdatelibrary", "自动更新library返回的数据：" + sb.toString());
+                }
                 return new UpdateEntity(sb.toString());
             } catch ( MalformedURLException e ) {
                 e.printStackTrace();
@@ -211,6 +219,8 @@ public class CretinAutoUpdateUtils {
                         showUpdateDialog(data, false, true);
                     }
                 }
+            } else {
+                Toast.makeText(mContext, "网络错误", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -282,7 +292,7 @@ public class CretinAutoUpdateUtils {
 
     private static int PERMISSON_REQUEST_CODE = 2;
 
-    @TargetApi( Build.VERSION_CODES.M )
+    @TargetApi( M )
     private static void requestPermission(UpdateEntity data) {
         if ( ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED ) {
@@ -422,6 +432,7 @@ public class CretinAutoUpdateUtils {
         protected void downloadFail(String e) {
             if ( progressDialog != null )
                 progressDialog.dismiss();
+            Toast.makeText(mContext, "下载失败", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -432,26 +443,16 @@ public class CretinAutoUpdateUtils {
      * @param file
      */
     public static void installApkFile(Context context, File file) {
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
-//            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            Uri contentUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
-//            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-//        } else {
-//            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        }
-//        context.startActivity(intent);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName()+".fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+        if ( context.getPackageManager().queryIntentActivities(intent, 0).size() > 0 ) {
             context.startActivity(intent);
         }
     }
@@ -529,9 +530,16 @@ public class CretinAutoUpdateUtils {
         private int iconRes;
         //显示的app名
         private String appName;
+        //显示log日志
+        private boolean showLog;
 
         public final CretinAutoUpdateUtils.Builder setBaseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public final CretinAutoUpdateUtils.Builder showLog(boolean showLog) {
+            this.showLog = showLog;
             return this;
         }
 
