@@ -71,6 +71,8 @@ public class CretinAutoUpdateUtils {
     private static String appName;
     //是否开启日志输出
     private static boolean showLog = true;
+    //设置请求方式
+    private static int requestMethod = Builder.METHOD_POST;
 
     //私有化构造方法
     private CretinAutoUpdateUtils() {
@@ -107,6 +109,8 @@ public class CretinAutoUpdateUtils {
         showType = builder.showType;
         canIgnoreThisVersion = builder.canIgnoreThisVersion;
         iconRes = builder.iconRes;
+        showLog = builder.showLog;
+        requestMethod = builder.requestMethod;
     }
 
     /**
@@ -158,6 +162,11 @@ public class CretinAutoUpdateUtils {
                 httpURLConnection.setConnectTimeout(5 * 1000);
                 //设置读取超时时间
                 httpURLConnection.setReadTimeout(5 * 1000);
+                if ( requestMethod == Builder.METHOD_POST ) {
+                    httpURLConnection.setRequestMethod("POST");
+                } else {
+                    httpURLConnection.setRequestMethod("GET");
+                }
                 httpURLConnection.connect();
                 //if连接请求码成功
                 if ( httpURLConnection.getResponseCode() == httpURLConnection.HTTP_OK ) {
@@ -170,7 +179,12 @@ public class CretinAutoUpdateUtils {
                     is.close();
                 }
                 if ( showLog ) {
-                    Log.e("cretinautoupdatelibrary", "自动更新library返回的数据：" + sb.toString());
+                    if ( TextUtils.isEmpty(sb.toString()) ) {
+                        Log.e("cretinautoupdatelibrary", "自动更新library返回的数据为空，" +
+                                "请检查请求方法是否设置正确，默认为post请求，再检查地址是否输入有误");
+                    } else {
+                        Log.e("cretinautoupdatelibrary", "自动更新library返回的数据：" + sb.toString());
+                    }
                 }
                 return new UpdateEntity(sb.toString());
             } catch ( MalformedURLException e ) {
@@ -178,7 +192,8 @@ public class CretinAutoUpdateUtils {
             } catch ( IOException e ) {
                 e.printStackTrace();
             } catch ( JSONException e ) {
-                e.printStackTrace();
+                Log.e("cretinautoupdatelibrary", "json解析错误，" +
+                        "请按照library中的UpdateEntity所需参数返回数据，json必须包含UpdateEntity所需全部字段");
             } finally {
                 if ( httpURLConnection != null ) {
                     httpURLConnection.disconnect();
@@ -526,12 +541,18 @@ public class CretinAutoUpdateUtils {
         public static final int TYPE_NITIFICATION = 1;
         //对话框显示进度
         public static final int TYPE_DIALOG = 2;
+        //POST方法
+        public static final int METHOD_POST = 3;
+        //GET方法
+        public static final int METHOD_GET = 4;
         //显示的app资源图
         private int iconRes;
         //显示的app名
         private String appName;
         //显示log日志
         private boolean showLog;
+        //设置请求方式
+        private int requestMethod = METHOD_POST;
 
         public final CretinAutoUpdateUtils.Builder setBaseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
@@ -540,6 +561,11 @@ public class CretinAutoUpdateUtils {
 
         public final CretinAutoUpdateUtils.Builder showLog(boolean showLog) {
             this.showLog = showLog;
+            return this;
+        }
+
+        public final CretinAutoUpdateUtils.Builder setRequestMethod(int requestMethod) {
+            this.requestMethod = requestMethod;
             return this;
         }
 

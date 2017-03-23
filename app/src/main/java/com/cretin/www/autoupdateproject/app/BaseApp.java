@@ -10,10 +10,12 @@ public class BaseApp extends Application {
     public void onCreate() {
         super.onCreate();
         CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
-                .setBaseUrl("http://120.24.5.102/weixin/app/getversion")
+                .setBaseUrl("http://101.201.31.212:8016/version/checkVersion")
                 .setIgnoreThisVersion(false)
                 .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
                 .setIconRes(R.mipmap.ic_launcher)
+                .showLog(true)
+                .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
                 .build();
         CretinAutoUpdateUtils.init(builder);
     }
