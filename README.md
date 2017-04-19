@@ -1,6 +1,52 @@
 #AutoUpdateProject
 
 
+##最新版本V1.1.1
+
+版本更新说明：
+
+**1、** 现在最新版是V1.1.1，如果你之前没有使用过，请先看下面的集成步骤，再看这里的更新说明
+
+**2、** 添加依赖的时候注意版本
+
+```gradle
+dependencies {
+	        compile 'com.github.MZCretin:AutoUpdateProject:v1.1.1'
+	}
+```
+
+**3、** 自定义字段的说明
+
+```
+CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
+                //设置更新api 
+                .setBaseUrl("http://101.201.31.212:8016/version/checkVersion")
+                //设置是否显示忽略此版本 
+                .setIgnoreThisVersion(false)
+                //设置下载显示形式 对话框或者通知栏显示 二选一 
+                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
+                //设置下载时展示的图标 
+                .setIconRes(R.mipmap.ic_launcher)
+                //设置是否打印log日志
+                .showLog(true)
+                //设置请求方式
+                .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
+                //设置下载时展示的应用名称
+                .setAppName("测试应用") 
+                .build();
+CretinAutoUpdateUtils.init(builder);
+```
+
+**4、** 相关说明
+
+由于之前的版本默认请求方式为POST请求，对于GET请求无法正常请求，所以在本次更新的时候添加了自定义请求的配置；
+
+还添加了对log日志的开关，在调试阶段可打开调试log输出，提交生产环境的时候可以主动的关闭。
+
+优化了产生错误之后的处理。
+
+欢迎在issue里面提出问题，共同优化
+
 ##V1.0.2版本
 
 
@@ -78,7 +124,7 @@ dependencies { compile 'com.github.MZCretin:AutoUpdateProject:v1.0' }
 
 **Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).There are two ways you can chose.
 
-```java
+```
 //第一种形式 自定义参数 
 CretinAutoUpdateUtils.Builder builder = 
 		new CretinAutoUpdateUtils.Builder() 
@@ -90,7 +136,7 @@ CretinAutoUpdateUtils.Builder builder =
 		.setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG) 
 		//设置下载时展示的图标 
 		.setIconRes(R.mipmap.ic_launcher) 
-		//设置下载时展示的应用吗 
+		//设置下载时展示的应用名称
 		.setAppName("测试应用") 
 		.build(); 
 CretinAutoUpdateUtils.init(builder); 
@@ -133,7 +179,7 @@ CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
 -------------------
 此library的使用需要与后台联动配合，下面是后台需要返回给我们使用的字段说明：
 
-```java
+```
 /**
  * Created by cretin on 2017/3/8.
  */
