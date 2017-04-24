@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
+import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateEntity;
 
 import org.json.JSONException;
@@ -71,6 +72,8 @@ public class CretinAutoUpdateUtils {
     private static String appName;
     //是否开启日志输出
     private static boolean showLog = true;
+    //自定义Bean类
+    private static Object cls;
     //设置请求方式
     private static int requestMethod = Builder.METHOD_POST;
 
@@ -111,6 +114,7 @@ public class CretinAutoUpdateUtils {
         iconRes = builder.iconRes;
         showLog = builder.showLog;
         requestMethod = builder.requestMethod;
+        cls = builder.cls;
     }
 
     /**
@@ -139,6 +143,8 @@ public class CretinAutoUpdateUtils {
      */
     public void destroy() {
         //不要忘了这一步
+        if ( mContext != null && intent != null )
+            mContext.stopService(intent);
         if ( mContext != null && receiver != null )
             mContext.unregisterReceiver(receiver);
     }
@@ -186,7 +192,21 @@ public class CretinAutoUpdateUtils {
                         Log.e("cretinautoupdatelibrary", "自动更新library返回的数据：" + sb.toString());
                     }
                 }
-                return new UpdateEntity(sb.toString());
+                if ( cls != null && cls instanceof LibraryUpdateEntity ) {
+                    LibraryUpdateEntity o = ( LibraryUpdateEntity )
+                            JSONHelper.parseObject(sb.toString(), cls.getClass());//反序列化
+                    UpdateEntity updateEntity = new UpdateEntity();
+                    updateEntity.setVersionCode(o.getVersionCodes());
+                    updateEntity.setIsForceUpdate(o.getIsForceUpdates());
+                    updateEntity.setPreBaselineCode(o.getPreBaselineCodes());
+                    updateEntity.setVersionName(o.getVersionNames());
+                    updateEntity.setDownurl(o.getDownurls());
+                    updateEntity.setUpdateLog(o.getUpdateLogs());
+                    updateEntity.setSize(o.getApkSizes());
+                    updateEntity.setHasAffectCodes(o.getHasAffectCodess());
+                    return updateEntity;
+                }
+                return JSONHelper.parseObject(sb.toString(), UpdateEntity.class);//反序列化
             } catch ( MalformedURLException e ) {
                 e.printStackTrace();
             } catch ( IOException e ) {
@@ -308,14 +328,14 @@ public class CretinAutoUpdateUtils {
     private static int PERMISSON_REQUEST_CODE = 2;
 
     @TargetApi( M )
-    private static void requestPermission(UpdateEntity data) {
+    private static void requestPermission(final UpdateEntity data) {
         if ( ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED ) {
             // 第一次请求权限时，用户如果拒绝，下一次请求shouldShowRequestPermissionRationale()返回true
             // 向用户解释为什么需要这个权限
             if ( ActivityCompat.shouldShowRequestPermissionRationale(( Activity ) mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage("申请相机权限")
+                        .setMessage("申请存储权限")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -337,75 +357,48 @@ public class CretinAutoUpdateUtils {
                         try {
                             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
                             final String fileName = filePath + "/" + getPackgeName(mContext) + "-v" + getVersionName(mContext) + ".apk";
-                            File file = new File(fileName);
+                            final File file = new File(fileName);
                             //如果不存在
                             if ( !file.exists() ) {
-                                if ( !file.getParentFile().exists() ) {
-                                    file.getParentFile().mkdirs();
-                                }
-                                if ( !file.createNewFile() ) {
-                                    Toast.makeText(mContext, "文件创建失败", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    //文件创建成功
-                                    Intent intent = new Intent(mContext, DownloadService.class);
-                                    intent.putExtra("downUrl", data.downurl);
-                                    intent.putExtra("appName", mContext.getString(R.string.app_name));
-                                    intent.putExtra("type", showType);
-                                    if ( iconRes != 0 )
-                                        intent.putExtra("icRes", iconRes);
-                                    mContext.startService(intent);
-
-                                    //显示dialog
-                                    if ( showType == Builder.TYPE_DIALOG ) {
-                                        progressDialog = new ProgressDialog(mContext);
-                                        if ( iconRes != 0 ) {
-                                            progressDialog.setIcon(iconRes);
-                                        } else {
-                                            progressDialog.setIcon(R.mipmap.ic_launcher1);
+                                //检测当前网络状态
+                                if ( !NetWorkUtils.getCurrentNetType(mContext).equals("wifi") ) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                    builder.setTitle("提示");
+                                    builder.setMessage("当前处于非WIFI连接，是否继续？");
+                                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            createFileAndDownload(file,data.downurl);
                                         }
-                                        progressDialog.setTitle("正在更新...");
-                                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//设置进度条对话框//样式（水平，旋转）
-                                        //进度最大值
-                                        progressDialog.setMax(100);
-                                        progressDialog.setCancelable(false);
-                                        progressDialog.show();
-                                    }
+                                    });
+                                    builder.setNegativeButton("取消", null);
+                                    builder.show();
+                                } else {
+                                    createFileAndDownload(file,data.downurl);
                                 }
                             } else {
                                 if ( file.length() == Long.parseLong(data.size) ) {
                                     installApkFile(mContext, file);
                                     return;
                                 } else {
-                                    Intent intent = new Intent(mContext, DownloadService.class);
-                                    //这里不再使用bindService,而使用startService
-                                    intent.putExtra("downUrl", data.downurl);
-                                    if ( TextUtils.isEmpty(appName) ) {
-                                        appName = "应用";
-                                    }
-                                    intent.putExtra("appName", appName);
-                                    intent.putExtra("type", showType);
-                                    if ( iconRes != 0 )
-                                        intent.putExtra("icRes", iconRes);
-                                    mContext.startService(intent);
-
-                                    //显示dialog
-                                    if ( showType == Builder.TYPE_DIALOG ) {
-                                        progressDialog = new ProgressDialog(mContext);
-                                        if ( iconRes != 0 ) {
-                                            progressDialog.setIcon(iconRes);
-                                        } else {
-                                            progressDialog.setIcon(R.mipmap.ic_launcher1);
-                                        }
-                                        progressDialog.setTitle("正在更新...");
-                                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//设置进度条对话框//样式（水平，旋转）
-                                        //进度最大值
-                                        progressDialog.setMax(100);
-                                        progressDialog.setCancelable(false);
-                                        progressDialog.show();
+                                    if ( !NetWorkUtils.getCurrentNetType(mContext).equals("wifi") ) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                        builder.setTitle("提示");
+                                        builder.setMessage("当前处于非WIFI连接，是否继续？");
+                                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                createFileAndDownload(file,data.downurl);
+                                            }
+                                        });
+                                        builder.setNegativeButton("取消", null);
+                                        builder.show();
+                                    } else {
+                                        createFileAndDownload(file,data.downurl);
                                     }
                                 }
                             }
-                        } catch ( IOException e ) {
+                        } catch ( Exception e ) {
                             e.printStackTrace();
                         }
                     } else {
@@ -415,6 +408,47 @@ public class CretinAutoUpdateUtils {
                     Toast.makeText(mContext, "下载路径为空", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    private static Intent intent;
+
+    //创建文件并下载文件
+    private static void createFileAndDownload(File file, String downurl) {
+        if ( !file.getParentFile().exists() ) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            if ( !file.createNewFile() ) {
+                Toast.makeText(mContext, "文件创建失败", Toast.LENGTH_SHORT).show();
+            } else {
+                //文件创建成功
+                intent = new Intent(mContext, DownloadService.class);
+                intent.putExtra("downUrl", downurl);
+                intent.putExtra("appName", mContext.getString(R.string.app_name));
+                intent.putExtra("type", showType);
+                if ( iconRes != 0 )
+                    intent.putExtra("icRes", iconRes);
+                mContext.startService(intent);
+
+                //显示dialog
+                if ( showType == Builder.TYPE_DIALOG ) {
+                    progressDialog = new ProgressDialog(mContext);
+                    if ( iconRes != 0 ) {
+                        progressDialog.setIcon(iconRes);
+                    } else {
+                        progressDialog.setIcon(R.mipmap.ic_launcher1);
+                    }
+                    progressDialog.setTitle("正在更新...");
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//设置进度条对话框//样式（水平，旋转）
+                    //进度最大值
+                    progressDialog.setMax(100);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                }
+            }
+        } catch ( IOException e ) {
+            e.printStackTrace();
         }
     }
 
@@ -433,6 +467,10 @@ public class CretinAutoUpdateUtils {
     private static class MyReceiver extends DownloadReceiver {
         @Override
         protected void downloadComplete() {
+            if ( mContext != null && intent != null )
+                mContext.stopService(intent);
+            if ( mContext != null && receiver != null )
+                mContext.unregisterReceiver(receiver);
             if ( progressDialog != null )
                 progressDialog.dismiss();
         }
@@ -458,17 +496,17 @@ public class CretinAutoUpdateUtils {
      * @param file
      */
     public static void installApkFile(Context context, File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent1 = new Intent(Intent.ACTION_VIEW);
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent1.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+            intent1.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        if ( context.getPackageManager().queryIntentActivities(intent, 0).size() > 0 ) {
-            context.startActivity(intent);
+        if ( context.getPackageManager().queryIntentActivities(intent1, 0).size() > 0 ) {
+            context.startActivity(intent1);
         }
     }
 
@@ -553,9 +591,16 @@ public class CretinAutoUpdateUtils {
         private boolean showLog;
         //设置请求方式
         private int requestMethod = METHOD_POST;
+        //自定义Bean类
+        private Object cls;
 
         public final CretinAutoUpdateUtils.Builder setBaseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public final CretinAutoUpdateUtils.Builder setTransition(Object cls) {
+            this.cls = cls;
             return this;
         }
 
