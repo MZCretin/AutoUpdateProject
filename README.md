@@ -1,11 +1,239 @@
 #AutoUpdateProject
 
+##最新版本V1.1.2
+**1、** 现在最新版是V1.1.2，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
+
+**2、** 添加依赖的时候注意版本
+
+```gradle
+dependencies {
+	        compile 'com.github.MZCretin:AutoUpdateProject:v1.1.2'
+	}
+```
+
+**3、** 自定义字段的说明
+
+```
+CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
+                //设置更新api 
+                .setBaseUrl("http://101.201.31.212:8016/version/checkVersion")
+                //设置是否显示忽略此版本 
+                .setIgnoreThisVersion(false)
+                //设置下载显示形式 对话框或者通知栏显示 二选一 
+                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
+                //设置下载时展示的图标 
+                .setIconRes(R.mipmap.ic_launcher)
+                //设置是否打印log日志
+                .showLog(true)
+                //设置请求方式
+                .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
+                //设置下载时展示的应用名称
+                .setAppName("测试应用") 
+                //设置自定义的Model类
+                .setTransition(new UpdateModel())
+                .build();
+CretinAutoUpdateUtils.init(builder);
+```
+
+**4、** 相关说明
+
+首先，在初始化sdk的时候采用自定义参数的方式，使用 new CretinAutoUpdateUtils.Builder().
+setTransition(new UpdateModel())方式传入你自定义的model类，请注意，自定义的UpdateModel
+类必须实现sdk的LibraryUpdateEntity接口，并实现该接口所必须实现的方法，在这些方法中返回给
+sdk必须的字段，这样sdk才能成功的获取相对应的信息。下面是一个具体的实现：
+```
+import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
+
+/**
+ * Created by cretin on 2017/4/21.
+ */
+
+public class UpdateModel implements LibraryUpdateEntity{
+
+    /**
+     * id : test
+     * page : 1
+     * rows : 10
+     * isForceUpdate : 0
+     * preBaselineCode : 0
+     * versionName : V1.0.1
+     * versionCode : 3
+     * downurl : http://120.24.5.102/Webconfig/frj01_211_jiagu_sign.apk
+     * updateLog : 1、修复bug
+     * size : 10291218
+     * hasAffectCodes : 1|2
+     * createTime : 1489651956000
+     * iosVersion : 1
+     */
+
+    private String id;
+    private int page;
+    private int rows;
+    private int isForceUpdate;
+    private int preBaselineCode;
+    private String versionName;
+    private int versionCode;
+    private String downurl;
+    private String updateLog;
+    private String size;
+    private String hasAffectCodes;
+    private long createTime;
+    private int iosVersion;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getIsForceUpdate() {
+        return isForceUpdate;
+    }
+
+    public void setIsForceUpdate(int isForceUpdate) {
+        this.isForceUpdate = isForceUpdate;
+    }
+
+    public int getPreBaselineCode() {
+        return preBaselineCode;
+    }
+
+    public void setPreBaselineCode(int preBaselineCode) {
+        this.preBaselineCode = preBaselineCode;
+    }
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
+
+    public int getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(int versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public String getDownurl() {
+        return downurl;
+    }
+
+    public void setDownurl(String downurl) {
+        this.downurl = downurl;
+    }
+
+    public String getUpdateLog() {
+        return updateLog;
+    }
+
+    public void setUpdateLog(String updateLog) {
+        this.updateLog = updateLog;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getHasAffectCodes() {
+        return hasAffectCodes;
+    }
+
+    public void setHasAffectCodes(String hasAffectCodes) {
+        this.hasAffectCodes = hasAffectCodes;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getIosVersion() {
+        return iosVersion;
+    }
+
+    public void setIosVersion(int iosVersion) {
+        this.iosVersion = iosVersion;
+    }
+
+    @Override
+    public int getVersionCodes() {
+        return getVersionCode();
+    }
+
+    @Override
+    public int getIsForceUpdates() {
+        return getIsForceUpdate();
+    }
+
+    @Override
+    public int getPreBaselineCodes() {
+        return getPreBaselineCode();
+    }
+
+    @Override
+    public String getVersionNames() {
+        return getVersionName();
+    }
+
+    @Override
+    public String getDownurls() {
+        return getDownurl();
+    }
+
+    @Override
+    public String getUpdateLogs() {
+        return getUpdateLog();
+    }
+
+    @Override
+    public String getApkSizes() {
+        return getSize();
+    }
+
+    @Override
+    public String getHasAffectCodess() {
+        return getHasAffectCodes();
+    }
+}
+```
+
+
+
 
 ##最新版本V1.1.1
 
 版本更新说明：
 
-**1、** 现在最新版是V1.1.1，如果你之前没有使用过，请先看下面的集成步骤，再看这里的更新说明
+**1、** 现在最新版是V1.1.1，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
 **2、** 添加依赖的时候注意版本
 
@@ -54,7 +282,7 @@ CretinAutoUpdateUtils.init(builder);
 
 更新说明：
 
-**1、** 现在最新版是v1.0.2，如果你之前没有使用过，请先看下面的集成步骤，再看这里的更新说明
+**1、** 现在最新版是v1.0.2，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
 **2、** 添加依赖的时候注意版本
 ```gradle
@@ -169,7 +397,7 @@ CretinAutoUpdateUtils.init(builder);
 
 **Step 5.** Start using it wherever you want as below.
 
-```java
+```
 CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
 ```
 

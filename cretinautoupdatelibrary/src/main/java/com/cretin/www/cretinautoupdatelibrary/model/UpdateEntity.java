@@ -21,19 +21,6 @@ public class UpdateEntity implements LibraryUpdateEntity{
     //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
     public String hasAffectCodes = "";
 
-//    public UpdateEntity(int versionCode, int isForceUpdate, int preBaselineCode,
-//                        String versionName, String downurl, String updateLog,
-//                        String size, String hasAffectCodes) {
-//        this.versionCode = versionCode;
-//        this.isForceUpdate = isForceUpdate;
-//        this.preBaselineCode = preBaselineCode;
-//        this.versionName = versionName;
-//        this.downurl = downurl;
-//        this.updateLog = updateLog;
-//        this.size = size;
-//        this.hasAffectCodes = hasAffectCodes;
-//    }
-
     public int getVersionCode() {
         return versionCode;
     }
