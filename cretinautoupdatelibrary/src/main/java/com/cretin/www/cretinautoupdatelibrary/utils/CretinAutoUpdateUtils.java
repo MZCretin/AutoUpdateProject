@@ -192,19 +192,24 @@ public class CretinAutoUpdateUtils {
                         Log.e("cretinautoupdatelibrary", "自动更新library返回的数据：" + sb.toString());
                     }
                 }
-                if ( cls != null && cls instanceof LibraryUpdateEntity ) {
-                    LibraryUpdateEntity o = ( LibraryUpdateEntity )
-                            JSONHelper.parseObject(sb.toString(), cls.getClass());//反序列化
-                    UpdateEntity updateEntity = new UpdateEntity();
-                    updateEntity.setVersionCode(o.getVersionCodes());
-                    updateEntity.setIsForceUpdate(o.getIsForceUpdates());
-                    updateEntity.setPreBaselineCode(o.getPreBaselineCodes());
-                    updateEntity.setVersionName(o.getVersionNames());
-                    updateEntity.setDownurl(o.getDownurls());
-                    updateEntity.setUpdateLog(o.getUpdateLogs());
-                    updateEntity.setSize(o.getApkSizes());
-                    updateEntity.setHasAffectCodes(o.getHasAffectCodess());
-                    return updateEntity;
+                if ( cls != null ) {
+                    if ( cls instanceof LibraryUpdateEntity ) {
+                        LibraryUpdateEntity o = ( LibraryUpdateEntity )
+                                JSONHelper.parseObject(sb.toString(), cls.getClass());//反序列化
+                        UpdateEntity updateEntity = new UpdateEntity();
+                        updateEntity.setVersionCode(o.getVersionCodes());
+                        updateEntity.setIsForceUpdate(o.getIsForceUpdates());
+                        updateEntity.setPreBaselineCode(o.getPreBaselineCodes());
+                        updateEntity.setVersionName(o.getVersionNames());
+                        updateEntity.setDownurl(o.getDownurls());
+                        updateEntity.setUpdateLog(o.getUpdateLogs());
+                        updateEntity.setSize(o.getApkSizes());
+                        updateEntity.setHasAffectCodes(o.getHasAffectCodess());
+                        return updateEntity;
+                    } else {
+                        throw new RuntimeException("未实现接口：" +
+                                cls.getClass().getName()+"未实现LibraryUpdateEntity接口");
+                    }
                 }
                 return JSONHelper.parseObject(sb.toString(), UpdateEntity.class);//反序列化
             } catch ( MalformedURLException e ) {
@@ -212,8 +217,10 @@ public class CretinAutoUpdateUtils {
             } catch ( IOException e ) {
                 e.printStackTrace();
             } catch ( JSONException e ) {
-                Log.e("cretinautoupdatelibrary", "json解析错误，" +
+                throw new RuntimeException("json解析错误，" +
                         "请按照library中的UpdateEntity所需参数返回数据，json必须包含UpdateEntity所需全部字段");
+            } catch ( Exception e ) {
+                e.printStackTrace();
             } finally {
                 if ( httpURLConnection != null ) {
                     httpURLConnection.disconnect();
@@ -368,13 +375,13 @@ public class CretinAutoUpdateUtils {
                                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            createFileAndDownload(file,data.downurl);
+                                            createFileAndDownload(file, data.downurl);
                                         }
                                     });
                                     builder.setNegativeButton("取消", null);
                                     builder.show();
                                 } else {
-                                    createFileAndDownload(file,data.downurl);
+                                    createFileAndDownload(file, data.downurl);
                                 }
                             } else {
                                 if ( file.length() == Long.parseLong(data.size) ) {
@@ -388,13 +395,13 @@ public class CretinAutoUpdateUtils {
                                         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                createFileAndDownload(file,data.downurl);
+                                                createFileAndDownload(file, data.downurl);
                                             }
                                         });
                                         builder.setNegativeButton("取消", null);
                                         builder.show();
                                     } else {
-                                        createFileAndDownload(file,data.downurl);
+                                        createFileAndDownload(file, data.downurl);
                                     }
                                 }
                             }

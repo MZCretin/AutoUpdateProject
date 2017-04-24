@@ -79,7 +79,7 @@ public class DownloadService extends Service {
                 Toast.makeText(mContext, "没有挂载的SD卡", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mContext, "下载地址不能为空", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException("下载地址不能为空");
         }
     }
 

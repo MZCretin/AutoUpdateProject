@@ -1,10 +1,12 @@
 package com.cretin.www.autoupdateproject;
 
+import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
+
 /**
  * Created by cretin on 2017/4/21.
  */
 
-public class UpdateModel {
+public class UpdateModel implements LibraryUpdateEntity{
 
     /**
      * id : test
@@ -22,9 +24,6 @@ public class UpdateModel {
      * iosVersion : 1
      */
 
-    private String id;
-    private int page;
-    private int rows;
     private int isForceUpdate;
     private int preBaselineCode;
     private String versionName;
@@ -36,29 +35,6 @@ public class UpdateModel {
     private long createTime;
     private int iosVersion;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
 
     public int getIsForceUpdate() {
         return isForceUpdate;
@@ -138,5 +114,45 @@ public class UpdateModel {
 
     public void setIosVersion(int iosVersion) {
         this.iosVersion = iosVersion;
+    }
+
+    @Override
+    public int getVersionCodes() {
+        return getVersionCode();
+    }
+
+    @Override
+    public int getIsForceUpdates() {
+        return getIsForceUpdate();
+    }
+
+    @Override
+    public int getPreBaselineCodes() {
+        return getPreBaselineCode();
+    }
+
+    @Override
+    public String getVersionNames() {
+        return getVersionName();
+    }
+
+    @Override
+    public String getDownurls() {
+        return getDownurl();
+    }
+
+    @Override
+    public String getUpdateLogs() {
+        return getUpdateLog();
+    }
+
+    @Override
+    public String getApkSizes() {
+        return getSize();
+    }
+
+    @Override
+    public String getHasAffectCodess() {
+        return getHasAffectCodes();
     }
 }
