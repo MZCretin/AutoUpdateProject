@@ -208,7 +208,7 @@ public class CretinAutoUpdateUtils {
                         return updateEntity;
                     } else {
                         throw new RuntimeException("未实现接口：" +
-                                cls.getClass().getName()+"未实现LibraryUpdateEntity接口");
+                                cls.getClass().getName() + "未实现LibraryUpdateEntity接口");
                     }
                 }
                 return JSONHelper.parseObject(sb.toString(), UpdateEntity.class);//反序列化
@@ -395,12 +395,14 @@ public class CretinAutoUpdateUtils {
                                         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                file.delete();
                                                 createFileAndDownload(file, data.downurl);
                                             }
                                         });
                                         builder.setNegativeButton("取消", null);
                                         builder.show();
                                     } else {
+                                        file.delete();
                                         createFileAndDownload(file, data.downurl);
                                     }
                                 }
