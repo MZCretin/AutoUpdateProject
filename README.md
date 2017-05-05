@@ -35,7 +35,7 @@
 
 ```gradle
 dependencies {
-	        compile 'com.github.MZCretin:AutoUpdateProject:v1.1.2'
+	        compile 'com.github.MZCretin:AutoUpdateProject:v1.1.3'
 	}
 ```
 **3、** 更新说明：修复了创建文件失败的bug
