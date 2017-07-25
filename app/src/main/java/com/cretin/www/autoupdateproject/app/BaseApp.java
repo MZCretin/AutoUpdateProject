@@ -13,7 +13,7 @@ public class BaseApp extends Application {
         CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
                 .setBaseUrl("http://120.24.5.102/weixin/app/getversion")
                 .setIgnoreThisVersion(true)
-                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_PROGRESS)
+                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN)
                 .setIconRes(R.mipmap.ic_launcher)
                 .showLog(true)
                 .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
