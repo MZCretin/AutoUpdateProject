@@ -43,6 +43,22 @@ dependencies {
 
 **4、** 具体使用请查看V1.1.4分支下的demo 
 
+###类型为 TYPE_DIALOG 效果展示：
+
+![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG.gif)
+
+###类型为 TYPE_NITIFICATION 效果展示：
+
+![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_NITIFICATION.gif)
+
+###类型为 TYPE_DIALOG_WITH_PROGRESS 效果展示：
+
+![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG_WITH_PROGRESS.gif)
+
+###类型为 TYPE_DIALOG_WITH_BACK_DOWN 效果展示：
+
+![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG_WITH_BACK_DOWN.gif)
+
 ##最新版本V1.1.3
 **1、** 现在最新版是V1.1.3，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
