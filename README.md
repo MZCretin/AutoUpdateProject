@@ -60,6 +60,7 @@ dependencies {
 ![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG_WITH_BACK_DOWN.gif)
 
 ##最新版本V1.1.3
+
 **1、** 现在最新版是V1.1.3，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
 **2、** 添加依赖的时候注意版本
