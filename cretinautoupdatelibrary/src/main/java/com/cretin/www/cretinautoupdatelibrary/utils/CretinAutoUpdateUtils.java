@@ -3,7 +3,6 @@ package com.cretin.www.cretinautoupdatelibrary.utils;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,15 +19,21 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateEntity;
+import com.cretin.www.cretinautoupdatelibrary.view.ProgressView;
 
 import org.json.JSONException;
 
@@ -59,6 +64,7 @@ public class CretinAutoUpdateUtils {
 
     private static Context mContext;
 
+    private static ForceExitCallBack forceCallBack;
     //检查更新的url
     private static String checkUrl;
 
@@ -77,6 +83,24 @@ public class CretinAutoUpdateUtils {
     //设置请求方式
     private static int requestMethod = Builder.METHOD_POST;
 
+    //自定义对话框的所有控件的引用
+    private static AlertDialog showAndDownDialog;
+    private static AlertDialog showAndBackDownDialog;
+
+    //绿色可爱型
+    private static TextView showAndDownTvMsg;
+    private static TextView showAndDownTvBtn1;
+    private static TextView showAndDownTvBtn2;
+    private static TextView showAndDownTvTitle;
+    private static LinearLayout showAndDownLlProgress;
+    private static ImageView showAndDownIvClose;
+    private static ProgressView showAndDownUpdateProView;
+
+    //前台展示后台下载
+    private static TextView showAndBackDownMsg;
+    private static ImageView showAndBackDownClose;
+    private static TextView showAndBackDownUpdate;
+
     //私有化构造方法
     private CretinAutoUpdateUtils() {
 
@@ -86,6 +110,18 @@ public class CretinAutoUpdateUtils {
      * 检查更新
      */
     public void check() {
+        if ( TextUtils.isEmpty(checkUrl) ) {
+            throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
+        } else {
+            new DownDataAsyncTask().execute();
+        }
+    }
+
+    /**
+     * 检查更新
+     */
+    public void check(ForceExitCallBack forceCallBack) {
+        CretinAutoUpdateUtils.forceCallBack = forceCallBack;
         if ( TextUtils.isEmpty(checkUrl) ) {
             throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
         } else {
@@ -229,7 +265,6 @@ public class CretinAutoUpdateUtils {
             return null;
         }
 
-
         @Override
         protected void onPostExecute(UpdateEntity data) {
             super.onPostExecute(data);
@@ -272,64 +307,178 @@ public class CretinAutoUpdateUtils {
      *
      * @param data
      */
-    private void showUpdateDialog(final UpdateEntity data, boolean isForceUpdate, boolean showIgnore) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        AlertDialog alertDialog = builder.create();
-        String updateLog = data.updateLog;
-        if ( TextUtils.isEmpty(updateLog) )
-            updateLog = "新版本，欢迎更新";
-        String versionName = data.versionName;
-        if ( TextUtils.isEmpty(versionName) ) {
-            versionName = "1.1";
-        }
-        alertDialog.setTitle("新版本v" + versionName);
-        alertDialog.setMessage(updateLog);
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
+    private void showUpdateDialog(final UpdateEntity data, final boolean isForceUpdate, boolean showIgnore) {
+        if ( showType == Builder.TYPE_DIALOG || showType == Builder.TYPE_NITIFICATION ) {
+            //简约式对话框展示对话信息的方式
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            AlertDialog alertDialog = builder.create();
+            String updateLog = data.updateLog;
+            if ( TextUtils.isEmpty(updateLog) )
+                updateLog = "新版本，欢迎更新";
+            String versionName = data.versionName;
+            if ( TextUtils.isEmpty(versionName) ) {
+                versionName = "1.1";
             }
-        });
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "更新", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startUpdate(data);
-            }
-        });
-        if ( canIgnoreThisVersion && showIgnore ) {
-            final String finalVersionName = versionName;
-            alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "忽略此版本", new DialogInterface.OnClickListener() {
+            alertDialog.setTitle("新版本v" + versionName);
+            alertDialog.setMessage(updateLog);
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //忽略此版本
-                    List listCodes = loadArray();
-                    if ( listCodes != null ) {
-                        listCodes.add(finalVersionName);
-                    } else {
-                        listCodes = new ArrayList();
-                        listCodes.add(finalVersionName);
+                    if ( isForceUpdate ) {
+                        if ( forceCallBack != null )
+                            forceCallBack.exit();
                     }
-                    saveArray(listCodes);
-                    Toast.makeText(mContext, "此版本已忽略", Toast.LENGTH_SHORT).show();
+                }
+            });
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "更新", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startUpdate(data);
+                }
+            });
+            if ( canIgnoreThisVersion && showIgnore ) {
+                final String finalVersionName = versionName;
+                alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "忽略此版本", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //忽略此版本
+                        List listCodes = loadArray();
+                        if ( listCodes != null ) {
+                            listCodes.add(finalVersionName);
+                        } else {
+                            listCodes = new ArrayList();
+                            listCodes.add(finalVersionName);
+                        }
+                        saveArray(listCodes);
+                        Toast.makeText(mContext, "此版本已忽略", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            if ( isForceUpdate ) {
+                alertDialog.setCancelable(false);
+            }
+            alertDialog.show();
+            (( TextView ) alertDialog.findViewById(android.R.id.message)).setLineSpacing(5, 1);
+            Button btnPositive =
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button btnNegative =
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            btnNegative.setTextColor(Color.parseColor("#16b2f5"));
+            if ( canIgnoreThisVersion && showIgnore ) {
+                Button btnNeutral =
+                        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                btnNeutral.setTextColor(Color.parseColor("#16b2f5"));
+            }
+            btnPositive.setTextColor(Color.parseColor("#16b2f5"));
+        } else if ( showType == Builder.TYPE_DIALOG_WITH_PROGRESS ) {
+            //在一个对话框中展示信息和下载进度
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.dialog);
+            View view = View.inflate(mContext, R.layout.download_dialog, null);
+            builder.setView(view);
+            showAndDownTvBtn1 = ( TextView ) view.findViewById(R.id.tv_btn1);
+            showAndDownTvBtn2 = ( TextView ) view.findViewById(R.id.tv_btn2);
+            showAndDownTvTitle = ( TextView ) view.findViewById(R.id.tv_title);
+            showAndDownTvMsg = ( TextView ) view.findViewById(R.id.tv_msg);
+            showAndDownIvClose = ( ImageView ) view.findViewById(R.id.iv_close);
+            showAndDownLlProgress = ( LinearLayout ) view.findViewById(R.id.ll_progress);
+            showAndDownUpdateProView = ( ProgressView ) showAndDownLlProgress.findViewById(R.id.progressView);
+            String updateLog = data.updateLog;
+            if ( TextUtils.isEmpty(updateLog) )
+                updateLog = "新版本，欢迎更新";
+            showAndDownTvMsg.setText(updateLog);
+            showAndDownDialog = builder.show();
+
+            showAndDownTvBtn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String btnStr = showAndDownTvBtn2.getText().toString();
+                    if ( btnStr.equals("立即更新") ) {
+                        //点更新
+                        showAndDownTvMsg.setVisibility(View.GONE);
+                        showAndDownLlProgress.setVisibility(View.VISIBLE);
+                        showAndDownTvTitle.setText("正在更新...");
+                        showAndDownTvBtn2.setText("取消更新");
+                        showAndDownTvBtn1.setText("隐藏窗口");
+                        showAndDownIvClose.setVisibility(View.GONE);
+                        startUpdate(data);
+                    } else {
+                        //点取消更新
+                        showAndDownDialog.dismiss();
+                        //取消更新 ？
+                        destroy();
+                    }
+                }
+            });
+
+            showAndDownTvBtn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String btnStr = showAndDownTvBtn1.getText().toString();
+                    if ( btnStr.equals("下次再说") || btnStr.equals("退出") ) {
+                        //点下次再说
+                        if ( isForceUpdate ) {
+                            if ( forceCallBack != null )
+                                forceCallBack.exit();
+                        } else {
+                            showAndDownDialog.dismiss();
+                        }
+                    } else if ( btnStr.equals("隐藏窗口") ) {
+                        //点隐藏窗口
+                        showAndDownDialog.dismiss();
+                    }
+                }
+            });
+
+            showAndDownIvClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //关闭按钮
+                    showAndDownDialog.dismiss();
+                    if ( isForceUpdate ) {
+                        if ( forceCallBack != null )
+                            forceCallBack.exit();
+                    }
+                }
+            });
+
+            if ( isForceUpdate ) {
+                //强制更新
+                showAndDownTvBtn1.setText("退出");
+            }
+        } else if ( showType == Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
+            //前台展示 后台下载
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.dialog);
+            View view = View.inflate(mContext, R.layout.download_dialog_super, null);
+            builder.setView(view);
+            showAndBackDownMsg = ( TextView ) view.findViewById(R.id.tv_content);
+            showAndBackDownClose = ( ImageView ) view.findViewById(R.id.iv_close);
+            showAndBackDownUpdate = ( TextView ) view.findViewById(R.id.tv_update);
+            String updateLog = data.updateLog;
+            if ( TextUtils.isEmpty(updateLog) )
+                updateLog = "新版本，欢迎更新";
+            showAndBackDownMsg.setText(updateLog);
+            showAndBackDownDialog = builder.show();
+
+            showAndBackDownUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //点更新
+                    startUpdate(data);
+                    showAndBackDownDialog.dismiss();
+                }
+            });
+
+            showAndBackDownClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAndBackDownDialog.dismiss();
+                    if ( isForceUpdate ) {
+                        if ( forceCallBack != null )
+                            forceCallBack.exit();
+                    }
                 }
             });
         }
-        if ( isForceUpdate ) {
-            alertDialog.setCancelable(false);
-        }
-        alertDialog.show();
-        (( TextView ) alertDialog.findViewById(android.R.id.message)).setLineSpacing(5, 1);
-        Button btnPositive =
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button btnNegative =
-                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        btnNegative.setTextColor(Color.parseColor("#16b2f5"));
-        if ( canIgnoreThisVersion && showIgnore ) {
-            Button btnNeutral =
-                    alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-            btnNeutral.setTextColor(Color.parseColor("#16b2f5"));
-        }
-        btnPositive.setTextColor(Color.parseColor("#16b2f5"));
     }
 
     private static int PERMISSON_REQUEST_CODE = 2;
@@ -386,6 +535,7 @@ public class CretinAutoUpdateUtils {
                             } else {
                                 if ( file.length() == Long.parseLong(data.size) ) {
                                     installApkFile(mContext, file);
+                                    showAndDownDialog.dismiss();
                                     return;
                                 } else {
                                     if ( !NetWorkUtils.getCurrentNetType(mContext).equals("wifi") ) {
@@ -399,7 +549,17 @@ public class CretinAutoUpdateUtils {
                                                 createFileAndDownload(file, data.downurl);
                                             }
                                         });
-                                        builder.setNegativeButton("取消", null);
+                                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                showAndDownLlProgress.setVisibility(View.GONE);
+                                                showAndDownTvMsg.setVisibility(View.VISIBLE);
+                                                showAndDownTvBtn2.setText("立即更新");
+                                                showAndDownTvBtn1.setText("下次再说");
+                                                showAndDownTvTitle.setText("发现新版本...");
+                                                showAndDownIvClose.setVisibility(View.VISIBLE);
+                                            }
+                                        });
                                         builder.show();
                                     } else {
                                         file.delete();
@@ -476,18 +636,28 @@ public class CretinAutoUpdateUtils {
     private static class MyReceiver extends DownloadReceiver {
         @Override
         protected void downloadComplete() {
-            if ( mContext != null && intent != null )
-                mContext.stopService(intent);
-            if ( mContext != null && receiver != null )
-                mContext.unregisterReceiver(receiver);
             if ( progressDialog != null )
                 progressDialog.dismiss();
+            if ( showAndDownDialog != null )
+                showAndDownDialog.dismiss();
+            try {
+                if ( mContext != null && intent != null )
+                    mContext.stopService(intent);
+                if ( mContext != null && receiver != null )
+                    mContext.unregisterReceiver(receiver);
+            } catch ( Exception e ) {
+            }
         }
 
         @Override
         protected void downloading(int progress) {
-            if ( progressDialog != null )
-                progressDialog.setProgress(progress);
+            if ( showType == Builder.TYPE_DIALOG ) {
+                if ( progressDialog != null )
+                    progressDialog.setProgress(progress);
+            } else if ( showType == Builder.TYPE_DIALOG_WITH_PROGRESS ) {
+                if ( showAndDownUpdateProView != null )
+                    showAndDownUpdateProView.setProgress(progress);
+            }
         }
 
         @Override
@@ -588,6 +758,10 @@ public class CretinAutoUpdateUtils {
         public static final int TYPE_NITIFICATION = 1;
         //对话框显示进度
         public static final int TYPE_DIALOG = 2;
+        //对话框展示提示和下载进度
+        public static final int TYPE_DIALOG_WITH_PROGRESS = 3;
+        //对话框展示提示后台下载
+        public static final int TYPE_DIALOG_WITH_BACK_DOWN = 4;
         //POST方法
         public static final int METHOD_POST = 3;
         //GET方法

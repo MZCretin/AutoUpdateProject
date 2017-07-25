@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/dialog_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="22dp"
+            android:paddingTop="20dp"
+            android:text="发现新版本..."
+            android:textColor="#ffffff"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:padding="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/update_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <com.cretin.www.cretinautoupdatelibrary.view.ProgressView
+            android:id="@+id/progressView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:lineSpacingExtra="2dp"
+        android:paddingLeft="22dp"
+        android:paddingTop="22dp"
+        android:text="新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙"
+        android:textColor="#444444"
+        android:textSize="12sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:background="#e3e3e3"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_btn1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_item_bg_selector_white_left_bottom"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="下次再说"
+            android:textColor="#7ec059"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="match_parent"
+            android:background="#e3e3e3"/>
+
+        <TextView
+            android:id="@+id/tv_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_item_bg_selector_white_right_bottom"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="立即更新"
+            android:textColor="#7ec059"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</LinearLayout>

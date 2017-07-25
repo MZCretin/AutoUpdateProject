@@ -53,9 +53,9 @@ public class DownloadService extends Service {
         showType = intent.getIntExtra("type", 0);
         if ( !TextUtils.isEmpty(downUrl) ) {
             if ( Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ) {
-                if ( showType == CretinAutoUpdateUtils.Builder.TYPE_DIALOG ) {
-                    mNotificationManager = null;
-                } else {
+                //后台下载或者前台展示后台下载都是调用这个
+                if ( showType == CretinAutoUpdateUtils.Builder.TYPE_NITIFICATION || showType
+                        == CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
                     builder = new Notification.Builder(mContext);
                     if ( intent.getIntExtra("icRes", 0) != 0 ) {
                         builder.setSmallIcon(intent.getIntExtra("icRes", 0));
@@ -70,6 +70,8 @@ public class DownloadService extends Service {
                     builder.setContent(contentView);
                     mNotification = builder.build();
                     mNotificationManager.notify(NOTIFY_ID, mNotification);
+                } else {
+                    mNotificationManager = null;
                 }
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
                 final String fileName = filePath + "/" + getPackgeName(this) + "-v" + getVersionName(this) + ".apk";
@@ -172,9 +174,10 @@ public class DownloadService extends Service {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             int rate = values[0];
-            if ( (rate % 6 == 0 || rate == 100) && rate != lastPosition ) {
+            if ( (rate % 1 == 0 || rate == 100) && rate != lastPosition ) {
                 lastPosition = rate;
-                if ( showType != CretinAutoUpdateUtils.Builder.TYPE_DIALOG ) {
+                if ( showType == CretinAutoUpdateUtils.Builder.TYPE_NITIFICATION || showType
+                        == CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
                     if ( rate < 100 ) {
                         //更新进度
                         RemoteViews contentView = mNotification.contentView;
@@ -260,15 +263,15 @@ public class DownloadService extends Service {
     public static void installApkFile(Context context, File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         //兼容7.0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName()+".fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+        if ( context.getPackageManager().queryIntentActivities(intent, 0).size() > 0 ) {
             context.startActivity(intent);
         }
     }
