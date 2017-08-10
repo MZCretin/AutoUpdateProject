@@ -30,6 +30,7 @@
 -------------------
 
 ##最新版本V1.1.4
+
 **1、** 现在最新版是V1.1.4，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
 **2、** 添加依赖的时候注意版本
@@ -526,3 +527,7 @@ public class UpdateEntity {
 使用过程中如果有什么问题或者建议 欢迎在issue中提出来或者直接联系我 792075058 嘿嘿
 
 PS:如果显示异常，欢迎移步 http://blog.csdn.net/u010998327/article/details/62036622
+
+####如果您觉得对您有帮助，请打赏我一杯咖啡的钱：
+
+![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/WEIXIN.JPG)
