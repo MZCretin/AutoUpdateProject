@@ -181,8 +181,10 @@ public class CretinAutoUpdateUtils {
         //不要忘了这一步
         if ( mContext != null && intent != null )
             mContext.stopService(intent);
-        if ( mContext != null && receiver != null )
+        if ( mContext != null && receiver != null ){
             mContext.unregisterReceiver(receiver);
+            receiver = null;
+        }
     }
 
     /**
@@ -201,9 +203,9 @@ public class CretinAutoUpdateUtils {
                 //调用openConnection得到网络连接，网络连接处于就绪状态
                 httpURLConnection = ( HttpURLConnection ) url.openConnection();
                 //设置网络连接超时时间5S
-                httpURLConnection.setConnectTimeout(5 * 1000);
+                httpURLConnection.setConnectTimeout(10 * 1000);
                 //设置读取超时时间
-                httpURLConnection.setReadTimeout(5 * 1000);
+                httpURLConnection.setReadTimeout(10 * 1000);
                 if ( requestMethod == Builder.METHOD_POST ) {
                     httpURLConnection.setRequestMethod("POST");
                 } else {
@@ -606,7 +608,7 @@ public class CretinAutoUpdateUtils {
                     if ( iconRes != 0 ) {
                         progressDialog.setIcon(iconRes);
                     } else {
-                        progressDialog.setIcon(R.mipmap.ic_launcher1);
+                        progressDialog.setIcon(R.mipmap.ic_launcher);
                     }
                     progressDialog.setTitle("正在更新...");
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//设置进度条对话框//样式（水平，旋转）

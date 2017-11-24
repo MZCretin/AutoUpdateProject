@@ -57,12 +57,13 @@ public class DownloadService extends Service {
                 if ( showType == CretinAutoUpdateUtils.Builder.TYPE_NITIFICATION || showType
                         == CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
                     builder = new Notification.Builder(mContext);
+                    RemoteViews contentView = new RemoteViews(mContext.getPackageName(), R.layout.layout_notification);
                     if ( intent.getIntExtra("icRes", 0) != 0 ) {
                         builder.setSmallIcon(intent.getIntExtra("icRes", 0));
+                        contentView.setImageViewResource(R.id.iv_icon, intent.getIntExtra("icRes", 0));
                     } else {
-                        builder.setSmallIcon(R.mipmap.ic_launcher1); //设置图标
+                        builder.setSmallIcon(R.mipmap.ic_launcher); //设置图标
                     }
-                    RemoteViews contentView = new RemoteViews(mContext.getPackageName(), R.layout.layout_notification);
                     if ( TextUtils.isEmpty(appName) )
                         contentView.setTextViewText(R.id.fileName, "正在下载...");
                     else
