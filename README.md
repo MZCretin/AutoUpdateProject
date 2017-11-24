@@ -29,6 +29,24 @@
 
 -------------------
 
+##最新版本V1.1.5
+
+**~** 2017年11月24日更新  修复通知栏图片显示异常
+
+**1、** 现在最新版是V1.1.5，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
+
+**2、** 添加依赖的时候注意版本
+
+```gradle
+dependencies {
+	        compile 'com.github.MZCretin:AutoUpdateProject:v1.1.5'
+	}
+```
+**3、** 更新说明：提供了另外两种样式的更新界面展示，另外提供了强制退出app的回调操作，至于怎么退出app由调用者自行操控！
+
+**4、** 具体使用请查看V1.4.0分支下的demo
+
+
 ##最新版本V1.1.4
 
 **1、** 现在最新版是V1.1.4，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
@@ -42,26 +60,9 @@ dependencies {
 ```
 **3、** 更新说明：提供了另外两种样式的更新界面展示，另外提供了强制退出app的回调操作，至于怎么退出app由调用者自行操控！
 
-**4、** 具体使用请查看V1.1.4分支下的demo 
-
-###类型为 TYPE_DIALOG 效果展示：
-
-![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG.gif)
-
-###类型为 TYPE_NITIFICATION 效果展示：
-
-![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_NITIFICATION.gif)
-
-###类型为 TYPE_DIALOG_WITH_PROGRESS 效果展示：
-
-![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG_WITH_PROGRESS.gif)
-
-###类型为 TYPE_DIALOG_WITH_BACK_DOWN 效果展示：
-
-![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/TYPE_DIALOG_WITH_BACK_DOWN.gif)
+**4、** 具体使用请查看V1.4.0分支下的demo
 
 ##最新版本V1.1.3
-
 **1、** 现在最新版是V1.1.3，如果你之前没有使用过，请先看最下面的集成步骤，再依次从下往上查看集成步骤
 
 **2、** 添加依赖的时候注意版本
@@ -73,7 +74,7 @@ dependencies {
 ```
 **3、** 更新说明：修复了创建文件失败的bug
 
-**4、** 具体使用请查看V1.1.3分支下的demo 
+**4、** 具体使用请查看V1.3.0分支下的demo
 
 ##最新版本V1.1.2
 
@@ -89,24 +90,24 @@ dependencies {
 
 **3、** 自定义字段的说明
 
-**4、** 具体使用请查看V1.1.2分支下的demo 
+**4、** 具体使用请查看V1.2.0分支下的demo
 
 ```
 CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
-                //设置更新api 
+                //设置更新api
                 .setBaseUrl("http://101.201.31.212:8016/version/checkVersion")
-                //设置是否显示忽略此版本 
+                //设置是否显示忽略此版本
                 .setIgnoreThisVersion(false)
-                //设置下载显示形式 对话框或者通知栏显示 二选一 
+                //设置下载显示形式 对话框或者通知栏显示 二选一
                 .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
-                //设置下载时展示的图标 
+                //设置下载时展示的图标
                 .setIconRes(R.mipmap.ic_launcher)
                 //设置是否打印log日志
                 .showLog(true)
                 //设置请求方式
                 .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
                 //设置下载时展示的应用名称
-                .setAppName("测试应用") 
+                .setAppName("测试应用")
                 //设置自定义的Model类
                 .setTransition(new UpdateModel())
                 .build();
@@ -325,20 +326,20 @@ dependencies {
 
 ```
 CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
-                //设置更新api 
+                //设置更新api
                 .setBaseUrl("http://101.201.31.212:8016/version/checkVersion")
-                //设置是否显示忽略此版本 
+                //设置是否显示忽略此版本
                 .setIgnoreThisVersion(false)
-                //设置下载显示形式 对话框或者通知栏显示 二选一 
+                //设置下载显示形式 对话框或者通知栏显示 二选一
                 .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
-                //设置下载时展示的图标 
+                //设置下载时展示的图标
                 .setIconRes(R.mipmap.ic_launcher)
                 //设置是否打印log日志
                 .showLog(true)
                 //设置请求方式
                 .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
                 //设置下载时展示的应用名称
-                .setAppName("测试应用") 
+                .setAppName("测试应用")
                 .build();
 CretinAutoUpdateUtils.init(builder);
 ```
@@ -404,7 +405,7 @@ dependencies {
 
 -------------------
 
-**Step 1.** Add the JitPack repository to your build file Add it in your root build.gradle at the end of repositories: 
+**Step 1.** Add the JitPack repository to your build file Add it in your root build.gradle at the end of repositories:
 ```gradle
 allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
 ```
@@ -417,23 +418,23 @@ dependencies { compile 'com.github.MZCretin:AutoUpdateProject:v1.0' }
 **Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).There are two ways you can chose.
 
 ```
-//第一种形式 自定义参数 
-CretinAutoUpdateUtils.Builder builder = 
-		new CretinAutoUpdateUtils.Builder() 
-		//设置更新api 
-		.setBaseUrl("http://120.24.5.102/weixin/app/getversion") 
-		//设置是否显示忽略此版本 
-		.setIgnoreThisVersion(true) 
-		//设置下载显示形式 对话框或者通知栏显示 二选一 
-		.setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG) 
-		//设置下载时展示的图标 
-		.setIconRes(R.mipmap.ic_launcher) 
+//第一种形式 自定义参数
+CretinAutoUpdateUtils.Builder builder =
+		new CretinAutoUpdateUtils.Builder()
+		//设置更新api
+		.setBaseUrl("http://120.24.5.102/weixin/app/getversion")
+		//设置是否显示忽略此版本
+		.setIgnoreThisVersion(true)
+		//设置下载显示形式 对话框或者通知栏显示 二选一
+		.setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
+		//设置下载时展示的图标
+		.setIconRes(R.mipmap.ic_launcher)
 		//设置下载时展示的应用名称
-		.setAppName("测试应用") 
-		.build(); 
-CretinAutoUpdateUtils.init(builder); 
+		.setAppName("测试应用")
+		.build();
+CretinAutoUpdateUtils.init(builder);
 
-//第二种模式 
+//第二种模式
 //CretinAutoUpdateUtils.init("http://120.24.5.102/weixin/app/getversion");
 ```
 
@@ -511,12 +512,12 @@ public class UpdateEntity {
 所以需要后台返回给我们这些字段，这些字段都是必须的，相关说明请看注释，下面是一个参考
 ```json
 {
-    "versionCode": "18", 
-    "isForceUpdate": "1", 
-    "preBaselineCode": "0", 
-    "versionName": "2.1.1", 
-    "downurl": "http://120.24.5.102/Webconfig/frj01_211_jiagu_sign.apk", 
-    "hasAffectCodes": "11|12|13|14|15|16|17", 
+    "versionCode": "18",
+    "isForceUpdate": "1",
+    "preBaselineCode": "0",
+    "versionName": "2.1.1",
+    "downurl": "http://120.24.5.102/Webconfig/frj01_211_jiagu_sign.apk",
+    "hasAffectCodes": "11|12|13|14|15|16|17",
     "updateLog": "1、修复bug 2、完善部分功能点 3、系统升级，强制更新",
     "size": 10291218
 }
@@ -527,7 +528,3 @@ public class UpdateEntity {
 使用过程中如果有什么问题或者建议 欢迎在issue中提出来或者直接联系我 792075058 嘿嘿
 
 PS:如果显示异常，欢迎移步 http://blog.csdn.net/u010998327/article/details/62036622
-
-####如果您觉得对您有帮助，请打赏我一杯咖啡的钱：
-
-![image](https://github.com/MZCretin/AutoUpdateProject/blob/master/pic/WEIXIN.JPG)
