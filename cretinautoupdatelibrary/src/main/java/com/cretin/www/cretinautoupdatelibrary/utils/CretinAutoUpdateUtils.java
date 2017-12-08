@@ -181,7 +181,7 @@ public class CretinAutoUpdateUtils {
         //不要忘了这一步
         if ( mContext != null && intent != null )
             mContext.stopService(intent);
-        if ( mContext != null && receiver != null ){
+        if ( mContext != null && receiver != null ) {
             mContext.unregisterReceiver(receiver);
             receiver = null;
         }
@@ -295,7 +295,16 @@ public class CretinAutoUpdateUtils {
                     }
                 } else if ( data.isForceUpdate == 0 ) {
                     if ( data.versionCode > getVersionCode(mContext) ) {
-                        showUpdateDialog(data, false, true);
+                        String dataVersion = data.versionName;
+                        if ( !TextUtils.isEmpty(dataVersion) ) {
+                            List listCodes = loadArray();
+                            if ( !listCodes.contains(dataVersion) ) {
+                                //没有设置为已忽略
+                                showUpdateDialog(data, false, true);
+                            } else {
+                                Log.e("cretinautoupdatelibrary", "自动更新library已经忽略此版本");
+                            }
+                        }
                     }
                 }
             } else {
