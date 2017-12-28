@@ -273,7 +273,9 @@ public class CretinAutoUpdateUtils {
             if ( data != null ) {
                 if ( data.isForceUpdate == 2 ) {
                     //所有旧版本强制更新
-                    showUpdateDialog(data, true, false);
+                    if ( data.versionCode > getVersionCode(mContext) ) {
+                        showUpdateDialog(data, true, false);
+                    }
                 } else if ( data.isForceUpdate == 1 ) {
                     //hasAffectCodes提及的版本强制更新
                     if ( data.versionCode > getVersionCode(mContext) ) {

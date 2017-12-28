@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         });
         //这里就是不处理强制更新的情况
         //CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
+
+
+
     }
 
     @Override
