@@ -100,7 +100,8 @@ public class CretinAutoUpdateUtils {
     private static TextView showAndBackDownMsg;
     private static ImageView showAndBackDownClose;
     private static TextView showAndBackDownUpdate;
-
+    //是否显示toast
+    private static boolean showToast;
     //私有化构造方法
     private CretinAutoUpdateUtils() {
 
@@ -121,6 +122,28 @@ public class CretinAutoUpdateUtils {
      * 检查更新
      */
     public void check(ForceExitCallBack forceCallBack) {
+        CretinAutoUpdateUtils.forceCallBack = forceCallBack;
+        if ( TextUtils.isEmpty(checkUrl) ) {
+            throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
+        } else {
+            new DownDataAsyncTask().execute();
+        }
+    }
+
+    public void check(boolean showToast) {
+        this.showToast = showToast;
+        if ( TextUtils.isEmpty(checkUrl) ) {
+            throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
+        } else {
+            new DownDataAsyncTask().execute();
+        }
+    }
+
+    /**
+     * 检查更新
+     */
+    public void check(ForceExitCallBack forceCallBack, boolean showToast) {
+        this.showToast = showToast;
         CretinAutoUpdateUtils.forceCallBack = forceCallBack;
         if ( TextUtils.isEmpty(checkUrl) ) {
             throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
