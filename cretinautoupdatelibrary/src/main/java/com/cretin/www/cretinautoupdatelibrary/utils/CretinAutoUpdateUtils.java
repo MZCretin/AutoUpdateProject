@@ -120,6 +120,7 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新  自己带数据过来 没有更新是不弹TOAST
+     *
      * @param data 被解析的对象
      */
     public void check(UpdateEntity data) {
@@ -128,7 +129,8 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新  自己带数据过来
-     * @param data 被解析的对象
+     *
+     * @param data      被解析的对象
      * @param showToast 是否在没有更新的时候弹出Toast
      */
     public void check(UpdateEntity data, boolean showToast) {
@@ -142,7 +144,8 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新  自己带数据过来
-     * @param data 被解析的对象
+     *
+     * @param data          被解析的对象
      * @param forceCallBack 开启了强制更新后的回调
      */
     public void check(UpdateEntity data, ForceExitCallBack forceCallBack) {
@@ -151,9 +154,10 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新  自己带数据过来
-     * @param data 被解析的对象
+     *
+     * @param data          被解析的对象
      * @param forceCallBack 开启了强制更新后的回调
-     * @param showToast 是否在没有更新的时候弹出Toast
+     * @param showToast     是否在没有更新的时候弹出Toast
      */
     public void check(UpdateEntity data, ForceExitCallBack forceCallBack, boolean showToast) {
         this.showToast = showToast;
@@ -167,6 +171,7 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新 sdk自己根据URL加载数据并解析
+     *
      * @param forceCallBack 开启了强制更新后的回调
      */
     public void check(ForceExitCallBack forceCallBack) {
@@ -175,6 +180,7 @@ public class CretinAutoUpdateUtils {
 
     /**
      * 检查更新 sdk自己根据URL加载数据并解析
+     *
      * @param showToast 是否在没有更新的时候弹出Toast
      */
     public void check(boolean showToast) {
@@ -267,9 +273,8 @@ public class CretinAutoUpdateUtils {
      */
     public void destroy() {
         //不要忘了这一步
-        if ( mContext != null && receiver != null ) {
+        if ( mLocalBroadcastManager != null && receiver != null ) {
             mLocalBroadcastManager.unregisterReceiver(receiver);
-            receiver = null;
         }
     }
 
@@ -754,10 +759,8 @@ public class CretinAutoUpdateUtils {
             if ( showAndDownDialog != null )
                 showAndDownDialog.dismiss();
             try {
-                if ( mContext != null && intent != null )
-                    mContext.stopService(intent);
-                if ( mContext != null && receiver != null )
-                    mContext.unregisterReceiver(receiver);
+                if ( mLocalBroadcastManager != null && receiver != null )
+                    mLocalBroadcastManager.unregisterReceiver(receiver);
             } catch ( Exception e ) {
             }
         }

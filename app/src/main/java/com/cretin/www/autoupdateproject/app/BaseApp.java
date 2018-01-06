@@ -12,7 +12,7 @@ public class BaseApp extends Application {
         CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
                 .setBaseUrl("http://www.cretinzp.com/system/versioninfo")
                 .setIgnoreThisVersion(true)
-                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG)
+                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_PROGRESS)
                 .setIconRes(R.mipmap.logo)
                 .showLog(true)
                 .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)

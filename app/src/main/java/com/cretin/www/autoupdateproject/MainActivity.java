@@ -5,11 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
-import com.cretin.www.cretinautoupdatelibrary.model.UpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.JSONHelper;
-
-import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,24 +39,24 @@ public class MainActivity extends AppCompatActivity {
          *  所以有必要提供一个给定数据的入口，然后根据提供的数据来进行版本的更新 所以就有了下面这个
          */
         //模拟请求到的数据
-        String json = "{'versionCode':10,'isForceUpdate':0,'preBaselineCode':9,'versionName':'v1.3.0'," +
-                "'downurl':'http://jokesimg.cretinzp.com/apk/app-release_130_jiagu_sign.apk'," +
-                "'updateLog':'最新版v1.3.0\n1、全新积分抽奖上线\n2、新增积分列表，积分详情更清楚\n" +
-                "3、优化N多你可能都不知道的细节\n4、修复已知BUG','size':'15620356'," +
-                "'hasAffectCodes':'1|2|3|4|5|6|7|8|9'}";
-        try {
-            //解析成对象
-            UpdateEntity data = JSONHelper.parseObject(json, UpdateEntity.class);//反序列化
-            //对一致数据进行版本更新的控制
-            CretinAutoUpdateUtils.getInstance(MainActivity.this).check(data, new ForceExitCallBack() {
-                @Override
-                public void exit() {
-                    MainActivity.this.finish();
-                }
-            }, true);
-        } catch ( JSONException e ) {
-            e.printStackTrace();
-        }
+//        String json = "{'versionCode':10,'isForceUpdate':0,'preBaselineCode':9,'versionName':'v1.3.0'," +
+//                "'downurl':'http://jokesimg.cretinzp.com/apk/app-release_130_jiagu_sign.apk'," +
+//                "'updateLog':'最新版v1.3.0\n1、全新积分抽奖上线\n2、新增积分列表，积分详情更清楚\n" +
+//                "3、优化N多你可能都不知道的细节\n4、修复已知BUG','size':'15620356'," +
+//                "'hasAffectCodes':'1|2|3|4|5|6|7|8|9'}";
+//        try {
+//            //解析成对象
+//            UpdateEntity data = JSONHelper.parseObject(json, UpdateEntity.class);//反序列化
+//            //对一致数据进行版本更新的控制
+//            CretinAutoUpdateUtils.getInstance(MainActivity.this).check(data, new ForceExitCallBack() {
+//                @Override
+//                public void exit() {
+//                    MainActivity.this.finish();
+//                }
+//            }, true);
+//        } catch ( JSONException e ) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
