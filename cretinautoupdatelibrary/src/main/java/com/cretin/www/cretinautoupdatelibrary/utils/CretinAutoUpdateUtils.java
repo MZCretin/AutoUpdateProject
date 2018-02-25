@@ -374,6 +374,10 @@ public class CretinAutoUpdateUtils {
                 //所有旧版本强制更新
                 if ( data.versionCode > getVersionCode(mContext) ) {
                     showUpdateDialog(data, true, false);
+                }else{
+                    if(showToast){
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else if ( data.isForceUpdate == 1 ) {
                 //hasAffectCodes提及的版本强制更新
@@ -393,6 +397,10 @@ public class CretinAutoUpdateUtils {
                             }
                         }
                     }
+                }else{
+                    if(showToast){
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else if ( data.isForceUpdate == 0 ) {
                 if ( data.versionCode > getVersionCode(mContext) ) {
@@ -405,6 +413,10 @@ public class CretinAutoUpdateUtils {
                         } else {
                             Log.e("cretinautoupdatelibrary", "自动更新library已经忽略此版本");
                         }
+                    }
+                }else{
+                    if(showToast){
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
