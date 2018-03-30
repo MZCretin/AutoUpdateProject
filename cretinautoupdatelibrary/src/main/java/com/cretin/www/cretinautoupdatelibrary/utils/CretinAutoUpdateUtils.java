@@ -374,8 +374,8 @@ public class CretinAutoUpdateUtils {
                 //所有旧版本强制更新
                 if ( data.versionCode > getVersionCode(mContext) ) {
                     showUpdateDialog(data, true, false);
-                }else{
-                    if(showToast){
+                } else {
+                    if ( showToast ) {
                         Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -397,8 +397,8 @@ public class CretinAutoUpdateUtils {
                             }
                         }
                     }
-                }else{
-                    if(showToast){
+                } else {
+                    if ( showToast ) {
                         Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -414,8 +414,8 @@ public class CretinAutoUpdateUtils {
                             Log.e("cretinautoupdatelibrary", "自动更新library已经忽略此版本");
                         }
                     }
-                }else{
-                    if(showToast){
+                } else {
+                    if ( showToast ) {
                         Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -449,6 +449,8 @@ public class CretinAutoUpdateUtils {
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -523,7 +525,11 @@ public class CretinAutoUpdateUtils {
                         showAndDownLlProgress.setVisibility(View.VISIBLE);
                         showAndDownTvTitle.setText("正在更新...");
                         showAndDownTvBtn2.setText("取消更新");
-                        showAndDownTvBtn1.setText("隐藏窗口");
+                        if ( isForceUpdate ) {
+                            showAndDownTvBtn1.setText("退出");
+                        } else {
+                            showAndDownTvBtn1.setText("隐藏窗口");
+                        }
                         showAndDownIvClose.setVisibility(View.GONE);
                         startUpdate(data);
                     } else {
@@ -531,6 +537,13 @@ public class CretinAutoUpdateUtils {
                         showAndDownDialog.dismiss();
                         //取消更新 ？
                         destroy();
+                        if ( intentService != null )
+                            mContext.stopService(intentService);
+                        if ( isForceUpdate ) {
+                            //退出app
+                            if ( forceCallBack != null )
+                                forceCallBack.exit();
+                        }
                     }
                 }
             });
@@ -541,6 +554,8 @@ public class CretinAutoUpdateUtils {
                     String btnStr = showAndDownTvBtn1.getText().toString();
                     if ( btnStr.equals("下次再说") || btnStr.equals("退出") ) {
                         //点下次再说
+                        if ( intentService != null )
+                            mContext.stopService(intentService);
                         if ( isForceUpdate ) {
                             if ( forceCallBack != null )
                                 forceCallBack.exit();
@@ -559,6 +574,8 @@ public class CretinAutoUpdateUtils {
                 public void onClick(View v) {
                     //关闭按钮
                     showAndDownDialog.dismiss();
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -569,6 +586,8 @@ public class CretinAutoUpdateUtils {
             if ( isForceUpdate ) {
                 //强制更新
                 showAndDownTvBtn1.setText("退出");
+                //如果是强制更新 则不能取消
+                showAndDownDialog.setCancelable(false);
             }
         } else if ( showType == Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
             //前台展示 后台下载
@@ -602,6 +621,8 @@ public class CretinAutoUpdateUtils {
                 @Override
                 public void onClick(View v) {
                     showAndBackDownDialog.dismiss();
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -710,7 +731,7 @@ public class CretinAutoUpdateUtils {
         }
     }
 
-    private static Intent intent;
+    private static Intent intentService;
 
     //创建文件并下载文件
     private static void createFileAndDownload(File file, String downurl) {
@@ -722,13 +743,13 @@ public class CretinAutoUpdateUtils {
                 Toast.makeText(mContext, "文件创建失败", Toast.LENGTH_SHORT).show();
             } else {
                 //文件创建成功
-                intent = new Intent(mContext, DownloadService.class);
-                intent.putExtra("downUrl", downurl);
-                intent.putExtra("appName", mContext.getString(R.string.app_name));
-                intent.putExtra("type", showType);
+                intentService = new Intent(mContext, DownloadService.class);
+                intentService.putExtra("downUrl", downurl);
+                intentService.putExtra("appName", mContext.getString(R.string.app_name));
+                intentService.putExtra("type", showType);
                 if ( iconRes != 0 )
-                    intent.putExtra("icRes", iconRes);
-                mContext.startService(intent);
+                    intentService.putExtra("icRes", iconRes);
+                mContext.startService(intentService);
 
                 //显示dialog
                 if ( showType == Builder.TYPE_DIALOG ) {
@@ -766,6 +787,7 @@ public class CretinAutoUpdateUtils {
     private static class MyReceiver extends DownloadReceiver {
         @Override
         protected void downloadComplete() {
+            Log.e("HHHHHH","downloadComplete");
             if ( progressDialog != null )
                 progressDialog.dismiss();
             if ( showAndDownDialog != null )
@@ -779,6 +801,7 @@ public class CretinAutoUpdateUtils {
 
         @Override
         protected void downloading(int progress) {
+            Log.e("HHHHHH","progress "+progress);
             if ( showType == Builder.TYPE_DIALOG ) {
                 if ( progressDialog != null )
                     progressDialog.setProgress(progress);
