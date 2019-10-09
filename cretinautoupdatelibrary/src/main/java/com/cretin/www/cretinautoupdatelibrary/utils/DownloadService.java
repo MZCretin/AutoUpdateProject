@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -57,12 +58,13 @@ public class DownloadService extends Service {
                 if ( showType == CretinAutoUpdateUtils.Builder.TYPE_NITIFICATION || showType
                         == CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
                     builder = new Notification.Builder(mContext);
+                    RemoteViews contentView = new RemoteViews(mContext.getPackageName(), R.layout.layout_notification);
                     if ( intent.getIntExtra("icRes", 0) != 0 ) {
                         builder.setSmallIcon(intent.getIntExtra("icRes", 0));
+                        contentView.setImageViewResource(R.id.iv_icon, intent.getIntExtra("icRes", 0));
                     } else {
-                        builder.setSmallIcon(R.mipmap.ic_launcher1); //设置图标
+                        builder.setSmallIcon(R.mipmap.ic_launcher); //设置图标
                     }
-                    RemoteViews contentView = new RemoteViews(mContext.getPackageName(), R.layout.layout_notification);
                     if ( TextUtils.isEmpty(appName) )
                         contentView.setTextViewText(R.id.fileName, "正在下载...");
                     else
@@ -144,7 +146,7 @@ public class DownloadService extends Service {
                 intent.setAction("android.intent.action.MY_RECEIVER");
                 intent.putExtra("type", "err");
                 intent.putExtra("err", e.toString());
-                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
             return null;
         }
@@ -202,7 +204,7 @@ public class DownloadService extends Service {
                 intent.setAction("android.intent.action.MY_RECEIVER");
                 intent.putExtra("type", "doing");
                 intent.putExtra("progress", rate);
-                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         }
     }

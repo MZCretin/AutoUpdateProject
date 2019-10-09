@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -58,6 +59,8 @@ public class CretinAutoUpdateUtils {
     //广播接受者
     private static MyReceiver receiver;
     private static CretinAutoUpdateUtils cretinAutoUpdateUtils;
+
+    private static LocalBroadcastManager mLocalBroadcastManager;
 
     //定义一个展示下载进度的进度条
     private static ProgressDialog progressDialog;
@@ -100,6 +103,8 @@ public class CretinAutoUpdateUtils {
     private static TextView showAndBackDownMsg;
     private static ImageView showAndBackDownClose;
     private static TextView showAndBackDownUpdate;
+    //是否显示toast
+    private static boolean showToast;
 
     //私有化构造方法
     private CretinAutoUpdateUtils() {
@@ -107,9 +112,79 @@ public class CretinAutoUpdateUtils {
     }
 
     /**
-     * 检查更新
+     * 检查更新 sdk自己根据URL加载数据并解析 没有更新是不弹TOAST
      */
     public void check() {
+        check(false);
+    }
+
+    /**
+     * 检查更新  自己带数据过来 没有更新是不弹TOAST
+     *
+     * @param data 被解析的对象
+     */
+    public void check(UpdateEntity data) {
+        check(data, false);
+    }
+
+    /**
+     * 检查更新  自己带数据过来
+     *
+     * @param data      被解析的对象
+     * @param showToast 是否在没有更新的时候弹出Toast
+     */
+    public void check(UpdateEntity data, boolean showToast) {
+        this.showToast = showToast;
+        if ( necessaryDataCheck(data) ) {
+            afterGetDataSuccess(data);
+        } else {
+            throw new RuntimeException("你传进来的对象中必须传versionCode,versionName,downurl,updateLog和size");
+        }
+    }
+
+    /**
+     * 检查更新  自己带数据过来
+     *
+     * @param data          被解析的对象
+     * @param forceCallBack 开启了强制更新后的回调
+     */
+    public void check(UpdateEntity data, ForceExitCallBack forceCallBack) {
+        check(data, forceCallBack, false);
+    }
+
+    /**
+     * 检查更新  自己带数据过来
+     *
+     * @param data          被解析的对象
+     * @param forceCallBack 开启了强制更新后的回调
+     * @param showToast     是否在没有更新的时候弹出Toast
+     */
+    public void check(UpdateEntity data, ForceExitCallBack forceCallBack, boolean showToast) {
+        this.showToast = showToast;
+        this.forceCallBack = forceCallBack;
+        if ( necessaryDataCheck(data) ) {
+            afterGetDataSuccess(data);
+        } else {
+            throw new RuntimeException("你传进来的对象中必须传versionCode,versionName,downurl,updateLog和size");
+        }
+    }
+
+    /**
+     * 检查更新 sdk自己根据URL加载数据并解析
+     *
+     * @param forceCallBack 开启了强制更新后的回调
+     */
+    public void check(ForceExitCallBack forceCallBack) {
+        check(forceCallBack, false);
+    }
+
+    /**
+     * 检查更新 sdk自己根据URL加载数据并解析
+     *
+     * @param showToast 是否在没有更新的时候弹出Toast
+     */
+    public void check(boolean showToast) {
+        this.showToast = showToast;
         if ( TextUtils.isEmpty(checkUrl) ) {
             throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
         } else {
@@ -120,8 +195,9 @@ public class CretinAutoUpdateUtils {
     /**
      * 检查更新
      */
-    public void check(ForceExitCallBack forceCallBack) {
-        CretinAutoUpdateUtils.forceCallBack = forceCallBack;
+    public void check(ForceExitCallBack forceCallBack, boolean showToast) {
+        this.showToast = showToast;
+        this.forceCallBack = forceCallBack;
         if ( TextUtils.isEmpty(checkUrl) ) {
             throw new RuntimeException("checkUrl is null. You must call init before using the cretin checking library.");
         } else {
@@ -154,6 +230,23 @@ public class CretinAutoUpdateUtils {
     }
 
     /**
+     * 检查必传数据是否存在
+     *
+     * @param updateEntity
+     * @return
+     */
+    private boolean necessaryDataCheck(UpdateEntity updateEntity) {
+        if ( TextUtils.isEmpty(updateEntity.downurl) ||
+                TextUtils.isEmpty(updateEntity.versionName) ||
+                TextUtils.isEmpty(updateEntity.updateLog) ||
+                TextUtils.isEmpty(updateEntity.size) ||
+                updateEntity.versionCode == 0 ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * getInstance()
      *
      * @param context
@@ -165,7 +258,8 @@ public class CretinAutoUpdateUtils {
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.intent.action.MY_RECEIVER");
         //注册
-        context.registerReceiver(receiver, filter);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);
+        mLocalBroadcastManager.registerReceiver(receiver, filter);
         requestPermission(null);
         if ( cretinAutoUpdateUtils == null ) {
             cretinAutoUpdateUtils = new CretinAutoUpdateUtils();
@@ -179,10 +273,9 @@ public class CretinAutoUpdateUtils {
      */
     public void destroy() {
         //不要忘了这一步
-        if ( mContext != null && intent != null )
-            mContext.stopService(intent);
-        if ( mContext != null && receiver != null )
-            mContext.unregisterReceiver(receiver);
+        if ( mLocalBroadcastManager != null && receiver != null ) {
+            mLocalBroadcastManager.unregisterReceiver(receiver);
+        }
     }
 
     /**
@@ -201,9 +294,9 @@ public class CretinAutoUpdateUtils {
                 //调用openConnection得到网络连接，网络连接处于就绪状态
                 httpURLConnection = ( HttpURLConnection ) url.openConnection();
                 //设置网络连接超时时间5S
-                httpURLConnection.setConnectTimeout(5 * 1000);
+                httpURLConnection.setConnectTimeout(10 * 1000);
                 //设置读取超时时间
-                httpURLConnection.setReadTimeout(5 * 1000);
+                httpURLConnection.setReadTimeout(10 * 1000);
                 if ( requestMethod == Builder.METHOD_POST ) {
                     httpURLConnection.setRequestMethod("POST");
                 } else {
@@ -238,7 +331,9 @@ public class CretinAutoUpdateUtils {
                         updateEntity.setPreBaselineCode(o.getPreBaselineCodes());
                         updateEntity.setVersionName(o.getVersionNames());
                         updateEntity.setDownurl(o.getDownurls());
-                        updateEntity.setUpdateLog(o.getUpdateLogs());
+                        //对LOG进行换行处理
+                        String res = o.getUpdateLogs().replaceAll("\\\\n", "\n");
+                        updateEntity.setUpdateLog(res);
                         updateEntity.setSize(o.getApkSizes());
                         updateEntity.setHasAffectCodes(o.getHasAffectCodess());
                         return updateEntity;
@@ -268,37 +363,65 @@ public class CretinAutoUpdateUtils {
         @Override
         protected void onPostExecute(UpdateEntity data) {
             super.onPostExecute(data);
-            if ( data != null ) {
-                if ( data.isForceUpdate == 2 ) {
-                    //所有旧版本强制更新
+            afterGetDataSuccess(data);
+        }
+    }
+
+    //成功获取数据之后的处理
+    private void afterGetDataSuccess(UpdateEntity data) {
+        if ( data != null ) {
+            if ( data.isForceUpdate == 2 ) {
+                //所有旧版本强制更新
+                if ( data.versionCode > getVersionCode(mContext) ) {
                     showUpdateDialog(data, true, false);
-                } else if ( data.isForceUpdate == 1 ) {
-                    //hasAffectCodes提及的版本强制更新
-                    if ( data.versionCode > getVersionCode(mContext) ) {
-                        //有更新
-                        String[] hasAffectCodes = data.hasAffectCodes.split("\\|");
-                        if ( Arrays.asList(hasAffectCodes).contains(getVersionCode(mContext) + "") ) {
-                            //被列入强制更新 不可忽略此版本
-                            showUpdateDialog(data, true, false);
-                        } else {
-                            String dataVersion = data.versionName;
-                            if ( !TextUtils.isEmpty(dataVersion) ) {
-                                List listCodes = loadArray();
-                                if ( !listCodes.contains(dataVersion) ) {
-                                    //没有设置为已忽略
-                                    showUpdateDialog(data, false, true);
-                                }
+                } else {
+                    if ( showToast ) {
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else if ( data.isForceUpdate == 1 ) {
+                //hasAffectCodes提及的版本强制更新
+                if ( data.versionCode > getVersionCode(mContext) ) {
+                    //有更新
+                    String[] hasAffectCodes = data.hasAffectCodes.split("\\|");
+                    if ( Arrays.asList(hasAffectCodes).contains(getVersionCode(mContext) + "") ) {
+                        //被列入强制更新 不可忽略此版本
+                        showUpdateDialog(data, true, false);
+                    } else {
+                        String dataVersion = data.versionName;
+                        if ( !TextUtils.isEmpty(dataVersion) ) {
+                            List listCodes = loadArray();
+                            if ( !listCodes.contains(dataVersion) ) {
+                                //没有设置为已忽略
+                                showUpdateDialog(data, false, true);
                             }
                         }
                     }
-                } else if ( data.isForceUpdate == 0 ) {
-                    if ( data.versionCode > getVersionCode(mContext) ) {
-                        showUpdateDialog(data, false, true);
+                } else {
+                    if ( showToast ) {
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
                     }
                 }
-            } else {
-                Toast.makeText(mContext, "网络错误", Toast.LENGTH_SHORT).show();
+            } else if ( data.isForceUpdate == 0 ) {
+                if ( data.versionCode > getVersionCode(mContext) ) {
+                    String dataVersion = data.versionName;
+                    if ( !TextUtils.isEmpty(dataVersion) ) {
+                        List listCodes = loadArray();
+                        if ( !listCodes.contains(dataVersion) ) {
+                            //没有设置为已忽略
+                            showUpdateDialog(data, false, true);
+                        } else {
+                            Log.e("cretinautoupdatelibrary", "自动更新library已经忽略此版本");
+                        }
+                    }
+                } else {
+                    if ( showToast ) {
+                        Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
+        } else {
+            Toast.makeText(mContext, "网络错误", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -308,6 +431,8 @@ public class CretinAutoUpdateUtils {
      * @param data
      */
     private void showUpdateDialog(final UpdateEntity data, final boolean isForceUpdate, boolean showIgnore) {
+        //对LOG进行换行处理
+        data.setUpdateLog(data.getUpdateLogs().replaceAll("\\\\n", "\n"));
         if ( showType == Builder.TYPE_DIALOG || showType == Builder.TYPE_NITIFICATION ) {
             //简约式对话框展示对话信息的方式
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -317,13 +442,15 @@ public class CretinAutoUpdateUtils {
                 updateLog = "新版本，欢迎更新";
             String versionName = data.versionName;
             if ( TextUtils.isEmpty(versionName) ) {
-                versionName = "1.1";
+                versionName = "1.0";
             }
-            alertDialog.setTitle("新版本v" + versionName);
+            alertDialog.setTitle("新版本" + versionName);
             alertDialog.setMessage(updateLog);
             alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -398,7 +525,11 @@ public class CretinAutoUpdateUtils {
                         showAndDownLlProgress.setVisibility(View.VISIBLE);
                         showAndDownTvTitle.setText("正在更新...");
                         showAndDownTvBtn2.setText("取消更新");
-                        showAndDownTvBtn1.setText("隐藏窗口");
+                        if ( isForceUpdate ) {
+                            showAndDownTvBtn1.setText("退出");
+                        } else {
+                            showAndDownTvBtn1.setText("隐藏窗口");
+                        }
                         showAndDownIvClose.setVisibility(View.GONE);
                         startUpdate(data);
                     } else {
@@ -406,6 +537,13 @@ public class CretinAutoUpdateUtils {
                         showAndDownDialog.dismiss();
                         //取消更新 ？
                         destroy();
+                        if ( intentService != null )
+                            mContext.stopService(intentService);
+                        if ( isForceUpdate ) {
+                            //退出app
+                            if ( forceCallBack != null )
+                                forceCallBack.exit();
+                        }
                     }
                 }
             });
@@ -416,6 +554,8 @@ public class CretinAutoUpdateUtils {
                     String btnStr = showAndDownTvBtn1.getText().toString();
                     if ( btnStr.equals("下次再说") || btnStr.equals("退出") ) {
                         //点下次再说
+                        if ( intentService != null )
+                            mContext.stopService(intentService);
                         if ( isForceUpdate ) {
                             if ( forceCallBack != null )
                                 forceCallBack.exit();
@@ -434,6 +574,8 @@ public class CretinAutoUpdateUtils {
                 public void onClick(View v) {
                     //关闭按钮
                     showAndDownDialog.dismiss();
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -444,6 +586,8 @@ public class CretinAutoUpdateUtils {
             if ( isForceUpdate ) {
                 //强制更新
                 showAndDownTvBtn1.setText("退出");
+                //如果是强制更新 则不能取消
+                showAndDownDialog.setCancelable(false);
             }
         } else if ( showType == Builder.TYPE_DIALOG_WITH_BACK_DOWN ) {
             //前台展示 后台下载
@@ -459,6 +603,11 @@ public class CretinAutoUpdateUtils {
             showAndBackDownMsg.setText(updateLog);
             showAndBackDownDialog = builder.show();
 
+            if ( isForceUpdate ) {
+                //如果是强制更新 则不能取消
+                showAndBackDownDialog.setCancelable(false);
+            }
+
             showAndBackDownUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -472,6 +621,8 @@ public class CretinAutoUpdateUtils {
                 @Override
                 public void onClick(View v) {
                     showAndBackDownDialog.dismiss();
+                    if ( intentService != null )
+                        mContext.stopService(intentService);
                     if ( isForceUpdate ) {
                         if ( forceCallBack != null )
                             forceCallBack.exit();
@@ -580,7 +731,7 @@ public class CretinAutoUpdateUtils {
         }
     }
 
-    private static Intent intent;
+    private static Intent intentService;
 
     //创建文件并下载文件
     private static void createFileAndDownload(File file, String downurl) {
@@ -592,13 +743,13 @@ public class CretinAutoUpdateUtils {
                 Toast.makeText(mContext, "文件创建失败", Toast.LENGTH_SHORT).show();
             } else {
                 //文件创建成功
-                intent = new Intent(mContext, DownloadService.class);
-                intent.putExtra("downUrl", downurl);
-                intent.putExtra("appName", mContext.getString(R.string.app_name));
-                intent.putExtra("type", showType);
+                intentService = new Intent(mContext, DownloadService.class);
+                intentService.putExtra("downUrl", downurl);
+                intentService.putExtra("appName", mContext.getString(R.string.app_name));
+                intentService.putExtra("type", showType);
                 if ( iconRes != 0 )
-                    intent.putExtra("icRes", iconRes);
-                mContext.startService(intent);
+                    intentService.putExtra("icRes", iconRes);
+                mContext.startService(intentService);
 
                 //显示dialog
                 if ( showType == Builder.TYPE_DIALOG ) {
@@ -606,7 +757,7 @@ public class CretinAutoUpdateUtils {
                     if ( iconRes != 0 ) {
                         progressDialog.setIcon(iconRes);
                     } else {
-                        progressDialog.setIcon(R.mipmap.ic_launcher1);
+                        progressDialog.setIcon(R.mipmap.ic_launcher);
                     }
                     progressDialog.setTitle("正在更新...");
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//设置进度条对话框//样式（水平，旋转）
@@ -636,21 +787,21 @@ public class CretinAutoUpdateUtils {
     private static class MyReceiver extends DownloadReceiver {
         @Override
         protected void downloadComplete() {
+            Log.e("HHHHHH","downloadComplete");
             if ( progressDialog != null )
                 progressDialog.dismiss();
             if ( showAndDownDialog != null )
                 showAndDownDialog.dismiss();
             try {
-                if ( mContext != null && intent != null )
-                    mContext.stopService(intent);
-                if ( mContext != null && receiver != null )
-                    mContext.unregisterReceiver(receiver);
+                if ( mLocalBroadcastManager != null && receiver != null )
+                    mLocalBroadcastManager.unregisterReceiver(receiver);
             } catch ( Exception e ) {
             }
         }
 
         @Override
         protected void downloading(int progress) {
+            Log.e("HHHHHH","progress "+progress);
             if ( showType == Builder.TYPE_DIALOG ) {
                 if ( progressDialog != null )
                     progressDialog.setProgress(progress);

@@ -55,7 +55,7 @@ public class ProgressView extends View {
     }
 
     //设置进度
-    public void setProgress(int progress){
+    public void setProgress(int progress) {
         mProgress = progress;
         invalidate();
     }
@@ -74,15 +74,15 @@ public class ProgressView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         //首先绘制一条背景图
-        RectF mTopDestRect = new RectF(18 * mScreenScale, ( int ) (( float ) mViewHeight) / 40 * 28,
+        RectF mTopDestRect = new RectF(18 * mScreenScale, ( int ) ((( float ) mViewHeight) / 40 * 28),
                 mProgressWidth + 17 * mScreenScale,
-                ( int ) (( float ) mViewHeight) / 40 * 38);
+                ( int ) ((( float ) mViewHeight) / 40 * 38));
         mPaint.setColor(Color.parseColor("#d9d9d9"));
         canvas.drawRoundRect(mTopDestRect, 100, 100, mPaint);
 
         //绘制进度条的头部
         canvas.drawBitmap(mProgressBitmap, 18 * mScreenScale + mStepLength * mProgress,
-                ( int ) (( float ) mViewHeight) / 40 * 26, mPaint);
+                ( int ) ((( float ) mViewHeight) / 40 * 26), mPaint);
 
         mPaint.setColor(Color.parseColor("#7ec059"));
         mPaint.setTextSize(12 * mScreenScale);
@@ -94,8 +94,8 @@ public class ProgressView extends View {
         canvas.drawText(mProgress + "%", 18 * mScreenScale + mStepLength * mProgress, 14 * mScreenScale, mPaint);
 
         //绘制走过的进度条的背景
-        RectF mRect = new RectF(18 * mScreenScale, ( int ) (( float ) mViewHeight) / 40 * 28, 18 * mScreenScale + mStepLength * mProgress + 10,
-                ( int ) (( float ) mViewHeight) / 40 * 38);
+        RectF mRect = new RectF(18 * mScreenScale, ( int ) ((( float ) mViewHeight) / 40 * 28), 18 * mScreenScale + mStepLength * mProgress + 10,
+                ( int ) ((( float ) mViewHeight) / 40 * 38));
         canvas.drawRoundRect(mRect, 100, 100, mPaint);
     }
 
@@ -136,8 +136,9 @@ public class ProgressView extends View {
 
         //MUST CALL THIS
         setMeasuredDimension(mViewWidth, mViewHeight);
-        mProgressWidth = (mViewWidth / 280 * 244);
-        mStepLength = (244 * mScreenScale - 17 * mScreenScale) / 100;
+        mProgressWidth = ( int ) (( float ) mViewWidth / 280 * 244);
+//        mStepLength = (244 * mScreenScale - 17 * mScreenScale) / 100;
+        mStepLength = mProgressWidth / 100;
 
         Log.e("w + h:", mViewWidth + "  " + mViewHeight + "   " + mStepLength + "  " + mProgressWidth);
     }
