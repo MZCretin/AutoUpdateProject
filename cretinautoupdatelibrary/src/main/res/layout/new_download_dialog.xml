@@ -77,12 +77,14 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_item_bg_selector_white_left_bottom"
             android:gravity="center"
-            android:padding="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:text="@string/btn_cancel_update"
             android:textColor="#7ec059"
             android:textSize="16sp" />
 
         <View
+            android:id="@+id/view_line"
             android:layout_width="1.5dp"
             android:layout_height="match_parent"
             android:background="#e3e3e3" />
@@ -94,7 +96,8 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_item_bg_selector_white_right_bottom"
             android:gravity="center"
-            android:padding="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:text="@string/btn_update_now"
             android:textColor="#7ec059"
             android:textSize="16sp" />

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
+import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,13 +24,21 @@ public class MainActivity extends AppCompatActivity {
          */
 
         //需要处理强制更新的时候调用带参数的check方法
-        CretinAutoUpdateUtils.getInstance(MainActivity.this).check(new ForceExitCallBack() {
-            @Override
-            public void exit() {
-                //在这里退出整个app
-                MainActivity.this.finish();
-            }
-        });
+//        CretinAutoUpdateUtils.getInstance(MainActivity.this).check(new ForceExitCallBack() {
+//            @Override
+//            public void exit() {
+//                在这里退出整个app
+//                MainActivity.this.finish();
+//            }
+//        });
+
+        DownloadInfo info = new DownloadInfo().setApkUrl("https://b6.market.xiaomi.com/download/AppStore/0c1a2d5d070a14b751080701b25fd27724a700d30/com.cretin.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(true)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info);
 
         //这里就是不处理强制更新的情况
         //CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
