@@ -1,12 +1,14 @@
 package com.cretin.www.autoupdateproject;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,11 +34,21 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        DownloadInfo info = new DownloadInfo().setApkUrl("https://b6.market.xiaomi.com/download/AppStore/0c1a2d5d070a14b751080701b25fd27724a700d30/com.cretin.apk")
+        String filePath = "";
+        String packageName = getPackageName();
+        filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName;
+
+        // apk 保存名称
+        String apkName = AppUtils.getAppName(this);
+
+        String apkLocalPath = filePath + "/" + apkName + ".apk";
+
+        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
                 .setForceUpdate(true)
+                .setApkLocalPath(apkLocalPath)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
         AppUpdateUtils.getInstance().checkUpdate(info);
 
