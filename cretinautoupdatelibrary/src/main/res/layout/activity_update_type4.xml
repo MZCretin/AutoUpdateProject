@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@mipmap/dialog_bg_type_3"
+        android:background="@mipmap/dialog_bg_type_4"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +31,7 @@
                 android:scrollbars="vertical"
                 android:singleLine="false"
                 android:layout_marginRight="60dp"
-                android:layout_weight="7"
+                android:layout_weight="8"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="2dp"
                 android:textColor="#4b4b4b"
@@ -46,8 +46,8 @@
             android:layout_marginLeft="80dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="80dp"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/btn_bg_type_3"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/btn_bg_type_4"
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/btn_update_now"

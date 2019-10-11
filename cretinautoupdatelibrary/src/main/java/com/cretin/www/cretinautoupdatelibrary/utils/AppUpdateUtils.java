@@ -7,6 +7,8 @@ import com.cretin.www.cretinautoupdatelibrary.LogUtils;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType1Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType2Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType3Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType4Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType5Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
@@ -82,7 +84,7 @@ public class AppUpdateUtils {
         }
 
         if (info != null)
-            UpdateType3Activity.launch(mContext, info);
+            UpdateType5Activity.launch(mContext, info);
     }
 
     /**

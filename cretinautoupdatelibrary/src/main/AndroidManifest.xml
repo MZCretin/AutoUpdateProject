@@ -18,8 +18,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
         <activity
-            android:name=".activity.UpdateType3Activity"
+            android:name=".activity.UpdateType5Activity"
             android:theme="@style/DialogActivityTheme"></activity>
+        <activity
+            android:name=".activity.UpdateType4Activity"
+            android:theme="@style/DialogActivityTheme" />
+        <activity
+            android:name=".activity.UpdateType3Activity"
+            android:theme="@style/DialogActivityTheme" />
         <activity
             android:name=".activity.UpdateType2Activity"
             android:theme="@style/DialogActivityTheme" />
