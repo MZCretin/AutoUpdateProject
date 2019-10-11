@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")

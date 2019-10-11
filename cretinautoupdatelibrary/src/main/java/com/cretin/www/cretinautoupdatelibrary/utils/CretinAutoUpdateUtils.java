@@ -826,17 +826,19 @@ public class CretinAutoUpdateUtils {
      * @param file
      */
     public static void installApkFile(Context context, File file) {
-        Intent intent1 = new Intent(Intent.ACTION_VIEW);
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ) {
-            intent1.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            intent1.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } else {
-            intent1.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            uri = Uri.fromFile(file);
         }
-        if ( context.getPackageManager().queryIntentActivities(intent1, 0).size() > 0 ) {
-            context.startActivity(intent1);
+        intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+            context.startActivity(intent);
         }
     }
 
