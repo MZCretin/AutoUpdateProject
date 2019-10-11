@@ -22,17 +22,6 @@ public class DownloadInfo implements Parcelable {
     private String updateLog;
     //是否强制更新
     private boolean isForceUpdate;
-    //apk本地保存路径
-    private String apkLocalPath;
-
-    public String getApkLocalPath() {
-        return apkLocalPath;
-    }
-
-    public DownloadInfo setApkLocalPath(String apkLocalPath) {
-        this.apkLocalPath = apkLocalPath;
-        return this;
-    }
 
     public boolean isForceUpdate() {
         return isForceUpdate;
@@ -102,7 +91,6 @@ public class DownloadInfo implements Parcelable {
         dest.writeString(this.prodVersionName);
         dest.writeString(this.updateLog);
         dest.writeByte(this.isForceUpdate ? (byte) 1 : (byte) 0);
-        dest.writeString(this.apkLocalPath);
     }
 
     public DownloadInfo() {
@@ -115,7 +103,6 @@ public class DownloadInfo implements Parcelable {
         this.prodVersionName = in.readString();
         this.updateLog = in.readString();
         this.isForceUpdate = in.readByte() != 0;
-        this.apkLocalPath = in.readString();
     }
 
     public static final Creator<DownloadInfo> CREATOR = new Creator<DownloadInfo>() {

@@ -8,6 +8,16 @@ package com.cretin.www.cretinautoupdatelibrary.model;
  */
 public class UpdateConfig {
     private String baseUrl;
+    //是否是debug状态 打印log
+    private boolean debug = true;
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
 
     public String getBaseUrl() {
         return baseUrl;

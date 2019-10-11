@@ -34,26 +34,18 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        String filePath = "";
-        String packageName = getPackageName();
-        filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName;
 
-        // apk 保存名称
-        String apkName = AppUtils.getAppName(this);
-
-        String apkLocalPath = filePath + "/" + apkName + ".apk";
 
         DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(true)
-                .setApkLocalPath(apkLocalPath)
+                .setForceUpdate(false)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
         AppUpdateUtils.getInstance().checkUpdate(info);
 
         //这里就是不处理强制更新的情况
-        //CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
+//        CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
 
         ///-------------------------------------------------
         /**

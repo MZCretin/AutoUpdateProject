@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 /**
@@ -67,6 +69,9 @@ public class UpdateReceiver extends BroadcastReceiver {
             if (progress == 100) {
                 downloadComplete(context, notifyId, systemService);
             }
+        } else if ((context.getPackageName() + RE_DOWNLOAD).equals(action)) {
+            //重新下载
+            AppUpdateUtils.getInstance().reDownload();
         }
     }
 
@@ -124,7 +129,7 @@ public class UpdateReceiver extends BroadcastReceiver {
             builder.setContentTitle(ResUtils.getString(R.string.download_fail));
         } else {
             // 通知栏标题
-            builder.setContentTitle(ResUtils.getString(R.string.has_download) + progress + "%");
+            builder.setContentTitle(AppUtils.getAppName(context) + " " + ResUtils.getString(R.string.has_download) + progress + "%");
         }
 
         // 设置只响一次

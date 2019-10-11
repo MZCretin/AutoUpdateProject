@@ -11,4 +11,8 @@
     <string name="wifi_tips">当前处于非WIFI连接，是否继续？</string>
     <string name="tips">提示</string>
     <string name="confirm">确定</string>
+    <string name="downloading">下载中...</string>
+    <string name="installing">安装中...</string>
+    <string name="install">安装</string>
+    <string name="apk_file_download_fail">安装文件下载失败</string>
 </resources>

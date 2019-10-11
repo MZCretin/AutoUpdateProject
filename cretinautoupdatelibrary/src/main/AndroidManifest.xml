@@ -6,26 +6,39 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
-
-    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
         <activity
-            android:name=".activity.UpdateActivity"
-            android:theme="@style/DialogActivityTheme"/>
+            android:name=".activity.UpdateType3Activity"
+            android:theme="@style/DialogActivityTheme"></activity>
+        <activity
+            android:name=".activity.UpdateType2Activity"
+            android:theme="@style/DialogActivityTheme" />
+        <activity
+            android:name=".activity.UpdateType1Activity"
+            android:theme="@style/DialogActivityTheme" />
 
-        <service android:name=".service.UpdateService"/>
+        <service android:name=".service.UpdateService" /> <!-- 老版本的服务 -->
+        <service android:name=".utils.DownloadService" />
+
+        <provider
+            android:name=".utils.InstallFileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/install_file" />
+        </provider>
     </application>
 
 </manifest>

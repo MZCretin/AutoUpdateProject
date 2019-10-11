@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
@@ -42,6 +43,20 @@ public class AppUtils {
         if (context.getPackageManager().queryIntentActivities(intent1, 0).size() > 0) {
             context.startActivity(intent1);
         }
+    }
+
+    /**
+     * 获取apk的安装路径
+     *
+     * @return
+     */
+    public static String getAppLocalPath(String versionName) {
+        //构建下载路径
+        String packageName = AppUpdateUtils.getInstance().getContext().getPackageName();
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName;
+        // apk 保存名称
+        String apkName = AppUtils.getAppName(AppUpdateUtils.getInstance().getContext());
+        return filePath + "/" + apkName + "_" + versionName + ".apk";
     }
 
     /**
@@ -82,6 +97,7 @@ public class AppUtils {
 
     /**
      * 删除文件
+     *
      * @param filePath
      */
     public static void deleteFile(String filePath) {
@@ -111,5 +127,39 @@ public class AppUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取版本名称
+     *
+     * @param context
+     * @return
+     */
+    public static String getVersionName(Context context) {
+        String versionName = "";
+        PackageInfo packInfo = getPackInfo(context);
+        if (packInfo != null) {
+            versionName = packInfo.versionName;
+        }
+        return versionName;
+    }
+
+    /**
+     * 获得apkinfo
+     *
+     * @param context
+     * @return
+     */
+    private static PackageInfo getPackInfo(Context context) {
+        // 获取packagemanager的实例
+        PackageManager packageManager = context.getPackageManager();
+        // getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageInfo packInfo = null;
+        try {
+            packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packInfo;
     }
 }
