@@ -2,7 +2,6 @@ package com.cretin.www.cretinautoupdatelibrary.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -16,7 +15,7 @@ import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
-public class UpdateType4Activity extends RootActivity {
+public class UpdateType9Activity extends RootActivity {
 
     private TextView tvMsg;
     private TextView tvBtn2;
@@ -25,7 +24,7 @@ public class UpdateType4Activity extends RootActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_type4);
+        setContentView(R.layout.activity_update_type9);
 
         findView();
 
@@ -75,7 +74,7 @@ public class UpdateType4Activity extends RootActivity {
             @Override
             public void downloadFail(String msg) {
                 tvBtn2.setText(ResUtils.getString(R.string.btn_update_now));
-                Toast.makeText(UpdateType4Activity.this, ResUtils.getString(R.string.apk_file_download_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateType9Activity.this, ResUtils.getString(R.string.apk_file_download_fail), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -102,7 +101,7 @@ public class UpdateType4Activity extends RootActivity {
      * @param info
      */
     public static void launch(Context context, DownloadInfo info) {
-        Intent intent = new Intent(context, UpdateType4Activity.class);
+        Intent intent = new Intent(context, UpdateType9Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("info", info);
         context.startActivity(intent);

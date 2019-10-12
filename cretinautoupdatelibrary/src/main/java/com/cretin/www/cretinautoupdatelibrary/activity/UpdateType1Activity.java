@@ -85,6 +85,7 @@ public class UpdateType1Activity extends RootActivity {
             @Override
             public void downloading(int progress) {
                 progressView.setProgress(progress);
+                tvBtn2.setText(ResUtils.getString(R.string.downloading)+progress+"%");
             }
 
             @Override

@@ -4,12 +4,18 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.cretin.www.cretinautoupdatelibrary.LogUtils;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType10Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType11Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType12Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType1Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType2Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType3Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType4Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType5Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType6Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType7Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType8Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType9Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
@@ -97,6 +103,18 @@ public class AppUpdateUtils {
                 UpdateType5Activity.launch(mContext, info);
             } else if (type == 6) {
                 UpdateType6Activity.launch(mContext, info);
+            } else if (type == 7) {
+                UpdateType7Activity.launch(mContext, info);
+            } else if (type == 8) {
+                UpdateType8Activity.launch(mContext, info);
+            } else if (type == 9) {
+                UpdateType9Activity.launch(mContext, info);
+            } else if (type == 10) {
+                UpdateType10Activity.launch(mContext, info);
+            } else if (type == 11) {
+                UpdateType11Activity.launch(mContext, info);
+            } else if (type == 12) {
+                UpdateType12Activity.launch(mContext, info);
             }
         }
     }

@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //更新 之前版本的逻辑
-    public void update1(View view) {
+    public void update(View view) {
         /**
          *   请大家在BaseApp里面切换不同的类型体验不同类型的更新效果
          */
@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void update2(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update1(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 1);
     }
 
-    public void update3(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update2(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -85,9 +85,9 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 2);
     }
 
-    public void update4(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update3(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 3);
     }
 
-    public void update5(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update4(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -107,9 +107,9 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 4);
     }
 
-    public void update6(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update5(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 5);
     }
 
-    public void update7(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update6(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
@@ -129,15 +129,70 @@ public class MainActivity extends AppCompatActivity {
         AppUpdateUtils.getInstance().checkUpdate(info, 6);
     }
 
-    public void update8(View view) {
-        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+    public void update7(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
                 .setForceUpdate(false)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
         AppUpdateUtils.getInstance().checkUpdate(info, 7);
+    }
+
+    public void update8(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 8);
+    }
+
+    public void update9(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 9);
+    }
+
+    public void update10(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 10);
+    }
+
+    public void update11(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 11);
+    }
+
+    public void update12(View view) {
+                DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 12);
     }
 
     @Override

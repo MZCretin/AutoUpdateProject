@@ -69,7 +69,7 @@ public class UpdateType6Activity extends RootActivity {
         return new AppDownloadListener() {
             @Override
             public void downloading(int progress) {
-
+                tvBtn2.setText(ResUtils.getString(R.string.downloading)+progress+"%");
             }
 
             @Override
