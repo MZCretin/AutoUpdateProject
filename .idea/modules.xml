@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AutoUpdateProject.iml" filepath="$PROJECT_DIR$/AutoUpdateProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AutoUpdateProject.iml" filepath="$PROJECT_DIR$/AutoUpdateProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cretinautoupdatelibrary/cretinautoupdatelibrary.iml" filepath="$PROJECT_DIR$/cretinautoupdatelibrary/cretinautoupdatelibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/cretinautoupdatelibrary/cretinautoupdatelibrary.iml" filepath="$PROJECT_DIR$/cretinautoupdatelibrary/cretinautoupdatelibrary.iml" />
     </modules>
   </component>
