@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -19,8 +19,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
         <activity
-            android:name=".activity.UpdateType5Activity"
+            android:name=".activity.UpdateType6Activity"
             android:theme="@style/DialogActivityTheme"></activity>
+        <activity
+            android:name=".activity.UpdateType5Activity"
+            android:theme="@style/DialogActivityTheme" />
         <activity
             android:name=".activity.UpdateType4Activity"
             android:theme="@style/DialogActivityTheme" />

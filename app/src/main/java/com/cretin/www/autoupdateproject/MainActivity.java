@@ -1,14 +1,12 @@
 package com.cretin.www.autoupdateproject;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,34 +17,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    //更新
-    public void update(View view) {
+    //更新 之前版本的逻辑
+    public void update1(View view) {
         /**
          *   请大家在BaseApp里面切换不同的类型体验不同类型的更新效果
          */
 
         //需要处理强制更新的时候调用带参数的check方法
-//        CretinAutoUpdateUtils.getInstance(MainActivity.this).check(new ForceExitCallBack() {
-//            @Override
-//            public void exit() {
+        CretinAutoUpdateUtils.getInstance(MainActivity.this).check(new ForceExitCallBack() {
+            @Override
+            public void exit() {
 //                在这里退出整个app
-//                MainActivity.this.finish();
-//            }
-//        });
+                MainActivity.this.finish();
+            }
+        });
 
-
-
-//        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
-        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
-                .setFileSize(31338250)
-                .setProdVersionCode(19)
-                .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
-                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info);
 
         //这里就是不处理强制更新的情况
-//        CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
+        CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
 
         ///-------------------------------------------------
         /**
@@ -72,6 +60,84 @@ public class MainActivity extends AppCompatActivity {
 //        } catch ( JSONException e ) {
 //            e.printStackTrace();
 //        }
+    }
+
+
+    public void update2(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 1);
+    }
+
+    public void update3(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 2);
+    }
+
+    public void update4(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 3);
+    }
+
+    public void update5(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 4);
+    }
+
+    public void update6(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 5);
+    }
+
+    public void update7(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 6);
+    }
+
+    public void update8(View view) {
+        //        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk");
+        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+                .setFileSize(31338250)
+                .setProdVersionCode(19)
+                .setProdVersionName("2.3.1")
+                .setForceUpdate(false)
+                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+        AppUpdateUtils.getInstance().checkUpdate(info, 7);
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType2Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType3Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType4Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType5Activity;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType6Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
@@ -74,7 +75,7 @@ public class AppUpdateUtils {
     /**
      * 检查更新
      */
-    public void checkUpdate(DownloadInfo info) {
+    public void checkUpdate(DownloadInfo info, int type) {
         checkInit();
 
         //检查sdk的挂载 未挂载直接阻断
@@ -83,8 +84,21 @@ public class AppUpdateUtils {
             return;
         }
 
-        if (info != null)
-            UpdateType5Activity.launch(mContext, info);
+        if (info != null) {
+            if (type == 1) {
+                UpdateType1Activity.launch(mContext, info);
+            } else if (type == 2) {
+                UpdateType2Activity.launch(mContext, info);
+            } else if (type == 3) {
+                UpdateType3Activity.launch(mContext, info);
+            } else if (type == 4) {
+                UpdateType4Activity.launch(mContext, info);
+            } else if (type == 5) {
+                UpdateType5Activity.launch(mContext, info);
+            } else if (type == 6) {
+                UpdateType6Activity.launch(mContext, info);
+            }
+        }
     }
 
     /**
