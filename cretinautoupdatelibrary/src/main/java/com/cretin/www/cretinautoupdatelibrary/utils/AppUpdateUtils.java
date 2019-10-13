@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
-import com.cretin.www.cretinautoupdatelibrary.LogUtils;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType10Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType11Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType12Activity;

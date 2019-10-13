@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cretin.www.cretinautoupdatelibrary.LogUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.LogUtils;
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
@@ -24,7 +24,6 @@ public class UpdateType1Activity extends RootActivity {
 
     //view
     private ImageView ivClose;
-    private TextView tvTitle;
     private ProgressView progressView;
     private TextView tvMsg;
     private TextView tvBtn1;
@@ -128,7 +127,6 @@ public class UpdateType1Activity extends RootActivity {
 
     private void findView() {
         ivClose = (ImageView) findViewById(R.id.iv_close);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
         progressView = (ProgressView) findViewById(R.id.progressView);
         tvMsg = (TextView) findViewById(R.id.tv_msg);
         tvBtn1 = (TextView) findViewById(R.id.tv_btn1);

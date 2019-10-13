@@ -1,4 +1,4 @@
-package com.cretin.www.cretinautoupdatelibrary;
+package com.cretin.www.cretinautoupdatelibrary.utils;
 
 import android.os.IInterface;
 import android.text.TextUtils;
