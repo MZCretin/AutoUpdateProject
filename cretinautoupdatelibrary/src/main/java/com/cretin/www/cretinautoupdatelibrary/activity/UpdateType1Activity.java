@@ -31,6 +31,7 @@ public class UpdateType1Activity extends RootActivity {
     private TextView tvBtn2;
     private View viewLine;
     private LinearLayout llProgress;
+    private TextView tvVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class UpdateType1Activity extends RootActivity {
     private void setDataAndListener() {
         tvMsg.setText(downloadInfo.getUpdateLog());
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvVersion.setText("v"+downloadInfo.getProdVersionName());
 
         if (downloadInfo.isForceUpdate()) {
             tvBtn1.setVisibility(View.GONE);
@@ -66,6 +68,7 @@ public class UpdateType1Activity extends RootActivity {
             @Override
             public void onClick(View v) {
                 //左边的按钮
+                cancelTask();
                 finish();
             }
         });
@@ -85,7 +88,7 @@ public class UpdateType1Activity extends RootActivity {
             @Override
             public void downloading(int progress) {
                 progressView.setProgress(progress);
-                tvBtn2.setText(ResUtils.getString(R.string.downloading)+progress+"%");
+                tvBtn2.setText(ResUtils.getString(R.string.downloading));
             }
 
             @Override
@@ -114,6 +117,11 @@ public class UpdateType1Activity extends RootActivity {
             public void reDownload() {
                 LogUtils.log("下载失败后点击重试");
             }
+
+            @Override
+            public void pause() {
+
+            }
         };
     }
 
@@ -127,6 +135,7 @@ public class UpdateType1Activity extends RootActivity {
         tvBtn2 = (TextView) findViewById(R.id.tv_btn2);
         viewLine = findViewById(R.id.view_line);
         llProgress = findViewById(R.id.ll_progress);
+        tvVersion = findViewById(R.id.tv_version);
     }
 
     /**

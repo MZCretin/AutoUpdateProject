@@ -18,10 +18,27 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5" />
+                android:gravity="bottom|right"
+                android:layout_weight="5" >
+
+                <TextView
+                    android:layout_marginBottom="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="10dp"
+                    android:id="@+id/tv_version"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/shape_btn_round_4c92f0"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_content"
@@ -47,12 +64,12 @@
             android:layout_marginTop="40dp"
             android:layout_marginRight="80dp"
             android:layout_marginBottom="40dp"
-            android:background="@drawable/btn_bg_type_6"
+            android:background="@drawable/shape_btn_border_white"
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/btn_update_now"
             android:textColor="#ffffff"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout

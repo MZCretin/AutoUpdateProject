@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +16,7 @@ import com.cretin.www.cretinautoupdatelibrary.LogUtils;
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 public class UpdateType8Activity extends RootActivity {
@@ -21,6 +24,8 @@ public class UpdateType8Activity extends RootActivity {
     private TextView tvMsg;
     private TextView tvBtn2;
     private ImageView ivClose;
+    private TextView tvBtn1;
+    private TextView tvVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +40,14 @@ public class UpdateType8Activity extends RootActivity {
     private void setDataAndListener() {
         tvMsg.setText(downloadInfo.getUpdateLog());
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvVersion.setText("v"+downloadInfo.getProdVersionName());
 
         if (downloadInfo.isForceUpdate()) {
             ivClose.setVisibility(View.GONE);
+            tvBtn1.setVisibility(View.GONE);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvBtn2.getLayoutParams();
+            layoutParams.setMargins(AppUtils.dp2px(35), AppUtils.dp2px(25), AppUtils.dp2px(35), AppUtils.dp2px(40));
+            tvBtn2.setLayoutParams(layoutParams);
         } else {
             ivClose.setVisibility(View.VISIBLE);
         }
@@ -45,6 +55,15 @@ public class UpdateType8Activity extends RootActivity {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+
+        tvBtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //左边的按钮
+                cancelTask();
                 finish();
             }
         });
@@ -62,6 +81,8 @@ public class UpdateType8Activity extends RootActivity {
         tvMsg = findViewById(R.id.tv_content);
         tvBtn2 = findViewById(R.id.tv_update);
         ivClose = findViewById(R.id.iv_close);
+        tvBtn1 = (TextView) findViewById(R.id.tv_btn1);
+        tvVersion = findViewById(R.id.tv_version);
     }
 
     @Override
@@ -69,7 +90,7 @@ public class UpdateType8Activity extends RootActivity {
         return new AppDownloadListener() {
             @Override
             public void downloading(int progress) {
-                tvBtn2.setText(ResUtils.getString(R.string.downloading)+progress+"%");
+                tvBtn2.setText(ResUtils.getString(R.string.downloading) + progress + "%");
             }
 
             @Override
@@ -91,6 +112,11 @@ public class UpdateType8Activity extends RootActivity {
             @Override
             public void reDownload() {
                 LogUtils.log("下载失败后点击重试");
+            }
+
+            @Override
+            public void pause() {
+
             }
         };
     }

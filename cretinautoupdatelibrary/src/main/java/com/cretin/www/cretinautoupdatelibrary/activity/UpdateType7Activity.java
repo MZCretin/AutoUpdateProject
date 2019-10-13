@@ -21,6 +21,7 @@ public class UpdateType7Activity extends RootActivity {
     private TextView tvMsg;
     private TextView tvBtn2;
     private ImageView ivClose;
+    private TextView tvVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class UpdateType7Activity extends RootActivity {
     private void setDataAndListener() {
         tvMsg.setText(downloadInfo.getUpdateLog());
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
+        tvVersion.setText("v"+downloadInfo.getProdVersionName());
 
         if (downloadInfo.isForceUpdate()) {
             ivClose.setVisibility(View.GONE);
@@ -62,6 +64,7 @@ public class UpdateType7Activity extends RootActivity {
         tvMsg = findViewById(R.id.tv_content);
         tvBtn2 = findViewById(R.id.tv_update);
         ivClose = findViewById(R.id.iv_close);
+        tvVersion = findViewById(R.id.tv_version);
     }
 
     @Override
@@ -91,6 +94,11 @@ public class UpdateType7Activity extends RootActivity {
             @Override
             public void reDownload() {
                 LogUtils.log("下载失败后点击重试");
+            }
+
+            @Override
+            public void pause() {
+
             }
         };
     }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -24,6 +25,9 @@ import java.io.File;
  * @desc: 添加描述
  */
 public class AppUtils {
+
+    private static float density;
+
     /**
      * 安装app
      *
@@ -48,17 +52,34 @@ public class AppUtils {
     }
 
     /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static int dp2px(float dpValue) {
+        if (density == 0)
+            density = Resources.getSystem().getDisplayMetrics().density;
+        return (int) (0.5f + dpValue * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    /**
      * 获取apk的安装路径
      *
      * @return
      */
     public static String getAppLocalPath(String versionName) {
-        //构建下载路径
-        String packageName = AppUpdateUtils.getInstance().getContext().getPackageName();
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName;
         // apk 保存名称
         String apkName = AppUtils.getAppName(AppUpdateUtils.getInstance().getContext());
-        return filePath + "/" + apkName + "_" + versionName + ".apk";
+        return getAppRootPath() + "/" + apkName + "_" + versionName + ".apk";
+    }
+
+    /**
+     * 获取apk存储的根目录
+     *
+     * @return
+     */
+    public static String getAppRootPath() {
+        //构建下载路径
+        String packageName = AppUpdateUtils.getInstance().getContext().getPackageName();
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName + "/apks";
     }
 
     /**
@@ -114,6 +135,26 @@ public class AppUtils {
         } catch (Exception e) {
 
         }
+    }
+
+    /**
+     * 删除文件夹的所有文件
+     *
+     * @param file
+     * @return
+     */
+    public static boolean delAllFile(File file) {
+        if (file == null || !file.exists()) {
+            return false;
+        }
+
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File f : files) {
+                delAllFile(f);
+            }
+        }
+        return file.delete();
     }
 
     /**

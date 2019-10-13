@@ -21,6 +21,18 @@
             android:textColor="#ffffff"
             android:textSize="17sp" />
 
+
+        <TextView
+            android:layout_below="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="22dp"
+            android:id="@+id/tv_version"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/iv_close"
             android:layout_width="wrap_content"

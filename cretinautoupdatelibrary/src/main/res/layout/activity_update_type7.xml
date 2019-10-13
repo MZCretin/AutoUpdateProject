@@ -18,25 +18,41 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5" />
+                android:layout_weight="5">
+
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginLeft="25dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="60dp"
-                android:scrollbars="vertical"
-                android:singleLine="false"
                 android:layout_marginRight="60dp"
                 android:layout_weight="6"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="2dp"
+                android:scrollbars="vertical"
+                android:singleLine="false"
                 android:textColor="#4b4b4b"
                 android:textSize="14sp"
                 tools:text="【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门" />
+
         </LinearLayout>
 
         <TextView
@@ -53,6 +69,7 @@
             android:text="@string/btn_update_now"
             android:textColor="#ffffff"
             android:textSize="14sp" />
+
     </LinearLayout>
 
     <LinearLayout

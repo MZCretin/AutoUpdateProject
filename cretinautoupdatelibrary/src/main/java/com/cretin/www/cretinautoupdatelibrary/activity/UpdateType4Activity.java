@@ -33,7 +33,7 @@ public class UpdateType4Activity extends RootActivity {
     }
 
     private void setDataAndListener() {
-        tvMsg.setText(downloadInfo.getUpdateLog());
+        tvMsg.setText(downloadInfo.getUpdateLog() + "\nv" + downloadInfo.getProdVersionName());
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         if (downloadInfo.isForceUpdate()) {
@@ -69,7 +69,7 @@ public class UpdateType4Activity extends RootActivity {
         return new AppDownloadListener() {
             @Override
             public void downloading(int progress) {
-                tvBtn2.setText(ResUtils.getString(R.string.downloading)+progress+"%");
+                tvBtn2.setText(ResUtils.getString(R.string.downloading) + progress + "%");
             }
 
             @Override
@@ -91,6 +91,11 @@ public class UpdateType4Activity extends RootActivity {
             @Override
             public void reDownload() {
                 LogUtils.log("下载失败后点击重试");
+            }
+
+            @Override
+            public void pause() {
+
             }
         };
     }

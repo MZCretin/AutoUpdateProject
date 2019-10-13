@@ -101,6 +101,13 @@ public abstract class RootActivity extends AppCompatActivity {
     }
 
     /**
+     * 取消任务
+     */
+    public void cancelTask(){
+        AppUpdateUtils.getInstance().cancelTask();
+    }
+
+    /**
      * 执行下载
      */
     private void doDownload() {

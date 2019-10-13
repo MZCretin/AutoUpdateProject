@@ -12,4 +12,5 @@ public interface AppDownloadListener {
     void downloadComplete(String path);
     void downloadStart();
     void reDownload();
+    void pause();
 }

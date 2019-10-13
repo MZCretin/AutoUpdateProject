@@ -1,5 +1,6 @@
 package com.cretin.www.cretinautoupdatelibrary.utils;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
@@ -22,7 +23,10 @@ import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateReceiver;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
+import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
+import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
 
@@ -36,13 +40,16 @@ import static com.cretin.www.cretinautoupdatelibrary.utils.AppUtils.getAppLocalP
  */
 public class AppUpdateUtils {
 
-    private static Context mContext;
+    private static Application mContext;
     private static AppUpdateUtils updateUtils;
     private static UpdateConfig updateConfig;
     //是否初始化
     private static boolean isInit;
     //下载过程监听
     private AppDownloadListener appDownloadListener;
+
+    //下载任务
+    private BaseDownloadTask downloadTask;
 
     //是否开始下载
     private static boolean isDownloading = false;
@@ -64,11 +71,19 @@ public class AppUpdateUtils {
      * @param context
      * @param config
      */
-    public static void init(Context context, UpdateConfig config) {
+    public static void init(Application context, UpdateConfig config) {
         isInit = true;
         mContext = context;
         updateConfig = config;
         ResUtils.init(context);
+        //初始化文件下载库
+        FileDownloader.setupOnApplicationOnCreate(mContext)
+                .connectionCreator(new FileDownloadUrlConnection
+                        .Creator(new FileDownloadUrlConnection.Configuration()
+                        .connectTimeout(30_000) // set connection timeout.
+                        .readTimeout(30_000) // set read timeout.
+                ))
+                .commit();
     }
 
     public static AppUpdateUtils getInstance() {
@@ -137,54 +152,77 @@ public class AppUpdateUtils {
 
         downloadUpdateApkFilePath = getAppLocalPath(info.getProdVersionName());
 
-        final BaseDownloadTask downloadTask = FileDownloader.getImpl().create(info.getApkUrl())
-                .setPath(downloadUpdateApkFilePath);
+        //检查下本地文件的大小 如果大小和信息中的文件大小一样的就可以直接安装 否则就删除掉 todo
+//        File tempFile = new File(downloadUpdateApkFilePath);
+//        if (tempFile != null && tempFile.exists()) {
+//            if (tempFile.length() != info.getFileSize()) {
+//                AppUtils.deleteFile(downloadUpdateApkFilePath);
+//                AppUtils.deleteFile(FileDownloadUtils.getTempPath(downloadUpdateApkFilePath));
+//            }
+//        }
 
+        downloadTask = FileDownloader.getImpl().create(info.getApkUrl())
+                .setPath(downloadUpdateApkFilePath);
         downloadTask
                 .addHeader("Accept-Encoding", "identity")
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36")
-                .setListener(new FileDownloadLargeFileListener() {
-                    @Override
-                    protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-                        downloadStart();
-                        if (totalBytes < 0) {
-                            downloadTask.pause();
-                        }
-                    }
-
-                    @Override
-                    protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-                        downloading(soFarBytes, totalBytes);
-                        if (totalBytes < 0) {
-                            downloadTask.pause();
-                        }
-                    }
-
-                    @Override
-                    protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-                        AppUtils.deleteFile(downloadUpdateApkFilePath);
-                        AppUtils.deleteFile(downloadUpdateApkFilePath + ".temp");
-                    }
-
-                    @Override
-                    protected void completed(BaseDownloadTask task) {
-                        downloadComplete(task.getPath());
-                    }
-
-                    @Override
-                    protected void error(BaseDownloadTask task, Throwable e) {
-                        AppUtils.deleteFile(downloadUpdateApkFilePath);
-                        AppUtils.deleteFile(downloadUpdateApkFilePath + ".temp");
-                        downloadError(e);
-                    }
-
-                    @Override
-                    protected void warn(BaseDownloadTask task) {
-                    }
-                })
+                .setListener(fileDownloadListener)
                 .setAutoRetryTimes(3)
                 .start();
     }
+
+    /**
+     * 结束任务
+     */
+    public void cancelTask() {
+        isDownloading = false;
+        if (downloadTask != null) {
+            downloadTask.pause();
+        }
+        UpdateReceiver.cancelDownload(mContext);
+    }
+
+    private FileDownloadListener fileDownloadListener = new FileDownloadLargeFileListener() {
+        @Override
+        protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+            downloadStart();
+            if (totalBytes < 0) {
+                downloadTask.pause();
+            }
+        }
+
+        @Override
+        protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+            downloading(soFarBytes, totalBytes);
+            if (totalBytes < 0) {
+                downloadTask.pause();
+            }
+        }
+
+        @Override
+        protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+            if (appDownloadListener != null) {
+                appDownloadListener.pause();
+            }
+        }
+
+        @Override
+        protected void completed(BaseDownloadTask task) {
+            downloadComplete(task.getPath());
+        }
+
+        @Override
+        protected void error(BaseDownloadTask task, Throwable e) {
+            AppUtils.deleteFile(downloadUpdateApkFilePath);
+            AppUtils.deleteFile(FileDownloadUtils.getTempPath(downloadUpdateApkFilePath));
+            downloadError(e);
+        }
+
+        @Override
+        protected void warn(BaseDownloadTask task) {
+
+        }
+    };
 
     /**
      * @param e
@@ -282,5 +320,15 @@ public class AppUpdateUtils {
     public void reDownload() {
         appDownloadListener.reDownload();
         download(downloadInfo, appDownloadListener);
+    }
+
+    /**
+     * 清除所有缓存的数据
+     */
+    public void clearAllData() {
+        //删除任务中的缓存文件
+        FileDownloader.getImpl().clearAllTaskData();
+        //删除已经下载好的文件
+        AppUtils.delAllFile(new File(AppUtils.getAppRootPath()));
     }
 }

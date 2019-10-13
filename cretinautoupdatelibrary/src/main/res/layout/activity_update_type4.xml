@@ -18,10 +18,21 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3" />
+                android:layout_weight="3" >
+
+                <ImageView
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="25dp"
+                    android:id="@+id/iv_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@mipmap/update_close" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_content"
@@ -55,19 +66,5 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp">
-
-        <ImageView
-            android:id="@+id/iv_close"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:src="@mipmap/update_close_img" />
-
-    </LinearLayout>
 
 </LinearLayout>

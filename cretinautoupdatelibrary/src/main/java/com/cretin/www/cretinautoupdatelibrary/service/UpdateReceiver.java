@@ -38,13 +38,35 @@ public class UpdateReceiver extends BroadcastReceiver {
      */
     public static final String RE_DOWNLOAD = "app.re_download";
 
+    /**
+     * 取消下载
+     */
+    public static final String CANCEL_DOWNLOAD = "app.download_cancel";
+
+
     public static final int REQUEST_CODE = 1001;
 
     private int lastProgress;
 
+    /**
+     * 发送进度
+     *
+     * @param context
+     * @param progress
+     */
     public static void send(Context context, int progress) {
         Intent intent = new Intent(context.getPackageName() + DOWNLOAD_ONLY);
         intent.putExtra(PROGRESS, progress);
+        context.sendBroadcast(intent);
+    }
+
+    /**
+     * 取消下载
+     *
+     * @param context
+     */
+    public static void cancelDownload(Context context) {
+        Intent intent = new Intent(context.getPackageName() + CANCEL_DOWNLOAD);
         context.sendBroadcast(intent);
     }
 
@@ -72,6 +94,11 @@ public class UpdateReceiver extends BroadcastReceiver {
         } else if ((context.getPackageName() + RE_DOWNLOAD).equals(action)) {
             //重新下载
             AppUpdateUtils.getInstance().reDownload();
+        } else if ((context.getPackageName() + CANCEL_DOWNLOAD).equals(action)) {
+            //取消下载
+            NotificationManager systemService =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            downloadComplete(context, notifyId, systemService);
         }
     }
 
@@ -86,7 +113,6 @@ public class UpdateReceiver extends BroadcastReceiver {
         systemService.cancel(notifyId);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             systemService.deleteNotificationChannel(notificationChannel);
-
         }
     }
 
