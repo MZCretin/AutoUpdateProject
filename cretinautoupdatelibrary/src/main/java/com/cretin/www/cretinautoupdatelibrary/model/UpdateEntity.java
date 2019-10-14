@@ -3,7 +3,7 @@ package com.cretin.www.cretinautoupdatelibrary.model;
 /**
  * Created by cretin on 2017/3/8.
  */
-
+@Deprecated
 public class UpdateEntity implements LibraryUpdateEntity{
     public int versionCode = 0;
     //是否强制更新 0 不强制更新 1 hasAffectCodes拥有字段强制更新 2 所有版本强制更新

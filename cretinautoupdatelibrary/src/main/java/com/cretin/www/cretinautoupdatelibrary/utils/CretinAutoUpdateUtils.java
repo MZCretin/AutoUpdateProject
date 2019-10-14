@@ -55,6 +55,7 @@ import static android.os.Build.VERSION_CODES.M;
  * Created by cretin on 2017/3/13.
  */
 
+@Deprecated
 public class CretinAutoUpdateUtils {
     //广播接受者
     private static MyReceiver receiver;

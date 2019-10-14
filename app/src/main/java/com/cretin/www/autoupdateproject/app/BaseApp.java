@@ -17,15 +17,15 @@ public class BaseApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
-//                .setBaseUrl("http://www.cretinzp.com/system/versioninfo")
-//                .setIgnoreThisVersion(true)
-//                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN)
-//                .setIconRes(R.mipmap.logo)
-//                .showLog(true)
-//                .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
-//                .build();
-//        CretinAutoUpdateUtils.init(builder);
+        CretinAutoUpdateUtils.Builder builder = new CretinAutoUpdateUtils.Builder()
+                .setBaseUrl("http://www.cretinzp.com/system/versioninfo")
+                .setIgnoreThisVersion(true)
+                .setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG_WITH_BACK_DOWN)
+                .setIconRes(R.mipmap.logo)
+                .showLog(true)
+                .setRequestMethod(CretinAutoUpdateUtils.Builder.METHOD_GET)
+                .build();
+        CretinAutoUpdateUtils.init(builder);
 
         UpdateConfig updateConfig = new UpdateConfig()
                 .setDebug(true)
