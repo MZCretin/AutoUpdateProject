@@ -27,18 +27,14 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (AppUpdateUtils.getInstance().getUpdateConfig().isShowNotification()) {
-            registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.DOWNLOAD_ONLY));
-            registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.RE_DOWNLOAD));
-            registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.CANCEL_DOWNLOAD));
-        }
+        registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.DOWNLOAD_ONLY));
+        registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.RE_DOWNLOAD));
+        registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.CANCEL_DOWNLOAD));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (AppUpdateUtils.getInstance().getUpdateConfig().isShowNotification()) {
-            unregisterReceiver(updateReceiver);
-        }
+        unregisterReceiver(updateReceiver);
     }
 }

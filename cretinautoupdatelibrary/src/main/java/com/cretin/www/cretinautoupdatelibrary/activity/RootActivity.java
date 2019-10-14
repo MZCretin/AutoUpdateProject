@@ -49,7 +49,8 @@ public abstract class RootActivity extends AppCompatActivity {
     private void checkDownload() {
         // 动态注册广播，8.0 静态注册收不到
         // 开启服务注册，避免直接在Activity中注册广播生命周期随Activity终止而终止
-        startService(new Intent(this, UpdateService.class));
+        if (AppUpdateUtils.getInstance().getUpdateConfig().isShowNotification())
+            startService(new Intent(this, UpdateService.class));
 
         if (!NetWorkUtils.getCurrentNetType(this).equals("wifi")) {
             AppUtils.showDialog(this, ResUtils.getString(R.string.wifi_tips), new OnDialogClickListener() {
@@ -100,7 +101,7 @@ public abstract class RootActivity extends AppCompatActivity {
     /**
      * 取消任务
      */
-    public void cancelTask(){
+    public void cancelTask() {
         AppUpdateUtils.getInstance().cancelTask();
     }
 
