@@ -3,6 +3,7 @@ package com.cretin.www.autoupdateproject.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.SpanUtils;
 import com.cretin.www.autoupdateproject.R;
 import com.cretin.www.autoupdateproject.model.ListModel;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 import java.util.List;
 
@@ -38,11 +41,19 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.tv_theme.setText(
-                "UI样式类型：" + getUiTypeDesc(data.get(position).getUiTypeValue()) + " \n" +
-                        "强制更新：" + (data.get(position).getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_URL ? "根据接口返回，当前是开启" : data.get(position).isForceUpdate() ? "开启" : "关闭") + " \n" +
-                        "数据加载方式：" + getSourceType(data.get(position).getSourceTypeVaule())
-        );
+        SpannableStringBuilder spannableStringBuilder = new SpanUtils().append("UI样式类型：")
+                .append(getUiTypeDesc(data.get(position).getUiTypeValue()) + "\n")
+                .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
+                .append("强制更新：")
+                .append((data.get(position).getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_URL ? "根据接口返回，当前是开启" : data.get(position).isForceUpdate() ? "开启" : "关闭") + " \n")
+                .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
+                .append("数据加载方式：")
+                .append(getSourceType(data.get(position).getSourceTypeVaule()))
+                .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
+                .create();
+        holder.tv_theme.setText(spannableStringBuilder);
+
+        holder.tv_index.setText((position + 1) + "");
 
         holder.tv_update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +138,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         private TextView tv_update;
         private TextView tv_force;
         private TextView tv_source_type;
+        private TextView tv_index;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -134,6 +146,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             tv_update = itemView.findViewById(R.id.tv_update);
             tv_force = itemView.findViewById(R.id.tv_force);
             tv_source_type = itemView.findViewById(R.id.tv_source_type);
+            tv_index = itemView.findViewById(R.id.tv_index);
         }
     }
 
