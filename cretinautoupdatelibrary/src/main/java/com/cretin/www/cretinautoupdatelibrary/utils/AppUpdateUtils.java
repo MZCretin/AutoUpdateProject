@@ -22,6 +22,7 @@ import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
+import com.cretin.www.cretinautoupdatelibrary.model.UpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpCallbackModelListener;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpUtils;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateReceiver;
@@ -121,6 +122,36 @@ public class AppUpdateUtils {
     }
 
     /**
+     * 检查更新 sdk自主解析json为modelClass 实现自动更新
+     *
+     * @param jsonData
+     */
+    public void checkUpdate(String jsonData) {
+        if (TextUtils.isEmpty(jsonData)) {
+            return;
+        }
+        UpdateConfig updateConfig = getUpdateConfig();
+
+        if (updateConfig.getDataSourceType() != TypeConfig.DATA_SOURCE_TYPE_JSON) {
+            LogUtils.log("使用 DATA_SOURCE_TYPE_JSON 这种模式的时候，必须要配置UpdateConfig中的dataSourceType参数才为 DATA_SOURCE_TYPE_JSON ");
+            return;
+        }
+
+        if (updateConfig.getModelClass() == null || !(updateConfig.getModelClass() instanceof LibraryUpdateEntity)) {
+            LogUtils.log("使用 DATA_SOURCE_TYPE_JSON 这种模式的时候，必须要配置UpdateConfig中的modelClass参数，并且modelClass必须实现LibraryUpdateEntity接口");
+            return;
+        }
+
+        try {
+            Object data = JSONHelper.parseObject(jsonData, updateConfig.getModelClass().getClass());//反序列化
+            requestSuccess(data);
+        } catch (Exception e) {
+            LogUtils.log("JSON解析异常，您提供的json数据无法正常解析成为modelClass");
+        }
+
+    }
+
+    /**
      * 检查更新 调用者配置数据
      */
     public void checkUpdate(DownloadInfo info) {
@@ -217,14 +248,14 @@ public class AppUpdateUtils {
 
         downloadUpdateApkFilePath = getAppLocalPath(info.getProdVersionName());
 
-        //检查下本地文件的大小 如果大小和信息中的文件大小一样的就可以直接安装 否则就删除掉 todo
-//        File tempFile = new File(downloadUpdateApkFilePath);
-//        if (tempFile != null && tempFile.exists()) {
-//            if (tempFile.length() != info.getFileSize()) {
-//                AppUtils.deleteFile(downloadUpdateApkFilePath);
-//                AppUtils.deleteFile(FileDownloadUtils.getTempPath(downloadUpdateApkFilePath));
-//            }
-//        }
+        //检查下本地文件的大小 如果大小和信息中的文件大小一样的就可以直接安装 否则就删除掉
+        File tempFile = new File(downloadUpdateApkFilePath);
+        if (tempFile != null && tempFile.exists()) {
+            if (tempFile.length() != info.getFileSize()) {
+                AppUtils.deleteFile(downloadUpdateApkFilePath);
+                AppUtils.deleteFile(FileDownloadUtils.getTempPath(downloadUpdateApkFilePath));
+            }
+        }
 
         downloadTask = FileDownloader.getImpl().create(info.getApkUrl())
                 .setPath(downloadUpdateApkFilePath);

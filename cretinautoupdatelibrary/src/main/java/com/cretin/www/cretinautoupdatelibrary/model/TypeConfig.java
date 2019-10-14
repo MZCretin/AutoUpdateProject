@@ -12,6 +12,7 @@ public class TypeConfig {
      */
     public static final int DATA_SOURCE_TYPE_MODEL = 10;//调用方提供信息model
     public static final int DATA_SOURCE_TYPE_URL = 11;//通过配置链接供sdk自主请求
+    public static final int DATA_SOURCE_TYPE_JSON = 12;//调用方提供信息json
 
     /**
      * 请求方式类型

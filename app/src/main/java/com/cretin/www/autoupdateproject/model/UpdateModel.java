@@ -1,11 +1,11 @@
-package com.cretin.www.autoupdateproject;
+package com.cretin.www.autoupdateproject.model;
 
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 
 /**
  * Created by cretin on 2017/4/21.
+ * 这个model是调用 http://www.cretinzp.com/system/versioninfo 这个接口之后返回的数据
  */
-
 public class UpdateModel implements LibraryUpdateEntity {
 
     /**

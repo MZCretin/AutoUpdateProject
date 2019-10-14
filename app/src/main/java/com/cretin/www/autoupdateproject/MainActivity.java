@@ -12,6 +12,9 @@ import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
+/**
+ * 说明：\n一、Demo下载下来的App是我业余写的一个段子类的App（段子乐），定期更新大量的搞笑段子和搞笑趣图，如果您感兴趣，可以安装之后在空闲的时候娱乐娱乐，App内部也可以由用户发布属于自己的段子呢！\n二、总共有四种下载样式可供选择，demo选择的是TYPE_DIALOG_WITH_BACK_DOWN，另外还有三种模式可供选择：\n           1、TYPE_DIALOG \n           2、TYPE_NITIFICATION \n           3、TYPE_DIALOG_WITH_PROGRESS\n   详情请关注github和csdn博客，地址github有
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -85,14 +88,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void update2(View view) {
-        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
-//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
-                .setFileSize(31338250)
-                .setProdVersionCode(19)
-                .setProdVersionName("2.3.1")
-                .setForceUpdateFlag(0)
-                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info);
+//        DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
+////        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk")
+//                .setFileSize(31338250)
+//                .setProdVersionCode(19)
+//                .setProdVersionName("2.3.1")
+//                .setForceUpdateFlag(0)
+//                .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
+//        AppUpdateUtils.getInstance().checkUpdate(info);
+
+        AppUpdateUtils.getInstance().checkUpdate("{\"versionCode\": 23,   \"isForceUpdate\": 1, \"preBaselineCode\": 22,\"versionName\": \"v2.2.4\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_224_jiagu_sign.apk\",\"updateLog\": \"v2.2.4\r\n1、优化细节和体验，更加稳定\r\n2、修复已知bug\n3、风格修改\",\"size\": \"28400193\",\"hasAffectCodes\":\"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22\"}");
     }
 
     public void update3(View view) {
