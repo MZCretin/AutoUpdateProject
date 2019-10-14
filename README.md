@@ -1,5 +1,7 @@
 # AutoUpdateProject
 
+[![](https://jitpack.io/v/MZCretin/AutoUpdateProject.svg)](https://jitpack.io/#MZCretin/AutoUpdateProject)
+
 ### 特点概述
 
 + 最大亮点，提供**12**种更新的样式，总有一个是你喜欢的类型！
@@ -11,6 +13,10 @@
 + 通知栏图片自定义
 
 ### 效果预览
+
+**说明： 以下12个更新的样式的类型值从左到右从上到下一次为** 
+
+**TypeConfig.UI_THEME_A**、**TypeConfig.UI_THEME_B**、**TypeConfig.UI_THEME_C**、**TypeConfig.UI_THEME_D**、**TypeConfig.UI_THEME_E**、**TypeConfig.UI_THEME_F**、**TypeConfig.UI_THEME_G**、**TypeConfig.UI_THEME_H**、**TypeConfig.UI_THEME_I**、**TypeConfig.UI_THEME_J**、**TypeConfig.UI_THEME_K**、**TypeConfig.UI_THEME_L**
 
 <div align=center ><img width="50%" height="100%" src="./pic/type01.png"  alt="UI_THEME_A"/><img width="50%" height="100%" src="./pic/type02.png" alt="UI_THEME_B"/><img width="50%" height="100%" src="./pic/type03.png" alt="UI_THEME_C"/><img width="50%" height="100%" src="./pic/type04.png" alt="UI_THEME_D"/><img width="50%" height="100%" src="./pic/type05.png" alt="UI_THEME_E"/><img width="50%" height="100%" src="./pic/type06.png" alt="UI_THEME_F"/><img width="50%" height="100%" src="./pic/type07.png" alt="UI_THEME_G"/><img width="50%" height="100%" src="./pic/type08.png" alt="UI_THEME_H"/><img width="50%" height="100%" src="./pic/type09.png" alt="UI_THEME_I"/><img width="50%" height="100%" src="./pic/type10.png" alt="UI_THEME_J"/><img width="50%" height="100%" src="./pic/type11.png" alt="UI_THEME_K"/><img width="50%" height="100%" src="./pic/type12.png" alt="UI_THEME_L"/></div>
 
@@ -24,119 +30,60 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
 
 **Step 2.** Add the dependency
 ```gradle
-dependencies { compile 'com.github.MZCretin:AutoUpdateProject:v1.0' }
+dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_version' }
 ```
 
-**Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).There are two ways you can chose.
+**Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).
 
-```
-//第一种形式 自定义参数 
-CretinAutoUpdateUtils.Builder builder = 
-		new CretinAutoUpdateUtils.Builder() 
-		//设置更新api 
-		.setBaseUrl("http://120.24.5.102/weixin/app/getversion") 
-		//设置是否显示忽略此版本 
-		.setIgnoreThisVersion(true) 
-		//设置下载显示形式 对话框或者通知栏显示 二选一 
-		.setShowType(CretinAutoUpdateUtils.Builder.TYPE_DIALOG) 
-		//设置下载时展示的图标 
-		.setIconRes(R.mipmap.ic_launcher) 
-		//设置下载时展示的应用名称
-		.setAppName("测试应用") 
-		.build(); 
-CretinAutoUpdateUtils.init(builder); 
-
-//第二种模式 
-//CretinAutoUpdateUtils.init("http://120.24.5.102/weixin/app/getversion");
+```java
+//更新库配置
+UpdateConfig updateConfig = new UpdateConfig()
+        .setDebug(true)//是否是Debug模式
+        .setBaseUrl("http://www.cretinzp.com/system/versioninfo")//当dataSourceType为DATA_SOURCE_TYPE_URL时，配置此接口用于获取更新信息
+        .setMethodType(TypeConfig.METHOD_GET)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的方法
+        .setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_URL)//设置获取更新信息的方式
+        .setShowNotification(true)//配置更新的过程中是否在通知栏显示进度
+        .setNotificationIconRes(R.mipmap.download_icon)//配置通知栏显示的图标
+        .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
+        .setRequestHeaders(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求头
+        .setRequestParams(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求参数
+        .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
+        .setModelClass(new UpdateModel());
+AppUpdateUtils.init(this, updateConfig);
 ```
 
+**Step 4.** Start using it wherever you want as below with 3 ways.
 
-**Step 4.** Add below codes to your app module's AndroidManifest file where under tags.
-```xml
-<application
-        android:name=".BaseApp"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+```java
+//有三种方式实现app更新，您可选其中一种方式来进行，推荐使用第三种方式！
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+//第一种方式，使用JSON字符串，让sdk自主解析并实现功能
+String jsonData = "{\"versionCode\": 25,\"isForceUpdate\": 1,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
+AppUpdateUtils.getInstance().checkUpdate(jsonData);
 
-        <service android:name="com.cretin.www.cretinautoupdatelibrary.utils.DownloadService"/>
-    </application>
-```
+//第二种方式，使用MODEL方式，组装好对应的MODEL，传入sdk中
+DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
+        .setFileSize(31338250)
+        .setProdVersionCode(25)
+        .setProdVersionName("2.3.1")
+        .setForceUpdateFlag(listModel.isForceUpdate() ? 1 : 0)
+        .setUpdateLog("1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改");
+AppUpdateUtils.getInstance().checkUpdate(info);
 
-**Step 5.** Start using it wherever you want as below.
+//第三种方式，在初始化的时候配置接口地址，sdk自主请求+解析实现功能（推荐）
+AppUpdateUtils.getInstance().checkUpdate();
 
 ```
-CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
-```
 
+### 使用注意点
 
-## 使用说明
-
--------------------
-此library的使用需要与后台联动配合，下面是后台需要返回给我们使用的字段说明：
-
-```
-/**
- * Created by cretin on 2017/3/8.
- */
-
-public class UpdateEntity {
-    public int versionCode = 0;
-    //是否强制更新 0 不强制更新 1 hasAffectCodes拥有字段强制更新 2 所有版本强制更新
-    public int isForceUpdate = 0;
-    //上一个版本版本号
-    public int preBaselineCode = 0;
-    //版本号 描述作用
-    public String versionName = "";
-    //新安装包的下载地址
-    public String downurl = "";
-    //更新日志
-    public String updateLog = "";
-    //安装包大小 单位字节
-    public String size = "";
-    //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
-    public String hasAffectCodes = "";
-
-    public UpdateEntity(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        this.versionCode = jsonObject.getInt("versionCode");
-        this.versionName = jsonObject.getString("versionName");
-        this.isForceUpdate = jsonObject.getInt("isForceUpdate");
-        this.downurl = jsonObject.getString("downurl");
-        this.preBaselineCode = jsonObject.getInt("preBaselineCode");
-        this.updateLog = jsonObject.getString("updateLog");
-        this.size = jsonObject.getString("size");
-        this.hasAffectCodes = jsonObject.getString("hasAffectCodes");
-    }
-}java
-
-```
--------------------
-所以需要后台返回给我们这些字段，这些字段都是必须的，相关说明请看注释，下面是一个参考
-```json
-{
-    "versionCode": "18", 
-    "isForceUpdate": "1", 
-    "preBaselineCode": "0", 
-    "versionName": "2.1.1", 
-    "downurl": "http://120.24.5.102/Webconfig/frj01_211_jiagu_sign.apk", 
-    "hasAffectCodes": "11|12|13|14|15|16|17", 
-    "updateLog": "1、修复bug 2、完善部分功能点 3、系统升级，强制更新",
-    "size": 10291218
-}
-```
++ 最简单快捷的方式就是使用传入MODEL的形式，因为这种方式需要的配置最少，但是你需要自己处理请求，并保证最终调用checkUpdate(model)的时候是在主线程。
++ 在使用传入json这种方式的时候，你需要同样保证调用checkUpdate(json)的时候在主线程，并且你需要在初始化的时候配置json对应的model【setModelClass(new UpdateModel())】，并保证这个model实现了LibraryUpdateEntity接口。
++ 在使用配置接口地址的方式的时候，您需要设置一个请求链接地址！当然，如果是需要的话，您需要设置请求方式，设置请求头和请求参数；并且你需要在初始化的时候配置请求成功之后返回的数据所对应的model【setModelClass(new UpdateModel())】，并保证这个model实现了LibraryUpdateEntity接口。
++ 如果你需要自定义UI，请自定义一个普通的Activity就可以了，这个Activity需要继承RootActivity，这样你就拥有了自动更新的能力；另外建议给这个自定义的Activity添加一个主题@style/DialogActivityTheme，这样他就能以对话框的形式展示，据我们的UI说这样会好看点。
 
 #### 有什么意见或者建议欢迎与我交流，觉得不错欢迎Star
 
-使用过程中如果有什么问题或者建议 欢迎在issue中提出来或者直接联系我 792075058 嘿嘿
+使用过程中如果有什么问题或者建议，欢迎在issue中提出来或者直接联系我 mxnzp_life@163.com 嘿嘿！
 
-PS:如果显示异常，欢迎移步 http://blog.csdn.net/u010998327/article/details/62036622
+

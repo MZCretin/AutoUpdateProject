@@ -12,6 +12,11 @@ import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 /**
  * 自定义UI类型
+ * 你需要注意：
+ * 1、Activity需要继承RootActivity才有效，并实现需要实现的方法
+ * 2、你需要在你的AndroidManifest.xml中为这个自定义的Activity设置
+ *    @style/DialogActivityTheme 这个对话框的主题；
+ *    当然这只是建议，你只要撸出来的页面好看，咋地都行
  */
 public class CustomActivity extends RootActivity {
     private TextView tvInfo;
