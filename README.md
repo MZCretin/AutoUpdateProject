@@ -13,6 +13,15 @@
 + 提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。
 + 通知栏图片自定义
 
+
+
+### Demo体验
+
+[Demo下载](https://raw.githubusercontent.com/MZCretin/AutoUpdateProject/master/pic/demo.apk)
+
+扫描二维码下载：
+<img src="./pic/erweima.png"/>
+
 ### 效果预览
 
 **说明： 以下12个更新的样式的类型值从左到右从上到下一次为** 
