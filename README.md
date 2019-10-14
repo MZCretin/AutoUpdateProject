@@ -4,14 +4,14 @@
 
 ### 特点概述
 
-+ 最大亮点，提供**12**种更新的样式，总有一个是你喜欢的类型！
-+ 支持三种设置更新信息的方式，您可以直接传model，传json数据，或者直接配置请求链接，sdk会自主请求并发起app的更新，满足多方需求！
-+ 文件下载支持断点续传，下载错误拥有重试机制；相同版本的apk只会下载一次，防止重复下载！
-+ 使用接口方式获取数据时支持设置请求头，支持POST和GET请求方式，更灵活。
-+ 调用者可以自定义UI实现更新功能。
-+ 已适配Android 6.0，Android 7.0，Android 8.0，Android 9.0。
-+ 提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。
-+ 通知栏图片自定义
++ **最大亮点，提供**12**种更新的样式，总有一个是你喜欢的类型！**
++ **支持三种设置更新信息的方式，您可以直接传model，传json数据，或者直接配置请求链接，sdk会自主请求并发起app的更新，满足多方需求！**
++ **文件下载支持断点续传，下载错误拥有重试机制；相同版本的apk只会下载一次，防止重复下载！**
++ **使用接口方式获取数据时支持设置请求头，支持POST和GET请求方式，更灵活。**
++ **调用者可以自定义UI实现更新功能。**
++ **已适配Android 6.0，Android 7.0，Android 8.0，Android 9.0。**
++ **提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。**
++ **通知栏图片自定义**
 
 
 
@@ -29,6 +29,8 @@
 **TypeConfig.UI_THEME_A**、**TypeConfig.UI_THEME_B**、**TypeConfig.UI_THEME_C**、**TypeConfig.UI_THEME_D**、**TypeConfig.UI_THEME_E**、**TypeConfig.UI_THEME_F**、**TypeConfig.UI_THEME_G**、**TypeConfig.UI_THEME_H**、**TypeConfig.UI_THEME_I**、**TypeConfig.UI_THEME_J**、**TypeConfig.UI_THEME_K**、**TypeConfig.UI_THEME_L**
 
 <div align=center ><img width="50%" height="100%" src="./pic/type01.png"  alt="UI_THEME_A"/><img width="50%" height="100%" src="./pic/type02.png" alt="UI_THEME_B"/><img width="50%" height="100%" src="./pic/type03.png" alt="UI_THEME_C"/><img width="50%" height="100%" src="./pic/type04.png" alt="UI_THEME_D"/><img width="50%" height="100%" src="./pic/type05.png" alt="UI_THEME_E"/><img width="50%" height="100%" src="./pic/type06.png" alt="UI_THEME_F"/><img width="50%" height="100%" src="./pic/type07.png" alt="UI_THEME_G"/><img width="50%" height="100%" src="./pic/type08.png" alt="UI_THEME_H"/><img width="50%" height="100%" src="./pic/type09.png" alt="UI_THEME_I"/><img width="50%" height="100%" src="./pic/type10.png" alt="UI_THEME_J"/><img width="50%" height="100%" src="./pic/type11.png" alt="UI_THEME_K"/><img width="50%" height="100%" src="./pic/type12.png" alt="UI_THEME_L"/></div>
+
+
 ### 使用方式
 
 **Step 1.** Add the JitPack repository to your build file Add it in your root build.gradle at the end of repositories: 
