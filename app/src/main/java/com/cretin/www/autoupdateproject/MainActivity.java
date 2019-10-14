@@ -1,41 +1,85 @@
 package com.cretin.www.autoupdateproject;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.cretin.www.autoupdateproject.adapter.RecyclerviewAdapter;
+import com.cretin.www.autoupdateproject.model.ListModel;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
+import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
+import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private RecyclerviewAdapter recyclerviewAdapter;
+    private List<ListModel> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.recyclerview);
+
+        list = new ArrayList<>();
+        obtainData();
+        recyclerviewAdapter = new RecyclerviewAdapter(this, list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(recyclerviewAdapter);
     }
 
-    //更新
-    public void update(View view) {
-        /**
-         *   请大家在BaseApp里面切换不同的类型体验不同类型的更新效果
-         */
+    //造假数据
+    private void obtainData() {
+        for (int i = 0; i < 13; i++) {
+            ListModel listModel = new ListModel();
+            listModel.setForceUpdate(false);
+            listModel.setUiTypeValue(300 + i);
+            listModel.setSourceTypeVaule(TypeConfig.DATA_SOURCE_TYPE_MODEL);
+            list.add(listModel);
+        }
+    }
 
-
-        //需要处理强制更新的时候调用带餐的check方法
-        CretinAutoUpdateUtils.getInstance(MainActivity.this).check(new ForceExitCallBack() {
-            @Override
-            public void exit() {
-                //在这里退出整个app
-                MainActivity.this.finish();
-            }
-        });
-        //这里就是不处理强制更新的情况
-        //CretinAutoUpdateUtils.getInstance(MainActivity.this).check();
+    //清除数据
+    public void clear() {
+        AppUpdateUtils.getInstance().clearAllData();
+        Toast.makeText(this, "下载的所有数据清除成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        CretinAutoUpdateUtils.getInstance(this).destroy();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_layout, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_01:
+                //使用说明
+                startActivity(new Intent(this,InfoActivity.class));
+                break;
+            case R.id.action_02:
+                clear();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

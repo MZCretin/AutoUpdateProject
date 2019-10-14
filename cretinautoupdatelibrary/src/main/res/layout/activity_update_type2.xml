@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@mipmap/dialog_update_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="28dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="10dp"
+                    android:id="@+id/tv_version"
+                    android:paddingLeft="10dp"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="2dp"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:singleLine="false"
+                android:textColor="#4b4b4b"
+                android:textSize="14sp"
+                tools:text="【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门\n【新增】短视频首页增加今日热门" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/light_orange_button_round"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/btn_update_now"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:src="@mipmap/update_close_img" />
+
+    </LinearLayout>
+
+</LinearLayout>

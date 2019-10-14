@@ -3,7 +3,7 @@ package com.cretin.www.cretinautoupdatelibrary.model;
 /**
  * Created by cretin on 2017/3/8.
  */
-
+@Deprecated
 public class UpdateEntity implements LibraryUpdateEntity{
     public int versionCode = 0;
     //是否强制更新 0 不强制更新 1 hasAffectCodes拥有字段强制更新 2 所有版本强制更新
@@ -86,42 +86,37 @@ public class UpdateEntity implements LibraryUpdateEntity{
     }
 
     @Override
-    public int getVersionCodes() {
+    public int getAppVersionCode() {
         return getVersionCode();
     }
 
     @Override
-    public int getIsForceUpdates() {
+    public int forceAppUpdateFlag() {
         return getIsForceUpdate();
     }
 
     @Override
-    public int getPreBaselineCodes() {
-        return getPreBaselineCode();
-    }
-
-    @Override
-    public String getVersionNames() {
+    public String getAppVersionName() {
         return getVersionName();
     }
 
     @Override
-    public String getDownurls() {
+    public String getAppApkUrls() {
         return getDownurl();
     }
 
     @Override
-    public String getUpdateLogs() {
+    public String getAppUpdateLog() {
         return getUpdateLog();
     }
 
     @Override
-    public String getApkSizes() {
+    public String getAppApkSize() {
         return getSize();
     }
 
     @Override
-    public String getHasAffectCodess() {
+    public String getAppHasAffectCodes() {
         return getHasAffectCodes();
     }
 }
