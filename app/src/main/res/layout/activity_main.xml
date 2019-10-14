@@ -1,141 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.cretin.www.autoupdateproject.MainActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clear"
-            android:padding="10dp"
-            android:text="清除所有缓存信息"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update"
-            android:padding="10dp"
-            android:text="点击进行App更新-原始类型"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update1"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型1"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update2"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型2"
-            android:textColor="@color/colorAccent" />
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update3"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型3"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update4"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型4"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update5"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型5"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update6"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型6"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update7"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型7"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update8"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型8"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update9"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型9"
-            android:textColor="@color/colorAccent" />
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update10"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型10"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update11"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型11"
-            android:textColor="@color/colorAccent" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="update12"
-            android:padding="10dp"
-            android:text="点击进行App更新-类型12"
-            android:textColor="@color/colorAccent" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:lineSpacingExtra="4dp"
-            android:padding="10dp"
-            android:text="说明：\n一、Demo下载下来的App是我业余写的一个段子类的App（段子乐），定期更新大量的搞笑段子和搞笑趣图，如果您感兴趣，可以安装之后在空闲的时候娱乐娱乐，App内部也可以由用户发布属于自己的段子呢！\n二、总共有四种下载样式可供选择，demo选择的是TYPE_DIALOG_WITH_BACK_DOWN，另外还有三种模式可供选择：\n           1、TYPE_DIALOG \n           2、TYPE_NITIFICATION \n           3、TYPE_DIALOG_WITH_PROGRESS\n   详情请关注github和csdn博客，地址github有"
-            android:textColor="@color/colorPrimary" />
-    </LinearLayout>
-</ScrollView>
+</android.support.constraint.ConstraintLayout>

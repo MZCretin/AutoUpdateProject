@@ -205,4 +205,19 @@ public class AppUtils {
         }
         return packInfo;
     }
+
+    /**
+     * 获得apk版本号
+     *
+     * @param context
+     * @return
+     */
+    public static int getVersionCode(Context context) {
+        int versionCode = 0;
+        PackageInfo packInfo = getPackInfo(context);
+        if ( packInfo != null ) {
+            versionCode = packInfo.versionCode;
+        }
+        return versionCode;
+    }
 }

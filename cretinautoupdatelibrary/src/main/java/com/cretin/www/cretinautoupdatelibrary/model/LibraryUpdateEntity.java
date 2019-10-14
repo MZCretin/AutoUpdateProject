@@ -6,26 +6,23 @@ package com.cretin.www.cretinautoupdatelibrary.model;
 
 public interface LibraryUpdateEntity {
     //获取版本号
-    int getVersionCodes();
+    int getAppVersionCode();
 
     //是否强制更新 0 不强制更新 1 hasAffectCodes拥有字段强制更新 2 所有版本强制更新
-    int getIsForceUpdates();
-
-    //上一个版本版本号
-    int getPreBaselineCodes();
+    int forceAppUpdateFlag();
 
     //版本号 描述作用
-    String getVersionNames();
+    String getAppVersionName();
 
     //新安装包的下载地址
-    String getDownurls();
+    String getAppApkUrls();
 
     //更新日志
-    String getUpdateLogs();
+    String getAppUpdateLog();
 
     //安装包大小 单位字节
-    String getApkSizes();
+    String getAppApkSize();
 
     //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
-    String getHasAffectCodess();
+    String getAppHasAffectCodes();
 }

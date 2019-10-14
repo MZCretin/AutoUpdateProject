@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Search, should appear as action button -->
+    <item
+        android:id="@+id/action_01"
+        android:title="相关说明"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_02"
+        android:title="清除本地数据"
+        app:showAsAction="ifRoom" />
+</menu>

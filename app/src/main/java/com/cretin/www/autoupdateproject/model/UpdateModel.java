@@ -1,18 +1,18 @@
-package com.cretin.www.autoupdateproject;
+package com.cretin.www.autoupdateproject.model;
 
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 
 /**
  * Created by cretin on 2017/4/21.
+ * 这个model是调用 http://www.cretinzp.com/system/versioninfo 这个接口之后返回的数据
  */
-
-public class UpdateModel implements LibraryUpdateEntity{
+public class UpdateModel implements LibraryUpdateEntity {
 
     /**
      * id : test
      * page : 1
      * rows : 10
-     * isForceUpdate : 0
+     * isForceUpdateFlag : 0
      * preBaselineCode : 0
      * versionName : V1.0.1
      * versionCode : 3
@@ -34,7 +34,6 @@ public class UpdateModel implements LibraryUpdateEntity{
     private String hasAffectCodes;
     private long createTime;
     private int iosVersion;
-
 
     public int getIsForceUpdate() {
         return isForceUpdate;
@@ -117,42 +116,37 @@ public class UpdateModel implements LibraryUpdateEntity{
     }
 
     @Override
-    public int getVersionCodes() {
+    public int getAppVersionCode() {
         return getVersionCode();
     }
 
     @Override
-    public int getIsForceUpdates() {
+    public int forceAppUpdateFlag() {
         return getIsForceUpdate();
     }
 
     @Override
-    public int getPreBaselineCodes() {
-        return getPreBaselineCode();
+    public String getAppVersionName() {
+        return getVersionName().replaceFirst("v", "");
     }
 
     @Override
-    public String getVersionNames() {
-        return getVersionName();
-    }
-
-    @Override
-    public String getDownurls() {
+    public String getAppApkUrls() {
         return getDownurl();
     }
 
     @Override
-    public String getUpdateLogs() {
+    public String getAppUpdateLog() {
         return getUpdateLog();
     }
 
     @Override
-    public String getApkSizes() {
+    public String getAppApkSize() {
         return getSize();
     }
 
     @Override
-    public String getHasAffectCodess() {
+    public String getAppHasAffectCodes() {
         return getHasAffectCodes();
     }
 }

@@ -45,9 +45,9 @@ public class UpdateType1Activity extends RootActivity {
     private void setDataAndListener() {
         tvMsg.setText(downloadInfo.getUpdateLog());
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
-        tvVersion.setText("v"+downloadInfo.getProdVersionName());
+        tvVersion.setText("v" + downloadInfo.getProdVersionName());
 
-        if (downloadInfo.isForceUpdate()) {
+        if (downloadInfo.isForceUpdateFlag()) {
             tvBtn1.setVisibility(View.GONE);
             viewLine.setVisibility(View.GONE);
             ivClose.setVisibility(View.GONE);

@@ -6,6 +6,8 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+
 /**
  * @date: on 2019-10-10
  * @author: a112233

@@ -37,7 +37,7 @@ public class UpdateType6Activity extends RootActivity {
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvVersion.setText("v" + downloadInfo.getProdVersionName());
 
-        if (downloadInfo.isForceUpdate()) {
+        if (downloadInfo.isForceUpdateFlag()) {
             ivClose.setVisibility(View.GONE);
         } else {
             ivClose.setVisibility(View.VISIBLE);
