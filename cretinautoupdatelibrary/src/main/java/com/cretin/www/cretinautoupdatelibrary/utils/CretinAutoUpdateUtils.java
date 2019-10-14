@@ -326,16 +326,15 @@ public class CretinAutoUpdateUtils {
                         LibraryUpdateEntity o = ( LibraryUpdateEntity )
                                 JSONHelper.parseObject(sb.toString(), cls.getClass());//反序列化
                         UpdateEntity updateEntity = new UpdateEntity();
-                        updateEntity.setVersionCode(o.getVersionCodes());
-                        updateEntity.setIsForceUpdate(o.getIsForceUpdates());
-                        updateEntity.setPreBaselineCode(o.getPreBaselineCodes());
-                        updateEntity.setVersionName(o.getVersionNames());
-                        updateEntity.setDownurl(o.getDownurls());
+                        updateEntity.setVersionCode(o.getAppVersionCode());
+                        updateEntity.setIsForceUpdate(o.forceAppUpdateFlag());
+                        updateEntity.setVersionName(o.getAppVersionName());
+                        updateEntity.setDownurl(o.getAppApkUrls());
                         //对LOG进行换行处理
-                        String res = o.getUpdateLogs().replaceAll("\\\\n", "\n");
+                        String res = o.getAppUpdateLog().replaceAll("\\\\n", "\n");
                         updateEntity.setUpdateLog(res);
-                        updateEntity.setSize(o.getApkSizes());
-                        updateEntity.setHasAffectCodes(o.getHasAffectCodess());
+                        updateEntity.setSize(o.getAppApkSize());
+                        updateEntity.setHasAffectCodes(o.getAppHasAffectCodes());
                         return updateEntity;
                     } else {
                         throw new RuntimeException("未实现接口：" +
@@ -432,7 +431,7 @@ public class CretinAutoUpdateUtils {
      */
     private void showUpdateDialog(final UpdateEntity data, final boolean isForceUpdate, boolean showIgnore) {
         //对LOG进行换行处理
-        data.setUpdateLog(data.getUpdateLogs().replaceAll("\\\\n", "\n"));
+        data.setUpdateLog(data.getUpdateLog().replaceAll("\\\\n", "\n"));
         if ( showType == Builder.TYPE_DIALOG || showType == Builder.TYPE_NITIFICATION ) {
             //简约式对话框展示对话信息的方式
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

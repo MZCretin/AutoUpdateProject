@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -140,11 +142,21 @@ public class UpdateReceiver extends BroadcastReceiver {
             builder.setChannelId(notificationChannel);
         }
 
-        //设置图标 todo
-        builder.setSmallIcon(android.R.mipmap.sym_def_app_icon);
+        //设置图标
+        int notificationIconRes = AppUpdateUtils.getInstance().getUpdateConfig().getNotificationIconRes();
+        if (notificationIconRes != 0) {
+            builder.setSmallIcon(notificationIconRes);
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),notificationIconRes));
+        } else {
+            builder.setSmallIcon(android.R.mipmap.sym_def_app_icon);
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),android.R.mipmap.sym_def_app_icon));
+        }
 
         // 设置进度
         builder.setProgress(100, lastProgress, false);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setShowWhen(true);
+        builder.setAutoCancel(false);
 
         if (progress == -1) {
             Intent intent = new Intent(context.getPackageName() + RE_DOWNLOAD);

@@ -40,7 +40,7 @@ public class UpdateType11Activity extends RootActivity {
         tvMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvVersion.setText("v"+downloadInfo.getProdVersionName());
 
-        if (downloadInfo.isForceUpdate()) {
+        if (downloadInfo.isForceUpdateFlag()) {
             ivClose.setVisibility(View.GONE);
             tvBtn1.setVisibility(View.GONE);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvBtn2.getLayoutParams();

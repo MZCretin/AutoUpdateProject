@@ -20,15 +20,30 @@ public class DownloadInfo implements Parcelable {
     private String prodVersionName;
     //更新日志
     private String updateLog;
-    //是否强制更新
-    private boolean isForceUpdate;
+    //是否强制更新 0 不强制更新 1 hasAffectCodes拥有字段强制更新 2 所有版本强制更新
+    private int forceUpdateFlag;
+    //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
+    private String hasAffectCodes;
 
-    public boolean isForceUpdate() {
-        return isForceUpdate;
+    public String getHasAffectCodes() {
+        return hasAffectCodes;
     }
 
-    public DownloadInfo setForceUpdate(boolean forceUpdate) {
-        isForceUpdate = forceUpdate;
+    public DownloadInfo setHasAffectCodes(String hasAffectCodes) {
+        this.hasAffectCodes = hasAffectCodes;
+        return this;
+    }
+
+    public boolean isForceUpdateFlag() {
+        return forceUpdateFlag > 0;
+    }
+
+    public int getForceUpdateFlag() {
+        return forceUpdateFlag;
+    }
+
+    public DownloadInfo setForceUpdateFlag(int forceUpdateFlag) {
+        this.forceUpdateFlag = forceUpdateFlag;
         return this;
     }
 
@@ -90,7 +105,8 @@ public class DownloadInfo implements Parcelable {
         dest.writeInt(this.prodVersionCode);
         dest.writeString(this.prodVersionName);
         dest.writeString(this.updateLog);
-        dest.writeByte(this.isForceUpdate ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.forceUpdateFlag);
+        dest.writeString(this.hasAffectCodes);
     }
 
     public DownloadInfo() {
@@ -102,7 +118,8 @@ public class DownloadInfo implements Parcelable {
         this.prodVersionCode = in.readInt();
         this.prodVersionName = in.readString();
         this.updateLog = in.readString();
-        this.isForceUpdate = in.readByte() != 0;
+        this.forceUpdateFlag = in.readInt();
+        this.hasAffectCodes = in.readString();
     }
 
     public static final Creator<DownloadInfo> CREATOR = new Creator<DownloadInfo>() {

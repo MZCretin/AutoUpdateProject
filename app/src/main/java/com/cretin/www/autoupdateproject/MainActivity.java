@@ -7,7 +7,9 @@ import android.widget.Toast;
 
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
+import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
 import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
          *  所以有必要提供一个给定数据的入口，然后根据提供的数据来进行版本的更新 所以就有了下面这个
          */
         //模拟请求到的数据
-//        String json = "{'versionCode':10,'isForceUpdate':0,'preBaselineCode':9,'versionName':'v1.3.0'," +
+//        String json = "{'versionCode':10,'isForceUpdateFlag':0,'preBaselineCode':9,'versionName':'v1.3.0'," +
 //                "'downurl':'http://jokesimg.cretinzp.com/apk/app-release_130_jiagu_sign.apk'," +
 //                "'updateLog':'最新版v1.3.0\n1、全新积分抽奖上线\n2、新增积分列表，积分详情更清楚\n" +
 //                "3、优化N多你可能都不知道的细节\n4、修复已知BUG','size':'15620356'," +
@@ -76,9 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 1);
+        AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_B);
+        AppUpdateUtils.getInstance().checkUpdate();
     }
 
     public void update2(View view) {
@@ -87,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 2);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update3(View view) {
@@ -98,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 3);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update4(View view) {
@@ -109,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 4);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update5(View view) {
@@ -120,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 5);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update6(View view) {
@@ -131,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 6);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update7(View view) {
@@ -142,9 +145,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 7);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update8(View view) {
@@ -153,9 +156,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(true)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 8);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update9(View view) {
@@ -164,9 +167,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 9);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update10(View view) {
@@ -175,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 10);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update11(View view) {
@@ -186,9 +189,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 11);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     public void update12(View view) {
@@ -197,9 +200,9 @@ public class MainActivity extends AppCompatActivity {
                 .setFileSize(31338250)
                 .setProdVersionCode(19)
                 .setProdVersionName("2.3.1")
-                .setForceUpdate(false)
+                .setForceUpdateFlag(0)
                 .setUpdateLog("新版本特性：\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙\n1.开户银行：江西银\n2.户姓名：小龙人\n3.子账户：621246000000000000\n4.户姓名：小龙");
-        AppUpdateUtils.getInstance().checkUpdate(info, 12);
+        AppUpdateUtils.getInstance().checkUpdate(info);
     }
 
     @Override

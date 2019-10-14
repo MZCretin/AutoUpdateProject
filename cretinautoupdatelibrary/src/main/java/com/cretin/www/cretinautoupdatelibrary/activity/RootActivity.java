@@ -140,7 +140,7 @@ public abstract class RootActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!downloadInfo.isForceUpdate())
+        if (!downloadInfo.isForceUpdateFlag())
             super.onBackPressed();
     }
 

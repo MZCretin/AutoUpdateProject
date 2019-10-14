@@ -34,8 +34,7 @@
                     android:paddingRight="10dp"
                     android:id="@+id/tv_version"
                     android:paddingLeft="10dp"
-                    android:background="@drawable/shape_btn_round_gray"
-                    android:textColor="#00BCD4"
+                    android:textColor="#ffffff"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

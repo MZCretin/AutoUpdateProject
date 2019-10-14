@@ -86,42 +86,37 @@ public class UpdateEntity implements LibraryUpdateEntity{
     }
 
     @Override
-    public int getVersionCodes() {
+    public int getAppVersionCode() {
         return getVersionCode();
     }
 
     @Override
-    public int getIsForceUpdates() {
+    public int forceAppUpdateFlag() {
         return getIsForceUpdate();
     }
 
     @Override
-    public int getPreBaselineCodes() {
-        return getPreBaselineCode();
-    }
-
-    @Override
-    public String getVersionNames() {
+    public String getAppVersionName() {
         return getVersionName();
     }
 
     @Override
-    public String getDownurls() {
+    public String getAppApkUrls() {
         return getDownurl();
     }
 
     @Override
-    public String getUpdateLogs() {
+    public String getAppUpdateLog() {
         return getUpdateLog();
     }
 
     @Override
-    public String getApkSizes() {
+    public String getAppApkSize() {
         return getSize();
     }
 
     @Override
-    public String getHasAffectCodess() {
+    public String getAppHasAffectCodes() {
         return getHasAffectCodes();
     }
 }
