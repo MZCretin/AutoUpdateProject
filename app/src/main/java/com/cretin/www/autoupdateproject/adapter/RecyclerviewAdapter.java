@@ -99,9 +99,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
             AppUpdateUtils.getInstance().checkUpdate(jsonData);
         } else if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_MODEL) {
-            //MODEL todo 切换成自己的apk下载路径
-            DownloadInfo info = new DownloadInfo().setApkUrl("https://apkdownload.followme.cn/Followme-official-release.apk")
-//        DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
+            DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
                     .setFileSize(31338250)
                     .setProdVersionCode(25)
                     .setProdVersionName("2.3.1")
