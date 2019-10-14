@@ -2,6 +2,7 @@ package com.cretin.www.cretinautoupdatelibrary.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -133,7 +134,7 @@ public class AppUpdateUtils {
         UpdateConfig updateConfig = getUpdateConfig();
 
         if (updateConfig.getDataSourceType() != TypeConfig.DATA_SOURCE_TYPE_JSON) {
-            LogUtils.log("使用 DATA_SOURCE_TYPE_JSON 这种模式的时候，必须要配置UpdateConfig中的dataSourceType参数才为 DATA_SOURCE_TYPE_JSON ");
+            LogUtils.log("使用 DATA_SOURCE_TYPE_JSON 这种模式的时候，必须要配置UpdateConfig中的dataSourceType参数为 DATA_SOURCE_TYPE_JSON ");
             return;
         }
 
@@ -200,6 +201,18 @@ public class AppUpdateUtils {
             //随机样式
             String versionName = AppUtils.getVersionName(mContext);
             type = 300 + versionName.hashCode() % 12;
+        } else if (type == TypeConfig.UI_THEME_CUSTOM) {
+            Class customActivityClass = updateConfig.getCustomActivityClass();
+            if (customActivityClass == null) {
+                LogUtils.log("使用 UI_THEME_CUSTOM 这种UI类型的时候，必须要配置UpdateConfig中的customActivityClass参数为您自定义的Activity");
+                return;
+            }
+            //用户自定义类型
+            Intent intent = new Intent(mContext, updateConfig.getCustomActivityClass());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("info", info);
+            mContext.startActivity(intent);
+            return;
         }
 
         //根据类型选择对应的样式
@@ -430,8 +443,6 @@ public class AppUpdateUtils {
 
     /**
      * 获取数据
-     *
-     * @param type
      */
     private void getData() {
         UpdateConfig updateConfig = getUpdateConfig();

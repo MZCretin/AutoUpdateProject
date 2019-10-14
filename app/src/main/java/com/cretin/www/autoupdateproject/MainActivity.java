@@ -74,10 +74,18 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_01:
                 //使用说明
-                startActivity(new Intent(this,InfoActivity.class));
+                startActivity(new Intent(this, InfoActivity.class));
                 break;
             case R.id.action_02:
+                //清除本地缓存
                 clear();
+                break;
+            case R.id.action_03:
+                //自定义UI
+                AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_CUSTOM);//类型为自定义样式类型
+                AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
+                AppUpdateUtils.getInstance().checkUpdate(recyclerviewAdapter.jsonDataUnForce);
+                Toast.makeText(this, "为了展示是真的可以自定义UI的，我写了个很丑的页面", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

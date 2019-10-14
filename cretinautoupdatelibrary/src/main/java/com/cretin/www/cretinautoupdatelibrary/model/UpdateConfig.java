@@ -37,6 +37,9 @@ public class UpdateConfig {
     //请求参数信息
     private Map<String, Object> requestParams;
 
+    //自定义的Activity类
+    private Class customActivityClass;
+
     //自定义Bean类 此类必须实现LibraryUpdateEntity接口
     private Object modelClass;
 
@@ -46,6 +49,15 @@ public class UpdateConfig {
 
     public UpdateConfig setShowNotification(boolean showNotification) {
         this.showNotification = showNotification;
+        return this;
+    }
+
+    public Class getCustomActivityClass() {
+        return customActivityClass;
+    }
+
+    public UpdateConfig setCustomActivityClass(Class customActivityClass) {
+        this.customActivityClass = customActivityClass;
         return this;
     }
 

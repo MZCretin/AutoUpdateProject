@@ -141,7 +141,11 @@ public abstract class RootActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!downloadInfo.isForceUpdateFlag())
+        if (downloadInfo != null) {
+            if (!downloadInfo.isForceUpdateFlag()) {
+                super.onBackPressed();
+            }
+        } else
             super.onBackPressed();
     }
 

@@ -10,9 +10,14 @@
 + 提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。
 + 通知栏图片自定义
 
+### 效果预览
+
+<div align=center ><img width="50%" height="100%" src="./pic/type01.png"  alt="UI_THEME_A"/><img width="50%" height="100%" src="./pic/type02.png" alt="UI_THEME_B"/><img width="50%" height="100%" src="./pic/type03.png" alt="UI_THEME_C"/><img width="50%" height="100%" src="./pic/type04.png" alt="UI_THEME_D"/><img width="50%" height="100%" src="./pic/type05.png" alt="UI_THEME_E"/><img width="50%" height="100%" src="./pic/type06.png" alt="UI_THEME_F"/><img width="50%" height="100%" src="./pic/type07.png" alt="UI_THEME_G"/><img width="50%" height="100%" src="./pic/type08.png" alt="UI_THEME_H"/><img width="50%" height="100%" src="./pic/type09.png" alt="UI_THEME_I"/><img width="50%" height="100%" src="./pic/type10.png" alt="UI_THEME_J"/><img width="50%" height="100%" src="./pic/type11.png" alt="UI_THEME_K"/><img width="50%" height="100%" src="./pic/type12.png" alt="UI_THEME_L"/></div>
+
 ### 使用方式
 
 **Step 1.** Add the JitPack repository to your build file Add it in your root build.gradle at the end of repositories: 
+
 ```gradle
 allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
 ```

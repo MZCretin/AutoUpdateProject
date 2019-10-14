@@ -150,9 +150,10 @@ public class AppUtils {
 
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                delAllFile(f);
-            }
+            if (files != null)
+                for (File f : files) {
+                    delAllFile(f);
+                }
         }
         return file.delete();
     }
@@ -215,7 +216,7 @@ public class AppUtils {
     public static int getVersionCode(Context context) {
         int versionCode = 0;
         PackageInfo packInfo = getPackInfo(context);
-        if ( packInfo != null ) {
+        if (packInfo != null) {
             versionCode = packInfo.versionCode;
         }
         return versionCode;

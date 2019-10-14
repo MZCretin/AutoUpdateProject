@@ -5,9 +5,13 @@
     <item
         android:id="@+id/action_01"
         android:title="相关说明"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="withText" />
     <item
         android:id="@+id/action_02"
         android:title="清除本地数据"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/action_03"
+        android:title="自定义UI"
+        app:showAsAction="withText" />
 </menu>

@@ -24,6 +24,7 @@ public class TypeConfig {
      * UI样式类型
      */
     public static final int UI_THEME_AUTO = 300;//sdk自主决定，随机从十几种样式中选择一种，并保证同一个设备选择的唯一的
+    public static final int UI_THEME_CUSTOM = 399;//用户自定义UI
     public static final int UI_THEME_A = 301;//类型A，具体样式效果请关注demo
     public static final int UI_THEME_B = 302;//类型B，具体样式效果请关注demo
     public static final int UI_THEME_C = 303;//类型C，具体样式效果请关注demo
