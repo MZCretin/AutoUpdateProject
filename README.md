@@ -13,7 +13,11 @@
 + **提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。**
 + **通知栏图片自定义**
 
+### 博客地址
 
+[掘进-【需求解决系列之四】Android App在线自动更新Library（V2.0）](https://juejin.im/post/5da491535188255a31329231)
+
+[简书-【需求解决系列之四】Android App在线自动更新Library（V2.0）](https://www.jianshu.com/p/9322785ffabf)
 
 ### Demo体验
 
