@@ -15,7 +15,7 @@
 
 ### 博客地址
 
-[掘进-【需求解决系列之四】Android App在线自动更新Library（V2.0）](https://juejin.im/post/5da491535188255a31329231)
+[掘金-【需求解决系列之四】Android App在线自动更新Library（V2.0）](https://juejin.im/post/5da491535188255a31329231)
 
 [简书-【需求解决系列之四】Android App在线自动更新Library（V2.0）](https://www.jianshu.com/p/9322785ffabf)
 
