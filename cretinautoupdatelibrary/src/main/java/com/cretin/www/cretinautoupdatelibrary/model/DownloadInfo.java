@@ -24,6 +24,17 @@ public class DownloadInfo implements Parcelable {
     private int forceUpdateFlag;
     //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
     private String hasAffectCodes;
+    //文件MD5的校验值
+    private String md5Check;
+
+    public String getMd5Check() {
+        return md5Check;
+    }
+
+    public DownloadInfo setMd5Check(String md5Check) {
+        this.md5Check = md5Check;
+        return this;
+    }
 
     public String getHasAffectCodes() {
         return hasAffectCodes;
@@ -107,6 +118,7 @@ public class DownloadInfo implements Parcelable {
         dest.writeString(this.updateLog);
         dest.writeInt(this.forceUpdateFlag);
         dest.writeString(this.hasAffectCodes);
+        dest.writeString(this.md5Check);
     }
 
     public DownloadInfo() {
@@ -120,6 +132,7 @@ public class DownloadInfo implements Parcelable {
         this.updateLog = in.readString();
         this.forceUpdateFlag = in.readInt();
         this.hasAffectCodes = in.readString();
+        this.md5Check = in.readString();
     }
 
     public static final Creator<DownloadInfo> CREATOR = new Creator<DownloadInfo>() {

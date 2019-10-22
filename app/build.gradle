@@ -28,20 +28,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.blankj:utilcode:1.25.9'
 
-    //使用jirpack
-    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.0'
+    //使用jitpack
+//    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.0'
     //使用本地库依赖
-    //    implementation project(':cretinautoupdatelibrary')
-
-
-
-
-
-
-
-
-
-
-
-
+    implementation project(':cretinautoupdatelibrary')
 }

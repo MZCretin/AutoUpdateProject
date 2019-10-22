@@ -19,11 +19,11 @@ import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType7Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType8Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType9Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
-import com.cretin.www.cretinautoupdatelibrary.model.UpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpCallbackModelListener;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpUtils;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateReceiver;
@@ -35,6 +35,8 @@ import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,8 +55,6 @@ public class AppUpdateUtils {
     private static UpdateConfig updateConfig;
     //是否初始化
     private static boolean isInit;
-    //下载过程监听
-    private AppDownloadListener appDownloadListener;
 
     //下载任务
     private BaseDownloadTask downloadTask;
@@ -68,9 +68,16 @@ public class AppUpdateUtils {
     //apk下载的路径
     private static String downloadUpdateApkFilePath = "";
 
+    //AppDownloadListener的集合
+    private List<AppDownloadListener> appDownloadListenerList;
+
+    //MD5校验监听
+    private List<MD5CheckListener> md5CheckListenerList;
+
     //私有化构造方法
     private AppUpdateUtils() {
-
+        appDownloadListenerList = new ArrayList<>();
+        md5CheckListenerList = new ArrayList<>();
     }
 
     /**
@@ -247,12 +254,8 @@ public class AppUpdateUtils {
      * 开始下载
      *
      * @param info
-     * @param appDownloadListener
      */
-    public void download(DownloadInfo info, AppDownloadListener appDownloadListener) {
-        if (appDownloadListener != null)
-            this.appDownloadListener = appDownloadListener;
-
+    public void download(DownloadInfo info) {
         checkInit();
 
         downloadInfo = info;
@@ -310,7 +313,7 @@ public class AppUpdateUtils {
 
         @Override
         protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-            if (appDownloadListener != null) {
+            for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
                 appDownloadListener.pause();
             }
         }
@@ -340,7 +343,7 @@ public class AppUpdateUtils {
         isDownloading = false;
         AppUtils.deleteFile(downloadUpdateApkFilePath);
         UpdateReceiver.send(mContext, -1);
-        if (appDownloadListener != null) {
+        for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
             appDownloadListener.downloadFail(e.getMessage());
         }
         LogUtils.log("文件下载出错，异常信息为：" + e.getMessage());
@@ -354,12 +357,43 @@ public class AppUpdateUtils {
     private void downloadComplete(String path) {
         isDownloading = false;
         UpdateReceiver.send(mContext, 100);
-        if (appDownloadListener != null) {
+        for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
             appDownloadListener.downloadComplete(path);
         }
         LogUtils.log("文件下载完成，准备安装，文件地址：" + downloadUpdateApkFilePath);
-        AppUtils.installApkFile(mContext, new File(path));
+        //校验MD5
+        File newFile = new File(path);
+        if (newFile.exists()) {
+            //如果需要进行MD5校验
+            if (updateConfig.isNeedFileMD5Check()) {
+                try {
+                    String md5 = Md5Utils.getFileMD5(newFile);
+                    if (!TextUtils.isEmpty(md5) && md5.equals(downloadInfo.getMd5Check())) {
+                        //校验成功
+                        for (MD5CheckListener md5CheckListener : getAllMD5CheckListener()) {
+                            md5CheckListener.fileMd5CheckSuccess();
+                        }
+                        AppUtils.installApkFile(mContext, newFile);
+                        LogUtils.log("文件MD5校验成功");
+                    } else {
+                        //校验失败
+                        for (MD5CheckListener md5CheckListener : getAllMD5CheckListener()) {
+                            md5CheckListener.fileMd5CheckFail(downloadInfo.getMd5Check(), md5);
+                        }
+                        LogUtils.log("文件MD5校验失败，originMD5：" + downloadInfo.getMd5Check() + "  localMD5：" + md5);
+                    }
+                } catch (Exception e) {
+                    LogUtils.log("文件MD5解析失败，抛出异常：" + e.getMessage());
+                    //安装文件
+                    AppUtils.installApkFile(mContext, newFile);
+                }
+            } else {
+                //安装文件
+                AppUtils.installApkFile(mContext, newFile);
+            }
+        }
     }
+
 
     /**
      * 正在下载
@@ -372,7 +406,7 @@ public class AppUpdateUtils {
         int progress = (int) (soFarBytes * 100.0 / totalBytes);
         if (progress < 0) progress = 0;
         UpdateReceiver.send(mContext, progress);
-        if (appDownloadListener != null) {
+        for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
             appDownloadListener.downloading(progress);
         }
         LogUtils.log("文件正在下载中，进度为" + progress + "%");
@@ -385,7 +419,7 @@ public class AppUpdateUtils {
         LogUtils.log("文件开始下载");
         isDownloading = true;
         UpdateReceiver.send(mContext, 0);
-        if (appDownloadListener != null) {
+        for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
             appDownloadListener.downloadStart();
         }
     }
@@ -427,8 +461,10 @@ public class AppUpdateUtils {
      * 重新下载
      */
     public void reDownload() {
-        appDownloadListener.reDownload();
-        download(downloadInfo, appDownloadListener);
+        for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
+            appDownloadListener.reDownload();
+        }
+        download(downloadInfo);
     }
 
     /**
@@ -492,7 +528,48 @@ public class AppUpdateUtils {
                     .setProdVersionName(libraryUpdateEntity.getAppVersionName())
                     .setApkUrl(libraryUpdateEntity.getAppApkUrls())
                     .setHasAffectCodes(libraryUpdateEntity.getAppHasAffectCodes())
+                    .setMd5Check(libraryUpdateEntity.getFileMd5Check())
                     .setUpdateLog(libraryUpdateEntity.getAppUpdateLog()));
+        }
+    }
+
+    public AppUpdateUtils addMd5CheckListener(MD5CheckListener md5CheckListener) {
+        if (md5CheckListener != null && !md5CheckListenerList.contains(md5CheckListener)) {
+            md5CheckListenerList.add(md5CheckListener);
+        }
+        return this;
+    }
+
+    public AppUpdateUtils addAppDownloadListener(AppDownloadListener appDownloadListener) {
+        if (appDownloadListener != null && !appDownloadListenerList.contains(appDownloadListener)) {
+            appDownloadListenerList.add(appDownloadListener);
+        }
+        return this;
+    }
+
+    private List<AppDownloadListener> getAllAppDownloadListener() {
+        List<AppDownloadListener> listeners = new ArrayList<>();
+        listeners.addAll(appDownloadListenerList);
+        return listeners;
+    }
+
+    private List<MD5CheckListener> getAllMD5CheckListener() {
+        List<MD5CheckListener> listeners = new ArrayList<>();
+        listeners.addAll(md5CheckListenerList);
+        return listeners;
+    }
+
+    //移除不需要的AppDownloadListener
+    public void removeAppDownloadListener(AppDownloadListener appDownloadListener) {
+        if (appDownloadListener != null && appDownloadListenerList.contains(appDownloadListener)) {
+            appDownloadListenerList.remove(appDownloadListener);
+        }
+    }
+
+    //移除不需要的MD5CheckListener
+    public void removeMD5CheckListener(MD5CheckListener md5CheckListener) {
+        if (md5CheckListener != null && md5CheckListenerList.contains(md5CheckListener)) {
+            md5CheckListenerList.remove(md5CheckListener);
         }
     }
 }

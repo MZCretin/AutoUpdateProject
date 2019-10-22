@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateService;
@@ -36,6 +37,10 @@ public abstract class RootActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1001;
 
     public DownloadInfo downloadInfo;
+
+    private AppDownloadListener appDownloadListener = obtainDownloadListener();
+
+    private MD5CheckListener md5CheckListener = obtainMD5CheckListener();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,10 +114,22 @@ public abstract class RootActivity extends AppCompatActivity {
      * 执行下载
      */
     private void doDownload() {
-        AppUpdateUtils.getInstance().download(downloadInfo, obtainDownloadListener());
+        AppUpdateUtils.getInstance()
+                .addMd5CheckListener(md5CheckListener)
+                .addAppDownloadListener(appDownloadListener)
+                .download(downloadInfo);
     }
 
     public abstract AppDownloadListener obtainDownloadListener();
+
+    /**
+     * 如果需要监听MD5校验结果 自行重写此方法
+     *
+     * @return
+     */
+    public MD5CheckListener obtainMD5CheckListener() {
+        return null;
+    }
 
     /**
      * 获取权限
@@ -155,6 +172,17 @@ public abstract class RootActivity extends AppCompatActivity {
     public void download() {
         if (!AppUpdateUtils.isDownloading()) {
             requestPermission();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (appDownloadListener != null) {
+            AppUpdateUtils.getInstance().removeAppDownloadListener(appDownloadListener);
+        }
+        if (md5CheckListener != null) {
+            AppUpdateUtils.getInstance().removeMD5CheckListener(md5CheckListener);
         }
     }
 }

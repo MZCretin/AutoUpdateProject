@@ -25,4 +25,7 @@ public interface LibraryUpdateEntity {
 
     //受影响的版本号 如果开启强制更新 那么这个字段包含的所有版本都会被强制更新 格式 2|3|4
     String getAppHasAffectCodes();
+
+    //获取文件的加密校验值
+    String getFileMd5Check();
 }

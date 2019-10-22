@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.blankj.utilcode.util.SpanUtils;
 import com.cretin.www.autoupdateproject.R;
 import com.cretin.www.autoupdateproject.model.ListModel;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
@@ -44,11 +45,16 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         SpannableStringBuilder spannableStringBuilder = new SpanUtils().append("UI样式类型：")
                 .append(getUiTypeDesc(data.get(position).getUiTypeValue()) + "\n")
                 .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
-                .append("强制更新：")
-                .append((data.get(position).getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_URL ? "根据接口返回，当前是开启" : data.get(position).isForceUpdate() ? "开启" : "关闭") + " \n")
+                .append("是否开启强制更新：")
+                .append((data.get(position).getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_URL ?
+                        "根据接口返回，当前是开启" : data.get(position).isForceUpdate() ? "开启" : "关闭") + " \n")
                 .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
                 .append("数据加载方式：")
-                .append(getSourceType(data.get(position).getSourceTypeVaule()))
+                .append(getSourceType(data.get(position).getSourceTypeVaule()) + "\n")
+                .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
+                .append("是否开启文件MD5检验：")
+                .append((data.get(position).getSourceTypeVaule() != TypeConfig.DATA_SOURCE_TYPE_MODEL ?
+                        "根据接口返回或者配置的JSON，当前是关闭" : data.get(position).isCheckFileMD5() ? "开启" : "关闭") + "")
                 .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
                 .create();
         holder.tv_theme.setText(spannableStringBuilder);
@@ -86,10 +92,13 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     private void sourceTypeChange(ListModel listModel) {
         if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_MODEL) {
             listModel.setSourceTypeVaule(TypeConfig.DATA_SOURCE_TYPE_JSON);
+            listModel.setCheckFileMD5(false);
         } else if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_JSON) {
             listModel.setSourceTypeVaule(TypeConfig.DATA_SOURCE_TYPE_URL);
+            listModel.setCheckFileMD5(false);
         } else {
             listModel.setSourceTypeVaule(TypeConfig.DATA_SOURCE_TYPE_MODEL);
+            listModel.setCheckFileMD5(true);
         }
         notifyDataSetChanged();
         Toast.makeText(context, "数据来源切换成功", Toast.LENGTH_SHORT).show();
@@ -112,6 +121,8 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             //JSON
             String jsonData = listModel.isForceUpdate() ? jsonDataForce : jsonDataUnForce;
             AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(listModel.getUiTypeValue());
+            //因为接口未使用文件加密校验 所以在这里关闭
+            AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(false);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
             AppUpdateUtils.getInstance().checkUpdate(jsonData);
         } else if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_MODEL) {
@@ -119,14 +130,33 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
                     .setFileSize(31338250)
                     .setProdVersionCode(25)
                     .setProdVersionName("2.3.1")
+                    .setMd5Check("68919BF998C29DA3F5BD2C0346281AC0")
                     .setForceUpdateFlag(listModel.isForceUpdate() ? 1 : 0)
                     .setUpdateLog("1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改");
             AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(listModel.getUiTypeValue());
+            //打开文件MD5校验
+            AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(true);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
-            AppUpdateUtils.getInstance().checkUpdate(info);
+
+            //因为这里打开了MD5的校验 我在这里添加一个MD5检验监听监听
+            AppUpdateUtils.getInstance()
+                    .addMd5CheckListener(new MD5CheckListener() {
+                        @Override
+                        public void fileMd5CheckFail(String originMD5, String localMD5) {
+                            Toast.makeText(context, "检验失败 ---> originMD5：" + originMD5 + "  localMD5：" + localMD5, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void fileMd5CheckSuccess() {
+                            Toast.makeText(context, "文件MD5校验成功", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .checkUpdate(info);
         } else if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_URL) {
             //请求
             AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(listModel.getUiTypeValue());
+            //因为接口未使用文件加密校验 所以在这里关闭
+            AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(false);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
             AppUpdateUtils.getInstance().checkUpdate();
         }

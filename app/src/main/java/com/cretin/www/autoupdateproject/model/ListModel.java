@@ -10,6 +10,15 @@ public class ListModel {
     private boolean isForceUpdate;
     private int uiTypeValue;
     private int sourceTypeVaule;
+    private boolean isCheckFileMD5;
+
+    public boolean isCheckFileMD5() {
+        return isCheckFileMD5;
+    }
+
+    public void setCheckFileMD5(boolean checkFileMD5) {
+        isCheckFileMD5 = checkFileMD5;
+    }
 
     public int getUiTypeValue() {
         return uiTypeValue;

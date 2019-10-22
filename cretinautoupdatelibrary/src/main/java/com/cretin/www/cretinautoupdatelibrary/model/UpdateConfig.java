@@ -43,6 +43,9 @@ public class UpdateConfig {
     //自定义Bean类 此类必须实现LibraryUpdateEntity接口
     private Object modelClass;
 
+    //是否需要进行文件的MD5校验
+    private boolean isNeedFileMD5Check;
+
     public boolean isShowNotification() {
         return showNotification;
     }
@@ -58,6 +61,15 @@ public class UpdateConfig {
 
     public UpdateConfig setCustomActivityClass(Class customActivityClass) {
         this.customActivityClass = customActivityClass;
+        return this;
+    }
+
+    public boolean isNeedFileMD5Check() {
+        return isNeedFileMD5Check;
+    }
+
+    public UpdateConfig setNeedFileMD5Check(boolean needFileMD5Check) {
+        isNeedFileMD5Check = needFileMD5Check;
         return this;
     }
 

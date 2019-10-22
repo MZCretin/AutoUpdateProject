@@ -12,6 +12,14 @@
 + **已适配Android 6.0，Android 7.0，Android 8.0，Android 9.0。**
 + **提供强制更新，不更新则无法使用APP，同时可以根据后台返回受影响的版本号，可控制多个版本同时被强制更新。**
 + **通知栏图片自定义**
++ **新增文件MD5校验，防止安装文件被恶意替换（2019-10-22 18:48:39添加）**
+
+### 新版本说明
++ 2019-10-22 18:53:42更新新版，版本号为：v2.0.1
+    + 新版新增文件的MD5校验
+    + 新版新增对文件下载进度的监听
+    + 新版新增对文件MD5校验结果的回调
+    + DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
 
 ### 博客地址
 
@@ -51,42 +59,54 @@ dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_vers
 **Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).
 
 ```java
-//更新库配置
-UpdateConfig updateConfig = new UpdateConfig()
-        .setDebug(true)//是否是Debug模式
-        .setBaseUrl("http://www.cretinzp.com/system/versioninfo")//当dataSourceType为DATA_SOURCE_TYPE_URL时，配置此接口用于获取更新信息
-        .setMethodType(TypeConfig.METHOD_GET)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的方法
-        .setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_URL)//设置获取更新信息的方式
-        .setShowNotification(true)//配置更新的过程中是否在通知栏显示进度
-        .setNotificationIconRes(R.mipmap.download_icon)//配置通知栏显示的图标
-        .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
-        .setRequestHeaders(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求头
-        .setRequestParams(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求参数
-        .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
-        .setModelClass(new UpdateModel());
-AppUpdateUtils.init(this, updateConfig);
+        //更新库配置
+        UpdateConfig updateConfig = new UpdateConfig()
+                .setDebug(true)//是否是Debug模式
+                .setBaseUrl("http://www.cretinzp.com/system/versioninfo")//当dataSourceType为DATA_SOURCE_TYPE_URL时，配置此接口用于获取更新信息
+                .setMethodType(TypeConfig.METHOD_GET)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的方法
+                .setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_URL)//设置获取更新信息的方式
+                .setShowNotification(true)//配置更新的过程中是否在通知栏显示进度
+                .setNotificationIconRes(R.mipmap.download_icon)//配置通知栏显示的图标
+                .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
+                .setRequestHeaders(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求头
+                .setRequestParams(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求参数
+                .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
+                .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
+                .setModelClass(new UpdateModel());
+        AppUpdateUtils.init(this, updateConfig);
 ```
 
 **Step 4.** Start using it wherever you want as below with 3 ways.
 
 ```java
-//有三种方式实现app更新，您可选其中一种方式来进行，推荐使用第三种方式！
+    //有三种方式实现app更新，您可选其中一种方式来进行，推荐使用第三种方式！
+    //新增下载进度和MD5检测结果的回调监听 2019-10-22 18:51:19
 
-//第一种方式，使用JSON字符串，让sdk自主解析并实现功能
-String jsonData = "{\"versionCode\": 25,\"isForceUpdate\": 1,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
-AppUpdateUtils.getInstance().checkUpdate(jsonData);
+    //第一种方式，使用JSON字符串，让sdk自主解析并实现功能
+    String jsonData = "{\"versionCode\": 25,\"isForceUpdate\": 1,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
+    AppUpdateUtils.getInstance()
+                        .addMd5CheckListener(...)
+                        .addAppDownloadListener(...)
+                        .checkUpdate(jsonData);
 
-//第二种方式，使用MODEL方式，组装好对应的MODEL，传入sdk中
-DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
-        .setFileSize(31338250)
-        .setProdVersionCode(25)
-        .setProdVersionName("2.3.1")
-        .setForceUpdateFlag(listModel.isForceUpdate() ? 1 : 0)
-        .setUpdateLog("1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改");
-AppUpdateUtils.getInstance().checkUpdate(info);
+    //第二种方式，使用MODEL方式，组装好对应的MODEL，传入sdk中
+    DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
+            .setFileSize(31338250)
+            .setProdVersionCode(25)
+            .setProdVersionName("2.3.1")
+            .setMd5Check("68919BF998C29DA3F5BD2C0346281AC0")
+            .setForceUpdateFlag(listModel.isForceUpdate() ? 1 : 0)
+            .setUpdateLog("1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改");
+    AppUpdateUtils.getInstance()
+                        .addMd5CheckListener(...)
+                        .addAppDownloadListener(...)
+                        .checkUpdate(info);
 
-//第三种方式，在初始化的时候配置接口地址，sdk自主请求+解析实现功能（推荐）
-AppUpdateUtils.getInstance().checkUpdate();
+    //第三种方式，在初始化的时候配置接口地址，sdk自主请求+解析实现功能（推荐）
+    AppUpdateUtils.getInstance()
+                        .addMd5CheckListener(...)
+                        .addAppDownloadListener(...)
+                        .checkUpdate();
 
 ```
 

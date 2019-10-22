@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.cretin.www.cretinautoupdatelibrary.activity.RootActivity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType2Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 /**
@@ -15,8 +16,9 @@ import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
  * 你需要注意：
  * 1、Activity需要继承RootActivity才有效，并实现需要实现的方法
  * 2、你需要在你的AndroidManifest.xml中为这个自定义的Activity设置
- *    @style/DialogActivityTheme 这个对话框的主题；
- *    当然这只是建议，你只要撸出来的页面好看，咋地都行
+ *
+ * @style/DialogActivityTheme 这个对话框的主题；
+ * 当然这只是建议，你只要撸出来的页面好看，咋地都行
  */
 public class CustomActivity extends RootActivity {
     private TextView tvInfo;
@@ -101,6 +103,26 @@ public class CustomActivity extends RootActivity {
 
             @Override
             public void pause() {
+
+            }
+        };
+    }
+
+    /**
+     * 如果需要知道文件MD5校验结果就重写此方法
+     *
+     * @return
+     */
+    @Override
+    public MD5CheckListener obtainMD5CheckListener() {
+        return new MD5CheckListener() {
+            @Override
+            public void fileMd5CheckFail(String originMD5, String localMD5) {
+
+            }
+
+            @Override
+            public void fileMd5CheckSuccess() {
 
             }
         };

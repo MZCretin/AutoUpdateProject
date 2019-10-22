@@ -14,4 +14,8 @@
         android:id="@+id/action_03"
         android:title="自定义UI"
         app:showAsAction="withText" />
+    <item
+        android:id="@+id/action_04"
+        android:title="获取文件MD5校验码"
+        app:showAsAction="withText" />
 </menu>

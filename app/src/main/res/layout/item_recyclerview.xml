@@ -7,8 +7,9 @@
     android:paddingTop="16dp">
 
     <TextView
+        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/tv_theme"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

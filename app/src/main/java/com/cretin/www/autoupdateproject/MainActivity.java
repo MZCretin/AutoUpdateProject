@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             ListModel listModel = new ListModel();
             listModel.setForceUpdate(false);
             listModel.setUiTypeValue(300 + i);
+            listModel.setCheckFileMD5(true);
             listModel.setSourceTypeVaule(TypeConfig.DATA_SOURCE_TYPE_MODEL);
             list.add(listModel);
         }
@@ -86,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
                 AppUpdateUtils.getInstance().checkUpdate(recyclerviewAdapter.jsonDataUnForce);
                 Toast.makeText(this, "为了展示是真的可以自定义UI的，我写了个很丑的页面", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_04:
+                //获取文件MD5检验码工具
+                startActivity(new Intent(this, MD5HelperActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

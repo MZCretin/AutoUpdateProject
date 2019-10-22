@@ -15,8 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".MD5HelperActivity"
+            android:label="文件MD5校验码"></activity>
+        <activity
             android:name=".CustomActivity"
-            android:theme="@style/DialogActivityTheme"></activity>
+            android:theme="@style/DialogActivityTheme" />
         <activity
             android:name=".InfoActivity"
             android:label="相关介绍" />

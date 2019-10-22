@@ -119,4 +119,9 @@ public class UpdateEntity implements LibraryUpdateEntity{
     public String getAppHasAffectCodes() {
         return getHasAffectCodes();
     }
+
+    @Override
+    public String getFileMd5Check() {
+        return "";
+    }
 }
