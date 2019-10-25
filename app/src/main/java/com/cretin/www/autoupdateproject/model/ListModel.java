@@ -11,6 +11,15 @@ public class ListModel {
     private int uiTypeValue;
     private int sourceTypeVaule;
     private boolean isCheckFileMD5;
+    private boolean isAutoUpdateBackground;
+
+    public boolean isAutoUpdateBackground() {
+        return isAutoUpdateBackground;
+    }
+
+    public void setAutoUpdateBackground(boolean autoUpdateBackground) {
+        isAutoUpdateBackground = autoUpdateBackground;
+    }
 
     public boolean isCheckFileMD5() {
         return isCheckFileMD5;

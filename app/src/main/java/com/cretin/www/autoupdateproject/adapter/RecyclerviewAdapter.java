@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.blankj.utilcode.util.SpanUtils;
 import com.cretin.www.autoupdateproject.R;
 import com.cretin.www.autoupdateproject.model.ListModel;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
@@ -28,6 +30,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     private List<ListModel> data;
     public String jsonDataForce = "{\"versionCode\": 25,\"isForceUpdate\": 1,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
     public String jsonDataUnForce = "{\"versionCode\": 25,\"isForceUpdate\": 0,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
+    public String jsonDataNoUpdate = "{\"versionCode\": 1,\"isForceUpdate\": 0,\"preBaselineCode\": 0,\"versionName\": \"v1.0.0\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"\"}";
 
     public RecyclerviewAdapter(Context context, List<ListModel> data) {
         this.context = context;
@@ -54,7 +57,10 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
                 .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
                 .append("是否开启文件MD5检验：")
                 .append((data.get(position).getSourceTypeVaule() != TypeConfig.DATA_SOURCE_TYPE_MODEL ?
-                        "根据接口返回或者配置的JSON，当前是关闭" : data.get(position).isCheckFileMD5() ? "开启" : "关闭") + "")
+                        "根据接口返回或者配置的JSON，当前是关闭" : data.get(position).isCheckFileMD5() ? "开启" : "关闭") + "\n")
+                .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
+                .append("是否开启后台静默下载：")
+                .append((data.get(position).isAutoUpdateBackground() ? "开启" : "关闭"))
                 .setForegroundColor(ResUtils.getColor(R.color.colorAccent))
                 .create();
         holder.tv_theme.setText(spannableStringBuilder);
@@ -86,6 +92,13 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
                 sourceTypeChange(data.get(position));
             }
         });
+
+        holder.tv_update_background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateBackground(data.get(position));
+            }
+        });
     }
 
     //修改数据来源
@@ -115,6 +128,13 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         Toast.makeText(context, "强制更新状态切换成功", Toast.LENGTH_SHORT).show();
     }
 
+    //修改静默下载的状态
+    private void updateBackground(ListModel listModel) {
+        listModel.setAutoUpdateBackground(!listModel.isAutoUpdateBackground());
+        notifyDataSetChanged();
+        Toast.makeText(context, "静默下载状态切换成功", Toast.LENGTH_SHORT).show();
+    }
+
     //开始更新
     private void update(ListModel listModel) {
         if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_JSON) {
@@ -124,6 +144,14 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             //因为接口未使用文件加密校验 所以在这里关闭
             AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(false);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
+            //开启或者关闭后台静默下载功能
+            AppUpdateUtils.getInstance().getUpdateConfig().setAutoDownloadBackground(listModel.isAutoUpdateBackground());
+            if (listModel.isAutoUpdateBackground()) {
+                //开启静默下载的时候推荐关闭通知栏进度提示
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(false);
+            } else {
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(true);
+            }
             AppUpdateUtils.getInstance().checkUpdate(jsonData);
         } else if (listModel.getSourceTypeVaule() == TypeConfig.DATA_SOURCE_TYPE_MODEL) {
             DownloadInfo info = new DownloadInfo().setApkUrl("http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk")
@@ -137,9 +165,53 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             //打开文件MD5校验
             AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(true);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
-
+            //开启或者关闭后台静默下载功能
+            AppUpdateUtils.getInstance().getUpdateConfig().setAutoDownloadBackground(listModel.isAutoUpdateBackground());
+            if (listModel.isAutoUpdateBackground()) {
+                //开启静默下载的时候推荐关闭通知栏进度提示
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(false);
+            } else {
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(true);
+            }
             //因为这里打开了MD5的校验 我在这里添加一个MD5检验监听监听
             AppUpdateUtils.getInstance()
+                    .addAppUpdateInfoListener(new AppUpdateInfoListener() {
+                        @Override
+                        public void isLatestVersion(boolean isLatest) {
+                            Log.e("HHHHHHHHHHHHHHH", "isLatest:" + isLatest);
+                        }
+                    })
+                    .addAppDownloadListener(new AppDownloadListener() {
+                        @Override
+                        public void downloading(int progress) {
+                            Log.e("HHHHHHHHHHHHHHH", "progress:" + progress);
+                        }
+
+                        @Override
+                        public void downloadFail(String msg) {
+                            Log.e("HHHHHHHHHHHHHHH", "msg:" + msg);
+                        }
+
+                        @Override
+                        public void downloadComplete(String path) {
+                            Log.e("HHHHHHHHHHHHHHH", "path:" + path);
+                        }
+
+                        @Override
+                        public void downloadStart() {
+                            Log.e("HHHHHHHHHHHHHHH", "start");
+                        }
+
+                        @Override
+                        public void reDownload() {
+
+                        }
+
+                        @Override
+                        public void pause() {
+
+                        }
+                    })
                     .addMd5CheckListener(new MD5CheckListener() {
                         @Override
                         public void fileMd5CheckFail(String originMD5, String localMD5) {
@@ -158,6 +230,14 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             //因为接口未使用文件加密校验 所以在这里关闭
             AppUpdateUtils.getInstance().getUpdateConfig().setNeedFileMD5Check(false);
             AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(listModel.getSourceTypeVaule());
+            //开启或者关闭后台静默下载功能
+            AppUpdateUtils.getInstance().getUpdateConfig().setAutoDownloadBackground(listModel.isAutoUpdateBackground());
+            if (listModel.isAutoUpdateBackground()) {
+                //开启静默下载的时候推荐关闭通知栏进度提示
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(false);
+            } else {
+                AppUpdateUtils.getInstance().getUpdateConfig().setShowNotification(true);
+            }
             AppUpdateUtils.getInstance().checkUpdate();
         }
     }
@@ -174,6 +254,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         private TextView tv_force;
         private TextView tv_source_type;
         private TextView tv_index;
+        private TextView tv_update_background;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -182,6 +263,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
             tv_force = itemView.findViewById(R.id.tv_force);
             tv_source_type = itemView.findViewById(R.id.tv_source_type);
             tv_index = itemView.findViewById(R.id.tv_index);
+            tv_update_background = itemView.findViewById(R.id.tv_update_background);
         }
     }
 

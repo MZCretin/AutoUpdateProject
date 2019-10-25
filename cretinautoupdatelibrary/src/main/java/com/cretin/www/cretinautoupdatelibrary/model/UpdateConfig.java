@@ -46,6 +46,18 @@ public class UpdateConfig {
     //是否需要进行文件的MD5校验
     private boolean isNeedFileMD5Check;
 
+    //是否静默下载
+    private boolean isAutoDownloadBackground;
+
+    public boolean isAutoDownloadBackground() {
+        return isAutoDownloadBackground;
+    }
+
+    public UpdateConfig setAutoDownloadBackground(boolean autoDownloadBackground) {
+        isAutoDownloadBackground = autoDownloadBackground;
+        return this;
+    }
+
     public boolean isShowNotification() {
         return showNotification;
     }

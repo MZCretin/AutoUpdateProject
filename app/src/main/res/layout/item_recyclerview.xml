@@ -7,7 +7,6 @@
     android:paddingTop="16dp">
 
     <TextView
-        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/tv_theme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,6 +17,7 @@
         android:textColor="#4a4a4a"
         android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -33,6 +33,20 @@
         android:textColor="@color/colorAccent"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_theme" />
+
+    <TextView
+        android:id="@+id/tv_update_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="@drawable/shape_btn"
+        android:textColor="#4a4a4a"
+        android:text="切换静默下载状态"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@+id/tv_update"
         app:layout_constraintTop_toBottomOf="@+id/tv_theme" />
 
     <TextView

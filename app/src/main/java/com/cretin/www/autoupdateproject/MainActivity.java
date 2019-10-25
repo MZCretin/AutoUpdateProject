@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.cretin.www.autoupdateproject.adapter.RecyclerviewAdapter;
 import com.cretin.www.autoupdateproject.model.ListModel;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
@@ -91,6 +92,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_04:
                 //获取文件MD5检验码工具
                 startActivity(new Intent(this, MD5HelperActivity.class));
+                break;
+            case R.id.action_05:
+                //带提示的更新
+                AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_A);//类型为自定义样式类型
+                AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
+                AppUpdateUtils.getInstance().addAppUpdateInfoListener(new AppUpdateInfoListener() {
+                    @Override
+                    public void isLatestVersion(boolean isLatest) {
+                        if(isLatest){
+                            Toast.makeText(MainActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this, "发现新版本，将会提示更新", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).checkUpdate(recyclerviewAdapter.jsonDataNoUpdate);
                 break;
         }
         return super.onOptionsItemSelected(item);

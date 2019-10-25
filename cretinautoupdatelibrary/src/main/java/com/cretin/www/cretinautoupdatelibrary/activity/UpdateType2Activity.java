@@ -14,6 +14,7 @@ import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.RootActivity;
 
 /**
  * 类似虎牙直播的更新样式
@@ -112,9 +113,7 @@ public class UpdateType2Activity extends RootActivity {
      * @param info
      */
     public static void launch(Context context, DownloadInfo info) {
-        Intent intent = new Intent(context, UpdateType2Activity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("info", info);
-        context.startActivity(intent);
+        launchActivity(context, info, UpdateType2Activity.class);
     }
+
 }

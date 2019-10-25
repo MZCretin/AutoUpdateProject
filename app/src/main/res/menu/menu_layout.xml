@@ -18,4 +18,8 @@
         android:id="@+id/action_04"
         android:title="获取文件MD5校验码"
         app:showAsAction="withText" />
+    <item
+        android:id="@+id/action_05"
+        android:title="带提示的检查更新"
+        app:showAsAction="withText" />
 </menu>

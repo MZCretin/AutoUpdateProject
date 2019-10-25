@@ -19,7 +19,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
 
-import static com.cretin.www.cretinautoupdatelibrary.activity.RootActivity.permission;
+import static com.cretin.www.cretinautoupdatelibrary.utils.RootActivity.permission;
 import static com.cretin.www.cretinautoupdatelibrary.utils.AppUtils.getAppLocalPath;
 
 public class MD5HelperActivity extends AppCompatActivity {
