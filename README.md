@@ -19,7 +19,7 @@
 + 2019-10-25 18:09:05更新新版，版本号为：v2.0.2
     + 新增静默下载更新的方式
     + 新增获取是否有新版本更新的事件回调
-    + 优化下载状态中的文案显示逻辑
+    + 优化下载状态中的文案显示逻辑，点击Demo右上角第五个item体验
     + 修复多次调用checkUpdate多次弹窗的bug
 
 + 2019-10-22 18:53:42更新新版，版本号为：v2.0.1
@@ -77,6 +77,7 @@ dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_vers
                 .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
                 .setRequestHeaders(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求头
                 .setRequestParams(null)//当dataSourceType为DATA_SOURCE_TYPE_URL时，设置请求的请求参数
+                .setAutoDownloadBackground(false)//是否需要后台静默下载，如果设置为true，则调用checkUpdate方法之后会直接下载安装，不会弹出更新页面。当你选择UI样式为TypeConfig.UI_THEME_CUSTOM，静默安装失效，您需要在自定义的Activity中自主实现静默下载，使用这种方式的时候建议setShowNotification(false)，这样基本上用户就会对下载无感知了
                 .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
                 .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
                 .setModelClass(new UpdateModel());
