@@ -1,6 +1,7 @@
-package com.cretin.www.cretinautoupdatelibrary.activity;
+package com.cretin.www.cretinautoupdatelibrary.utils;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +16,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType1Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
@@ -42,10 +45,22 @@ public abstract class RootActivity extends AppCompatActivity {
 
     private MD5CheckListener md5CheckListener = obtainMD5CheckListener();
 
+    private AppUpdateInfoListener appUpdateInfoListener = obtainAppUpdateInfoListener();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         downloadInfo = getIntent().getParcelableExtra("info");
+        AppUpdateUtils.getInstance().addAppDownloadListener(appDownloadListener);
+        AppUpdateUtils.getInstance().addAppUpdateInfoListener(appUpdateInfoListener);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        downloadInfo = getIntent().getParcelableExtra("info");
+        AppUpdateUtils.getInstance().addAppDownloadListener(appDownloadListener);
+        AppUpdateUtils.getInstance().addAppUpdateInfoListener(appUpdateInfoListener);
     }
 
     /**
@@ -116,7 +131,6 @@ public abstract class RootActivity extends AppCompatActivity {
     private void doDownload() {
         AppUpdateUtils.getInstance()
                 .addMd5CheckListener(md5CheckListener)
-                .addAppDownloadListener(appDownloadListener)
                 .download(downloadInfo);
     }
 
@@ -128,6 +142,15 @@ public abstract class RootActivity extends AppCompatActivity {
      * @return
      */
     public MD5CheckListener obtainMD5CheckListener() {
+        return null;
+    }
+
+    /**
+     * 如果需要知道是否新版本更新的信息 自行重写此方法
+     *
+     * @return
+     */
+    public AppUpdateInfoListener obtainAppUpdateInfoListener() {
         return null;
     }
 
@@ -172,17 +195,28 @@ public abstract class RootActivity extends AppCompatActivity {
     public void download() {
         if (!AppUpdateUtils.isDownloading()) {
             requestPermission();
+        } else {
+            if (appDownloadListener != null)
+                appDownloadListener.downloadStart();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (appDownloadListener != null) {
-            AppUpdateUtils.getInstance().removeAppDownloadListener(appDownloadListener);
-        }
-        if (md5CheckListener != null) {
-            AppUpdateUtils.getInstance().removeMD5CheckListener(md5CheckListener);
-        }
+        AppUpdateUtils.getInstance().clearAllListener();
+    }
+
+    /**
+     * 启动Activity
+     *
+     * @param context
+     * @param info
+     */
+    public static void launchActivity(Context context, DownloadInfo info, Class cla) {
+        Intent intent = new Intent(context, cla);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP + Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("info", info);
+        context.startActivity(intent);
     }
 }

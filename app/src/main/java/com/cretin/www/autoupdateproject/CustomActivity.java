@@ -5,8 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cretin.www.cretinautoupdatelibrary.activity.RootActivity;
-import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType2Activity;
+import com.cretin.www.cretinautoupdatelibrary.utils.RootActivity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;

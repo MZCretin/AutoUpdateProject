@@ -14,6 +14,7 @@ import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
+import com.cretin.www.cretinautoupdatelibrary.utils.RootActivity;
 
 public class UpdateType3Activity extends RootActivity {
 
@@ -109,9 +110,7 @@ public class UpdateType3Activity extends RootActivity {
      * @param info
      */
     public static void launch(Context context, DownloadInfo info) {
-        Intent intent = new Intent(context, UpdateType3Activity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("info", info);
-        context.startActivity(intent);
+        launchActivity(context, info, UpdateType3Activity.class);
     }
+
 }

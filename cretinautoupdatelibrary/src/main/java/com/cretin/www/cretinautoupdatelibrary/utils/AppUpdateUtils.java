@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.cretin.www.cretinautoupdatelibrary.activity.UpdateBackgroundActivity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType10Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType11Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType12Activity;
@@ -19,6 +20,7 @@ import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType7Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType8Activity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType9Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
+import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
@@ -35,7 +37,6 @@ import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,15 +70,19 @@ public class AppUpdateUtils {
     private static String downloadUpdateApkFilePath = "";
 
     //AppDownloadListener的集合
-    private List<AppDownloadListener> appDownloadListenerList;
+    private static List<AppDownloadListener> appDownloadListenerList;
 
     //MD5校验监听
-    private List<MD5CheckListener> md5CheckListenerList;
+    private static List<MD5CheckListener> md5CheckListenerList;
+
+    //更新信息回调
+    private static List<AppUpdateInfoListener> appUpdateInfoListenerList;
 
     //私有化构造方法
     private AppUpdateUtils() {
         appDownloadListenerList = new ArrayList<>();
         md5CheckListenerList = new ArrayList<>();
+        appUpdateInfoListenerList = new ArrayList<>();
     }
 
     /**
@@ -156,11 +161,10 @@ public class AppUpdateUtils {
         } catch (Exception e) {
             LogUtils.log("JSON解析异常，您提供的json数据无法正常解析成为modelClass");
         }
-
     }
 
     /**
-     * 检查更新 调用者配置数据
+     * 检查更新 调用者配置数据 最终三种方式都会到这里来 所以要做静默下载 在这里做就好了
      */
     public void checkUpdate(DownloadInfo info) {
         checkInit();
@@ -172,28 +176,38 @@ public class AppUpdateUtils {
         //检查当前版本是否需要更新 如果app当前的版本号大于等于线上最新的版本号 不需要升级版本
         int versionCode = AppUtils.getVersionCode(mContext);
         if (versionCode >= info.getProdVersionCode()) {
+            listenToUpdateInfo(true);
+            clearAllListener();
             return;
         }
 
-        //检查是否强制更新
-        if (info.getForceUpdateFlag() != 0) {
-            //需要强制更新
-            if (info.getForceUpdateFlag() == 1) {
-                //hasAffectCodes拥有字段强制更新
-                String hasAffectCodes = info.getHasAffectCodes();
-                if (!TextUtils.isEmpty(hasAffectCodes)) {
-                    List<String> codes = Arrays.asList(hasAffectCodes.split("\\|"));
-                    if (codes.contains(versionCode + "")) {
-                        //包含这个版本 所以需要强制更新
-                    } else {
-                        //不包含这个版本 所以此版本需要强制更新
-                        info.setForceUpdateFlag(0);
+        //通知当前版本不是最新版本
+        listenToUpdateInfo(false);
+
+        UpdateConfig updateConfig = getUpdateConfig();
+        //如果用户开启了静默下载 其实是否开启强制更新已经没有意义了
+        if (!updateConfig.isAutoDownloadBackground()) {
+            //检查是否强制更新
+            if (info.getForceUpdateFlag() != 0) {
+                //需要强制更新
+                if (info.getForceUpdateFlag() == 1) {
+                    //hasAffectCodes拥有字段强制更新
+                    String hasAffectCodes = info.getHasAffectCodes();
+                    if (!TextUtils.isEmpty(hasAffectCodes)) {
+                        List<String> codes = Arrays.asList(hasAffectCodes.split("\\|"));
+                        if (codes.contains(versionCode + "")) {
+                            //包含这个版本 所以需要强制更新
+                        } else {
+                            //不包含这个版本 所以此版本需要强制更新
+                            info.setForceUpdateFlag(0);
+                        }
                     }
+                } else {
+                    //所有拥有字段强制更新
                 }
-            } else {
-                //所有拥有字段强制更新
             }
         }
+
 
         //检查sdk的挂载 未挂载直接阻断
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -201,9 +215,7 @@ public class AppUpdateUtils {
             return;
         }
 
-        UpdateConfig updateConfig = getUpdateConfig();
         int type = updateConfig.getUiThemeType();
-
         if (type == TypeConfig.UI_THEME_AUTO) {
             //随机样式
             String versionName = AppUtils.getVersionName(mContext);
@@ -222,31 +234,39 @@ public class AppUpdateUtils {
             return;
         }
 
-        //根据类型选择对应的样式
-        if (type == TypeConfig.UI_THEME_A) {
-            UpdateType1Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_B) {
-            UpdateType2Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_C) {
-            UpdateType3Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_D) {
-            UpdateType4Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_E) {
-            UpdateType5Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_F) {
-            UpdateType6Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_G) {
-            UpdateType7Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_H) {
-            UpdateType8Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_I) {
-            UpdateType9Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_J) {
-            UpdateType10Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_K) {
-            UpdateType11Activity.launch(mContext, info);
-        } else if (type == TypeConfig.UI_THEME_L) {
-            UpdateType12Activity.launch(mContext, info);
+        //如果用户开启了静默下载 就不需要展示更新页面了
+        if (!updateConfig.isAutoDownloadBackground()) {
+            //根据类型选择对应的样式
+            if (type == TypeConfig.UI_THEME_A) {
+                UpdateType1Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_B) {
+                UpdateType2Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_C) {
+                UpdateType3Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_D) {
+                UpdateType4Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_E) {
+                UpdateType5Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_F) {
+                UpdateType6Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_G) {
+                UpdateType7Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_H) {
+                UpdateType8Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_I) {
+                UpdateType9Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_J) {
+                UpdateType10Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_K) {
+                UpdateType11Activity.launch(mContext, info);
+            } else if (type == TypeConfig.UI_THEME_L) {
+                UpdateType12Activity.launch(mContext, info);
+            }
+        } else {
+            //直接下载
+            UpdateBackgroundActivity.launch(mContext, info);
+            //移除掉之前的事件监听 因为用不到了根本就
+            clearAllListener();
         }
     }
 
@@ -547,6 +567,19 @@ public class AppUpdateUtils {
         return this;
     }
 
+    public AppUpdateUtils addAppUpdateInfoListener(AppUpdateInfoListener appUpdateInfoListener) {
+        if (appUpdateInfoListener != null && !appUpdateInfoListenerList.contains(appUpdateInfoListener)) {
+            appUpdateInfoListenerList.add(appUpdateInfoListener);
+        }
+        return this;
+    }
+
+    public List<AppUpdateInfoListener> getAllAppUpdateInfoListener() {
+        List<AppUpdateInfoListener> listeners = new ArrayList<>();
+        listeners.addAll(appUpdateInfoListenerList);
+        return listeners;
+    }
+
     private List<AppDownloadListener> getAllAppDownloadListener() {
         List<AppDownloadListener> listeners = new ArrayList<>();
         listeners.addAll(appDownloadListenerList);
@@ -559,17 +592,17 @@ public class AppUpdateUtils {
         return listeners;
     }
 
-    //移除不需要的AppDownloadListener
-    public void removeAppDownloadListener(AppDownloadListener appDownloadListener) {
-        if (appDownloadListener != null && appDownloadListenerList.contains(appDownloadListener)) {
-            appDownloadListenerList.remove(appDownloadListener);
+    //是否有新版本更新
+    private void listenToUpdateInfo(boolean isLatest) {
+        for (AppUpdateInfoListener appUpdateInfoListener : getAllAppUpdateInfoListener()) {
+            appUpdateInfoListener.isLatestVersion(isLatest);
         }
     }
 
-    //移除不需要的MD5CheckListener
-    public void removeMD5CheckListener(MD5CheckListener md5CheckListener) {
-        if (md5CheckListener != null && md5CheckListenerList.contains(md5CheckListener)) {
-            md5CheckListenerList.remove(md5CheckListener);
-        }
+    //移除所有监听
+    protected static void clearAllListener() {
+        md5CheckListenerList.clear();
+        appUpdateInfoListenerList.clear();
+        appDownloadListenerList.clear();
     }
 }
