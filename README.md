@@ -2,6 +2,14 @@
 
 [![](https://jitpack.io/v/MZCretin/AutoUpdateProject.svg)](https://jitpack.io/#MZCretin/AutoUpdateProject)
 
+### 系列
+
+在工作之余，打算将一些常用的逻辑页面，模块，功能点做成library库，这样当有相似需求的时候，可以做到插拔式开发！现在系列中有以下内容
+
++ [App内部自动更新-AutoUpdateProject](https://github.com/MZCretin/AutoUpdateProject)
++ [选择城市-CitySelect](https://github.com/MZCretin/CitySelect)
++ [扫描二维码条形码控件-ScanCode](https://github.com/MZCretin/CitySeScanCode)
+
 ### 特点概述
 
 + **最大亮点，提供**12**种更新的样式，总有一个是你喜欢的类型！**
