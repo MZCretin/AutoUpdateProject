@@ -24,6 +24,10 @@
 + **新增静默下载更新的方式，实现进入App直接后台下载，下载完成后弹出安装页面（静默安装需要Root权限，而且体验很不好，不做支持）（2019-10-25 18:09:05添加）。**
 
 ### 新版本说明
++ 2019-11-04 12:38:12更新版本，版本号为：v2.0.3
+    + 新增配置DownloadConnection的入口，可切换文件下载器的内核
+    + 提供了配置Okhttp3作为下载器的demo，在demo中提供了OkHttp3Connection的实现，并提供信任所有证书的工具类SSLUtils，可解决https根证书不被信任导致无法下载的问题
+
 + 2019-10-25 18:09:05更新新版，版本号为：v2.0.2
     + 新增静默下载更新的方式
     + 新增获取是否有新版本更新的事件回调
@@ -68,12 +72,24 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
 
 **Step 2.** Add the dependency
 ```gradle
-dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_version' }
+    dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_version' }
 ```
 
 **Step 3.** Init it in BaseApplication or MainActivity before using it.And then register BaseApplication in AndroidManifest(Don't forget it).
 
 ```java
+        //如果你想使用okhttp作为下载的载体，那么你需要自己依赖okhttp，更新库不强制依赖okhttp！可以使用如下代码创建一个OkHttpClient 并在UpdateConfig中配置setCustomDownloadConnectionCreator start
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(30_000, TimeUnit.SECONDS)
+                .readTimeout(30_000, TimeUnit.SECONDS)
+                .writeTimeout(30_000, TimeUnit.SECONDS)
+                //如果你需要信任所有的证书，可解决根证书不被信任导致无法下载的问题 start
+                .sslSocketFactory(SSLUtils.createSSLSocketFactory())
+                .hostnameVerifier(new SSLUtils.TrustAllHostnameVerifier())
+                //如果你需要信任所有的证书，可解决根证书不被信任导致无法下载的问题 end
+                .retryOnConnectionFailure(true);
+        //如果你想使用okhttp作为下载的载体，那么你需要自己依赖okhttp，更新库不强制依赖okhttp！可以使用如下代码创建一个OkHttpClient 并在UpdateConfig中配置setCustomDownloadConnectionCreator end
+
         //更新库配置
         UpdateConfig updateConfig = new UpdateConfig()
                 .setDebug(true)//是否是Debug模式
@@ -88,7 +104,9 @@ dependencies { implementation 'com.github.MZCretin:AutoUpdateProject:latest_vers
                 .setAutoDownloadBackground(false)//是否需要后台静默下载，如果设置为true，则调用checkUpdate方法之后会直接下载安装，不会弹出更新页面。当你选择UI样式为TypeConfig.UI_THEME_CUSTOM，静默安装失效，您需要在自定义的Activity中自主实现静默下载，使用这种方式的时候建议setShowNotification(false)，这样基本上用户就会对下载无感知了
                 .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
                 .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
+                .setCustomDownloadConnectionCreator(new OkHttp3Connection.Creator(builder))//如果你想使用okhttp作为下载的载体，可以使用如下代码创建一个OkHttpClient，并使用demo中提供的OkHttp3Connection构建一个ConnectionCreator传入，在这里可以配置信任所有的证书，可解决根证书不被信任导致无法下载apk的问题
                 .setModelClass(new UpdateModel());
+        //初始化
         AppUpdateUtils.init(this, updateConfig);
 ```
 

@@ -32,4 +32,7 @@ dependencies {
 //    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.0'
     //使用本地库依赖
     implementation project(':cretinautoupdatelibrary')
+
+    //如果你需要使用okhttp作为你的下载器 你需要自主引入okhttp的依赖
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 }

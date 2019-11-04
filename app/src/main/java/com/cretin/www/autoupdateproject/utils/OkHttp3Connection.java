@@ -1,4 +1,4 @@
-package com.cretin.www.cretinautoupdatelibrary.net;
+package com.cretin.www.autoupdateproject.utils;
 
 import com.liulishuo.filedownloader.connection.FileDownloadConnection;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;

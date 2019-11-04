@@ -28,20 +28,19 @@ import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.model.UpdateConfig;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpCallbackModelListener;
 import com.cretin.www.cretinautoupdatelibrary.net.HttpUtils;
-import com.cretin.www.cretinautoupdatelibrary.net.OkHttp3Connection;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateReceiver;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import okhttp3.OkHttpClient;
 
 import static com.cretin.www.cretinautoupdatelibrary.utils.AppUtils.getAppLocalPath;
 
@@ -98,26 +97,22 @@ public class AppUpdateUtils {
         mContext = context;
         updateConfig = config;
         ResUtils.init(context);
+
+        FileDownloadHelper.ConnectionCreator fileDownloadConnection = null;
         //初始化文件下载库
-        /* start 使用自定义的下载器 解决根证书不被信任的情况下无法下载https的文件的问题*/
-        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(30_000, TimeUnit.SECONDS);
-        builder.readTimeout(30_000, TimeUnit.SECONDS);
+        if (updateConfig != null && updateConfig.getCustomDownloadConnectionCreator() != null) {
+            fileDownloadConnection = updateConfig.getCustomDownloadConnectionCreator();
+        } else {
+            fileDownloadConnection = new FileDownloadUrlConnection
+                    .Creator(new FileDownloadUrlConnection.Configuration()
+                    .connectTimeout(30_000) // set connection timeout.
+                    .readTimeout(30_000) // set read timeout.
+            );
+        }
 
-        FileDownloader.setupOnApplicationOnCreate(context)
-                .connectionCreator(new OkHttp3Connection.Creator(builder))
+        FileDownloader.setupOnApplicationOnCreate(mContext)
+                .connectionCreator(fileDownloadConnection)
                 .commit();
-        /* end 使用自定义的下载器 解决根证书不被信任的情况下无法下载https的文件的问题*/
-
-        /* start 使用默认的URLConnection 减少依赖*/
-//        FileDownloader.setupOnApplicationOnCreate(mContext)
-//                .connectionCreator(new FileDownloadUrlConnection
-//                        .Creator(new FileDownloadUrlConnection.Configuration()
-//                        .connectTimeout(30_000) // set connection timeout.
-//                        .readTimeout(30_000) // set read timeout.
-//                ))
-//                .commit();
-        /* end 使用默认的URLConnection 减少依赖*/
     }
 
     public static AppUpdateUtils getInstance() {

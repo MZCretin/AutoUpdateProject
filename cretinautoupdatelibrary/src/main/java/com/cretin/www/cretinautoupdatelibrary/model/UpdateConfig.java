@@ -1,5 +1,7 @@
 package com.cretin.www.cretinautoupdatelibrary.model;
 
+import com.liulishuo.filedownloader.util.FileDownloadHelper;
+
 import java.util.Map;
 
 /**
@@ -48,6 +50,18 @@ public class UpdateConfig {
 
     //是否静默下载
     private boolean isAutoDownloadBackground;
+
+    //自定义下载
+    private FileDownloadHelper.ConnectionCreator customDownloadConnectionCreator;
+
+    public FileDownloadHelper.ConnectionCreator getCustomDownloadConnectionCreator() {
+        return customDownloadConnectionCreator;
+    }
+
+    public UpdateConfig setCustomDownloadConnectionCreator(FileDownloadHelper.ConnectionCreator customDownloadConnectionCreator) {
+        this.customDownloadConnectionCreator = customDownloadConnectionCreator;
+        return this;
+    }
 
     public boolean isAutoDownloadBackground() {
         return isAutoDownloadBackground;
