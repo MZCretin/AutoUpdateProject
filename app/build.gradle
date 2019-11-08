@@ -29,7 +29,8 @@ dependencies {
     implementation 'com.blankj:utilcode:1.25.9'
 
     //使用jitpack
-//    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.0'
+//    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.4'
+
     //使用本地库依赖
     implementation project(':cretinautoupdatelibrary')
 

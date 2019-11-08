@@ -94,28 +94,30 @@ public class AppUtils {
      * @param okText
      */
     public static void showDialog(Activity activity, String msg, final OnDialogClickListener clickListener, boolean cancelable, String title, String cancelText, String okText) {
-        new AlertDialog.Builder(activity, R.style.AlertDialog)
-                .setTitle(title)
-                .setMessage(msg)
-                .setPositiveButton(okText, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (clickListener != null) {
-                            clickListener.onOkClick(dialog);
+        if (!activity.isFinishing()) {
+            new AlertDialog.Builder(activity, R.style.AlertDialog)
+                    .setTitle(title)
+                    .setMessage(msg)
+                    .setPositiveButton(okText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (clickListener != null) {
+                                clickListener.onOkClick(dialog);
+                            }
                         }
-                    }
-                })
-                .setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (clickListener != null) {
-                            clickListener.onCancelClick(dialog);
+                    })
+                    .setNegativeButton(cancelText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (clickListener != null) {
+                                clickListener.onCancelClick(dialog);
+                            }
                         }
-                    }
-                })
-                .setCancelable(cancelable)
-                .create()
-                .show();
+                    })
+                    .setCancelable(cancelable)
+                    .create()
+                    .show();
+        }
     }
 
     /**
