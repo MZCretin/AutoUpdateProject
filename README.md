@@ -10,6 +10,7 @@
 + [选择城市-CitySelect](https://github.com/MZCretin/CitySelect)
 + [扫描二维码条形码控件-ScanCode](https://github.com/MZCretin/CitySeScanCode)
 + [一键打开WebView件-WebViewUtils](https://github.com/MZCretin/WebViewUtils)
++ [简约动态权限申请库-FanPermission](https://github.com/MZCretin/FanPermission)
 
 ### 特点概述
 
