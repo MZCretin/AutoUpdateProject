@@ -24,6 +24,7 @@
 + **通知栏图片自定义**
 + **新增文件MD5校验，防止安装文件被恶意替换（2019-10-22 18:48:39添加）**
 + **新增静默下载更新的方式，实现进入App直接后台下载，下载完成后弹出安装页面（静默安装需要Root权限，而且体验很不好，不做支持）（2019-10-25 18:09:05添加）。**
++ **支持https下载apk**
 
 ### 新版本说明
 + 2019-11-08 18:13:56更新版本，版本号为：v2.0.4
@@ -96,7 +97,34 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
                 .retryOnConnectionFailure(true);
         //如果你想使用okhttp作为下载的载体，那么你需要自己依赖okhttp，更新库不强制依赖okhttp！可以使用如下代码创建一个OkHttpClient 并在UpdateConfig中配置setCustomDownloadConnectionCreator end
 
-        //更新库配置
+        //当你希望自己提供json数据给插件，让插件自己解析并实现更新
+        UpdateConfig updateConfig = new UpdateConfig()
+                        .setDebug(true)//是否是Debug模式
+                        .setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON)//设置获取更新信息的方式为JSON方式
+                        .setShowNotification(true)//配置更新的过程中是否在通知栏显示进度
+                        .setNotificationIconRes(R.mipmap.download_icon)//配置通知栏显示的图标
+                        .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
+                        .setAutoDownloadBackground(false)//是否需要后台静默下载，如果设置为true，则调用checkUpdate方法之后会直接下载安装，不会弹出更新页面。当你选择UI样式为TypeConfig.UI_THEME_CUSTOM，静默安装失效，您需要在自定义的Activity中自主实现静默下载，使用这种方式的时候建议setShowNotification(false)，这样基本上用户就会对下载无感知了
+                        .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class，否则不用设置
+                        .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
+                        .setCustomDownloadConnectionCreator(new OkHttp3Connection.Creator(builder))//如果你想使用okhttp作为下载的载体，可以使用如下代码创建一个OkHttpClient，并使用demo中提供的OkHttp3Connection构建一个ConnectionCreator传入，在这里可以配置信任所有的证书，可解决根证书不被信任导致无法下载apk的问题
+                        .setModelClass(new UpdateModel());//这里设置JSON解析之后对应的Model 用于json解析
+        AppUpdateUtils.init(this, updateConfig);//执行初始化
+
+        //当你希望使用传入model的方式，让插件自己解析并实现更新
+        UpdateConfig updateConfig = new UpdateConfig()
+                .setDebug(true)//是否是Debug模式
+                .setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_MODEL)//设置获取更新信息的方式
+                .setShowNotification(true)//配置更新的过程中是否在通知栏显示进度
+                .setNotificationIconRes(R.mipmap.download_icon)//配置通知栏显示的图标
+                .setUiThemeType(TypeConfig.UI_THEME_AUTO)//配置UI的样式，一种有12种样式可供选择
+                .setAutoDownloadBackground(false)//是否需要后台静默下载，如果设置为true，则调用checkUpdate方法之后会直接下载安装，不会弹出更新页面。当你选择UI样式为TypeConfig.UI_THEME_CUSTOM，静默安装失效，您需要在自定义的Activity中自主实现静默下载，使用这种方式的时候建议setShowNotification(false)，这样基本上用户就会对下载无感知了
+                .setCustomActivityClass(CustomActivity.class)//如果你选择的UI样式为TypeConfig.UI_THEME_CUSTOM，那么你需要自定义一个Activity继承自RootActivity，并参照demo实现功能，在此处填写自定义Activity的class
+                .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
+                .setCustomDownloadConnectionCreator(new OkHttp3Connection.Creator(builder));//如果你想使用okhttp作为下载的载体，可以使用如下代码创建一个OkHttpClient，并使用demo中提供的OkHttp3Connection构建一个ConnectionCreator传入，在这里可以配置信任所有的证书，可解决根证书不被信任导致无法下载apk的问题
+        AppUpdateUtils.init(this, updateConfig);
+
+        //当你希望使用配置请求链接的方式，让插件自己解析并实现更新
         UpdateConfig updateConfig = new UpdateConfig()
                 .setDebug(true)//是否是Debug模式
                 .setBaseUrl("http://www.cretinzp.com/system/versioninfo")//当dataSourceType为DATA_SOURCE_TYPE_URL时，配置此接口用于获取更新信息
@@ -112,8 +140,8 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
                 .setNeedFileMD5Check(false)//是否需要进行文件的MD5检验，如果开启需要提供文件本身正确的MD5校验码，DEMO中提供了获取文件MD5检验码的工具页面，也提供了加密工具类Md5Utils
                 .setCustomDownloadConnectionCreator(new OkHttp3Connection.Creator(builder))//如果你想使用okhttp作为下载的载体，可以使用如下代码创建一个OkHttpClient，并使用demo中提供的OkHttp3Connection构建一个ConnectionCreator传入，在这里可以配置信任所有的证书，可解决根证书不被信任导致无法下载apk的问题
                 .setModelClass(new UpdateModel());
-        //初始化
         AppUpdateUtils.init(this, updateConfig);
+
 ```
 
 **Step 4.** Start using it wherever you want as below with 3 ways.
@@ -125,8 +153,8 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
     //第一种方式，使用JSON字符串，让sdk自主解析并实现功能
     String jsonData = "{\"versionCode\": 25,\"isForceUpdate\": 1,\"preBaselineCode\": 24,\"versionName\": \"v2.3.1\",\"downurl\": \"http://jokesimg.cretinzp.com/apk/app-release_231_jiagu_sign.apk\",\"updateLog\": \"1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改\",\"size\": \"31338250\",\"hasAffectCodes\": \"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24\"}";
     AppUpdateUtils.getInstance()
-                        .addMd5CheckListener(...)
-                        .addAppDownloadListener(...)
+                        .addMd5CheckListener(...)//添加MD5检查更新
+                        .addAppDownloadListener(...)//添加文件下载监听
                         .checkUpdate(jsonData);
 
     //第二种方式，使用MODEL方式，组装好对应的MODEL，传入sdk中
@@ -138,14 +166,14 @@ allprojects { repositories { ... maven { url 'https://jitpack.io' } } }
             .setForceUpdateFlag(listModel.isForceUpdate() ? 1 : 0)
             .setUpdateLog("1、优化细节和体验，更加稳定\n2、引入大量优质用户\r\n3、修复已知bug\n4、风格修改");
     AppUpdateUtils.getInstance()
-                        .addMd5CheckListener(...)
-                        .addAppDownloadListener(...)
+                        .addMd5CheckListener(...)//添加MD5检查更新
+                        .addAppDownloadListener(...)//添加文件下载监听
                         .checkUpdate(info);
 
     //第三种方式，在初始化的时候配置接口地址，sdk自主请求+解析实现功能（推荐）
     AppUpdateUtils.getInstance()
-                        .addMd5CheckListener(...)
-                        .addAppDownloadListener(...)
+                        .addMd5CheckListener(...)//添加MD5检查更新
+                        .addAppDownloadListener(...)//添加文件下载监听
                         .checkUpdate();
 
 ```
