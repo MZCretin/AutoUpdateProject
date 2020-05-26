@@ -8,7 +8,7 @@
 
 + [App内部自动更新-AutoUpdateProject](https://github.com/MZCretin/AutoUpdateProject)
 + [选择城市-CitySelect](https://github.com/MZCretin/CitySelect)
-+ [扫描二维码条形码控件-ScanCode](https://github.com/MZCretin/CitySeScanCode)
++ [扫描二维码条形码控件-ScanCode](https://github.com/MZCretin/ScanCode)
 + [一键打开WebView件-WebViewUtils](https://github.com/MZCretin/WebViewUtils)
 + [简约动态权限申请库-FanPermission](https://github.com/MZCretin/FanPermission)
 + [弹出自定义支付密码输入框-InputPswDemo](https://github.com/MZCretin/InputPswDemo)
