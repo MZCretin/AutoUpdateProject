@@ -11,6 +11,7 @@
 + [扫描二维码条形码控件-ScanCode](https://github.com/MZCretin/CitySeScanCode)
 + [一键打开WebView件-WebViewUtils](https://github.com/MZCretin/WebViewUtils)
 + [简约动态权限申请库-FanPermission](https://github.com/MZCretin/FanPermission)
++ [弹出自定义支付密码输入框-InputPswDemo](https://github.com/MZCretin/InputPswDemo)
 
 ### 特点概述
 
