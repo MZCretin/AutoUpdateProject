@@ -51,6 +51,19 @@ public class UpdateConfig {
     //是否静默下载
     private boolean isAutoDownloadBackground;
 
+    //在通知栏显示进度
+    public static final int TYPE_NITIFICATION = 1;
+    //对话框显示进度
+    public static final int TYPE_DIALOG = 2;
+    //对话框展示提示和下载进度
+    public static final int TYPE_DIALOG_WITH_PROGRESS = 3;
+    //对话框展示提示后台下载
+    public static final int TYPE_DIALOG_WITH_BACK_DOWN = 4;
+    //POST方法
+    public static final int METHOD_POST = 3;
+    //GET方法
+    public static final int METHOD_GET = 4;
+
     //自定义下载
     private FileDownloadHelper.ConnectionCreator customDownloadConnectionCreator;
 

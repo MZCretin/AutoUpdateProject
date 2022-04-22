@@ -2,28 +2,17 @@ package com.cretin.www.autoupdateproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import com.cretin.www.autoupdateproject.adapter.RecyclerviewAdapter;
 import com.cretin.www.autoupdateproject.model.ListModel;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
-import com.cretin.www.cretinautoupdatelibrary.interfaces.ForceExitCallBack;
-import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.model.TypeConfig;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.CretinAutoUpdateUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
