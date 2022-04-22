@@ -45,7 +45,7 @@ public class HttpUtils {
                     // 根据URL地址创建URL对象
                     url = new URL(urlString);
 
-                    httpURLConnection = obtainConnection(url, "", headers);
+                    httpURLConnection = obtainConnection(url, "", headers, false);
 
                     httpURLConnection.setRequestMethod("GET");
 
@@ -93,7 +93,7 @@ public class HttpUtils {
 
     /**
      * /**
-     * GET方法 返回数据会解析成cls对象
+     * POST方法 返回数据会解析成cls对象
      *
      * @param context   上下文
      * @param urlString 请求的路径
@@ -127,7 +127,7 @@ public class HttpUtils {
                 HttpURLConnection httpURLConnection = null;
                 try {
                     url = new URL(urlString);
-                    httpURLConnection = obtainConnection(url, paramsStr.toString(), headers);
+                    httpURLConnection = obtainConnection(url, paramsStr.toString(), headers, true);
 
                     httpURLConnection.setRequestMethod("POST");
 
@@ -169,7 +169,7 @@ public class HttpUtils {
         });
     }
 
-    private static HttpURLConnection obtainConnection(URL url, String params, Map<String, Object> headers) throws IOException {
+    private static HttpURLConnection obtainConnection(URL url, String params, Map<String, Object> headers, boolean usePostMethod) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestProperty("Content-type", "application/json");
 
@@ -184,17 +184,19 @@ public class HttpUtils {
 
         // 设置运行输入
         httpURLConnection.setDoInput(true);
-        // 设置运行输出
-        httpURLConnection.setDoOutput(true);
-
-        if (!TextUtils.isEmpty(params)) {
-            PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
-            // 发送请求参数
-            printWriter.write(params);
-            // flush输出流的缓冲
-            printWriter.flush();
-            printWriter.close();
+        if (usePostMethod) {
+            // 设置运行输出
+            httpURLConnection.setDoOutput(true);
+            if (!TextUtils.isEmpty(params)) {
+                PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
+                // 发送请求参数
+                printWriter.write(params);
+                // flush输出流的缓冲
+                printWriter.flush();
+                printWriter.close();
+            }
         }
+        // TODO: GET的参数会写在URL上
         return httpURLConnection;
     }
 }
