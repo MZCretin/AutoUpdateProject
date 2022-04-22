@@ -291,7 +291,7 @@ public class AppUpdateUtils {
 
         FileDownloader.setup(mContext);
 
-        downloadUpdateApkFilePath = getAppLocalPath(info.getProdVersionName());
+        downloadUpdateApkFilePath = getAppLocalPath(mContext, info.getProdVersionName());
 
         //检查下本地文件的大小 如果大小和信息中的文件大小一样的就可以直接安装 否则就删除掉
         File tempFile = new File(downloadUpdateApkFilePath);
@@ -503,7 +503,7 @@ public class AppUpdateUtils {
         //删除任务中的缓存文件
         FileDownloader.getImpl().clearAllTaskData();
         //删除已经下载好的文件
-        AppUtils.delAllFile(new File(AppUtils.getAppRootPath()));
+        AppUtils.delAllFile(new File(AppUtils.getAppRootPath(mContext)));
     }
 
     /**

@@ -68,7 +68,7 @@ public class MD5HelperActivity extends AppCompatActivity {
     private void downloadFile(String appUrl) {
         FileDownloader.setup(this);
 
-        final String downloadUpdateApkFilePath = getAppLocalPath("test");
+        final String downloadUpdateApkFilePath = getAppLocalPath(this,"test");
 
         BaseDownloadTask downloadTask = FileDownloader.getImpl().create(appUrl)
                 .setPath(downloadUpdateApkFilePath);

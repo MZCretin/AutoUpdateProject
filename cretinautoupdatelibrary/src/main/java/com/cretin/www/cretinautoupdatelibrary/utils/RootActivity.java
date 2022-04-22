@@ -162,19 +162,20 @@ public abstract class RootActivity extends AppCompatActivity {
      * 获取权限
      */
     public void requestPermission() {
-        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
-            checkDownload();
-        } else {
-            //下载权限
-            int writePermission = ContextCompat.checkSelfPermission(this, permission);
-            if (writePermission == PackageManager.PERMISSION_GRANTED) {
-                //拥有权限则直接下载
-                checkDownload();
-            } else {
-                // 申请权限
-                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_CODE);
-            }
-        }
+        checkDownload();
+//        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
+//
+//        } else {
+//            //下载权限
+//            int writePermission = ContextCompat.checkSelfPermission(this, permission);
+//            if (writePermission == PackageManager.PERMISSION_GRANTED) {
+//                //拥有权限则直接下载
+//                checkDownload();
+//            } else {
+//                // 申请权限
+//                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_CODE);
+//            }
+//        }
     }
 
     @Override

@@ -65,10 +65,10 @@ public class AppUtils {
      *
      * @return
      */
-    public static String getAppLocalPath(String versionName) {
+    public static String getAppLocalPath(Context context,String versionName) {
         // apk 保存名称
         String apkName = AppUtils.getAppName(AppUpdateUtils.getInstance().getContext());
-        return getAppRootPath() + "/" + apkName + "_" + versionName + ".apk";
+        return getAppRootPath(context) + "/" + apkName + "_" + versionName + ".apk";
     }
 
     /**
@@ -76,10 +76,10 @@ public class AppUtils {
      *
      * @return
      */
-    public static String getAppRootPath() {
+    public static String getAppRootPath(Context context) {
         //构建下载路径
         String packageName = AppUpdateUtils.getInstance().getContext().getPackageName();
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + packageName + "/apks";
+        return  context.getExternalCacheDir()+ "/" + packageName + "/apks";
     }
 
     /**
