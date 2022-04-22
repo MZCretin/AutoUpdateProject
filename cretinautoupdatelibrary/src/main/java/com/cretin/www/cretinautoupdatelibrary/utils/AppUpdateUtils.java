@@ -228,7 +228,7 @@ public class AppUpdateUtils {
         if (type == TypeConfig.UI_THEME_AUTO) {
             //随机样式
             String versionName = AppUtils.getVersionName(mContext);
-            type = 300 + versionName.hashCode() % 12;
+            type = 301 + versionName.hashCode() % 12;
         } else if (type == TypeConfig.UI_THEME_CUSTOM) {
             Class customActivityClass = updateConfig.getCustomActivityClass();
             if (customActivityClass == null) {

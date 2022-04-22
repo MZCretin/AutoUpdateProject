@@ -47,6 +47,8 @@ public class HttpUtils {
 
                     httpURLConnection = obtainConnection(url, "", headers);
 
+                    httpURLConnection.setRequestMethod("GET");
+
                     // 响应码为200表示成功，否则失败。
                     if (httpURLConnection.getResponseCode() == 200) {
                         // 获取网络的输入流
@@ -128,7 +130,6 @@ public class HttpUtils {
                     httpURLConnection = obtainConnection(url, paramsStr.toString(), headers);
 
                     httpURLConnection.setRequestMethod("POST");
-
 
                     if (httpURLConnection.getResponseCode() == 200) {
                         // 获取网络的输入流
