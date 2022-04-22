@@ -2,6 +2,11 @@
 
 [![](https://jitpack.io/v/MZCretin/AutoUpdateProject.svg)](https://jitpack.io/#MZCretin/AutoUpdateProject)
 
+### 想没想过做个自己的APP？
+
+想没想过自己做个APP，自己做自己的产品，自己决定交互，自己制作ui，那么快来吧，我开源了段子乐APP的数据和接口，你完全可以自己diy一个你自己的产品了~，详情请查看：https://github.com/MZCretin/duanzile-open-api 欢迎star
+
+
 ### 系列
 
 在工作之余，打算将一些常用的逻辑页面，模块，功能点做成library库，这样当有相似需求的时候，可以做到插拔式开发！现在系列中有以下内容
@@ -28,6 +33,12 @@
 + **支持https下载apk**
 
 ### 新版本说明
++ 2022年04月22日15:24:14更新版本，版本号为：v2.0.5
+    + 将APK存储在内容部文件夹
+    + 全Android系统版本兼容
+    + 修复了已知bug
+    + 移除无用代码
+
 + 2019-11-08 18:13:56更新版本，版本号为：v2.0.4
     + 修复静默下载时网络环境为数据网络的时候无法下载的问题
     + 修复其他问题,[#22](https://github.com/MZCretin/AutoUpdateProject/issues/22)
