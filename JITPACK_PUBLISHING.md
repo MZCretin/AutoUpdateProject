@@ -19,10 +19,10 @@ git push origin master
 
 ```bash
 # 创建版本标签
-git tag v2.0.1
+git tag v2.0.6
 
 # 推送标签到 GitHub
-git push origin v2.0.1
+git push origin v2.0.6
 ```
 
 ### 3. 验证 JitPack 构建
@@ -47,7 +47,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.1'
+    implementation 'com.github.MZCretin:AutoUpdateProject:v2.0.6'
 }
 ```
 
@@ -101,5 +101,5 @@ dependencies {
 当前库信息：
 - **GroupId**: com.github.MZCretin
 - **ArtifactId**: AutoUpdateProject  
-- **当前版本**: v2.0.1
+- **当前版本**: v2.0.6
 - **JitPack地址**: https://jitpack.io/#MZCretin/AutoUpdateProject
