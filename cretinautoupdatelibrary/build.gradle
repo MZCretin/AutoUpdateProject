@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 28
-        versionName "2.0.8"
+        versionCode 29
+        versionName "2.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,13 +44,81 @@ repositories {
     mavenCentral()
 }
 
+// AAR构建配置
+android.libraryVariants.all { variant ->
+    variant.outputs.all { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.aar')) {
+            def fileName = "cretinautoupdatelibrary-${android.defaultConfig.versionName}-${variant.buildType.name}.aar"
+            output.outputFileName = fileName
+        }
+    }
+}
+
+// 创建便捷的AAR构建任务
+task buildReleaseAar(type: Exec, dependsOn: 'assembleRelease') {
+    group = 'build'
+    description = 'Build release AAR and copy to outputs directory'
+    
+    doFirst {
+        // 创建输出目录
+        def outputDir = file("${project.rootDir}/aar_outputs")
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+    }
+    
+    doLast {
+        // 复制AAR文件到项目根目录
+        def sourceAar = file("${project.buildDir}/outputs/aar/cretinautoupdatelibrary-${android.defaultConfig.versionName}-release.aar")
+        def targetDir = file("${project.rootDir}/aar_outputs")
+        def targetAar = file("${targetDir}/cretinautoupdatelibrary-${android.defaultConfig.versionName}-release.aar")
+        
+        if (sourceAar.exists()) {
+            copy {
+                from sourceAar
+                into targetDir
+            }
+            println "AAR file copied to: ${targetAar.absolutePath}"
+        } else {
+            println "Warning: AAR file not found at ${sourceAar.absolutePath}"
+        }
+    }
+    
+    commandLine 'echo', 'AAR build completed'
+}
+
+// 创建包含源码的AAR任务
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = 'sources'
+}
+
+// 创建文档JAR任务
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    android.libraryVariants.all { variant ->
+        if (variant.name == 'release') {
+            owner.classpath += variant.javaCompileProvider.get().classpath
+        }
+    }
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
+task javadocJar(type: Jar, dependsOn: androidJavadocs) {
+    archiveClassifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
 // JitPack 发布配置 - 使用现代组件发布以包含依赖信息
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'com.github.MZCretin'
             artifactId = 'cretinautoupdatelibrary'
-            version = '2.0.8'
+            version = '2.0.9'
             
             // 使用组件发布，这会自动包含依赖信息
 //            afterEvaluate {
