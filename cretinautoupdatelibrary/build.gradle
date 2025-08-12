@@ -44,5 +44,45 @@ repositories {
     mavenCentral()
 }
 
-// JitPack 发布配置 - JitPack 会自动处理构建和发布
-// 只需要确保项目可以正常编译即可
+// JitPack 发布配置
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'com.github.MZCretin'
+                artifactId = 'cretinautoupdatelibrary'
+                version = '2.0.6'
+                
+                // 在发布前确保 AAR 已构建
+                artifact(bundleReleaseAar)
+                
+                pom {
+                    name = 'CretinAutoUpdateLibrary'
+                    description = 'Android Auto Update Library'
+                    url = 'https://github.com/MZCretin/AutoUpdateProject'
+                    
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    
+                    developers {
+                        developer {
+                            id = 'cretin'
+                            name = 'Cretin'
+                            email = 'mxnzp_life@163.com'
+                        }
+                    }
+                    
+                    scm {
+                        connection = 'scm:git:git://github.com/MZCretin/AutoUpdateProject.git'
+                        developerConnection = 'scm:git:ssh://github.com/MZCretin/AutoUpdateProject.git'
+                        url = 'https://github.com/MZCretin/AutoUpdateProject'
+                    }
+                }
+            }
+        }
+    }
+}
