@@ -10,6 +10,9 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
+import android.widget.Toast;
+
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 
@@ -36,17 +39,22 @@ public class AppUtils {
      */
     public static void installApkFile(Context context, File file) {
         // Android 8.0及以上版本需要检查REQUEST_INSTALL_PACKAGES权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!context.getPackageManager().canRequestPackageInstalls()) {
-                // 没有安装权限，需要引导用户开启
-                return;
-            }
-        }
-        
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            if (!context.getPackageManager().canRequestPackageInstalls()) {
+//                // 没有安装权限，需要引导用户开启
+//                // 跳转到 "安装未知应用" 设置页面
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.setData(Uri.parse("package:"+context.getPackageName()));
+//                context.startActivity(intent);
+//                return;
+//            }
+//        }
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri = null;
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // Android 7.0及以上使用FileProvider
             uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
@@ -55,15 +63,15 @@ public class AppUtils {
         } else {
             uri = Uri.fromFile(file);
         }
-        
+
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
-        
+
         // 添加Android 15兼容性检查
         if (Build.VERSION.SDK_INT >= 35) {
             // Android 15特定的处理
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        
+
         if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
             context.startActivity(intent);
         }
@@ -83,7 +91,7 @@ public class AppUtils {
      *
      * @return
      */
-    public static String getAppLocalPath(Context context,String versionName) {
+    public static String getAppLocalPath(Context context, String versionName) {
         // apk 保存名称
         String apkName = AppUtils.getAppName(AppUpdateUtils.getInstance().getContext());
         return getAppRootPath(context) + "/" + apkName + "_" + versionName + ".apk";
@@ -97,7 +105,7 @@ public class AppUtils {
     public static String getAppRootPath(Context context) {
         //构建下载路径
         String packageName = AppUpdateUtils.getInstance().getContext().getPackageName();
-        return  context.getExternalCacheDir()+ "/" + packageName + "/apks";
+        return context.getExternalCacheDir() + "/" + packageName + "/apks";
     }
 
     /**

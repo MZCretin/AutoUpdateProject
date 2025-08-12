@@ -38,6 +38,9 @@ dependencies {
     //如果你需要使用okhttp作为你的下载器 你需要自主引入okhttp的依赖
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     
+    // FileDownloader dependency - needed for AutoUpdate library
+    implementation 'com.liulishuo.filedownloader:library:1.7.6'
+    
     // 测试依赖
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Keep FileDownloader classes to prevent NoClassDefFoundError
+-keep class com.liulishuo.filedownloader.** { *; }
+-keepclassmembers class com.liulishuo.filedownloader.** { *; }
+
+# Keep all public classes and methods in this library
+-keep public class com.cretin.www.cretinautoupdatelibrary.** { *; }
+
+# Keep all classes with annotations
+-keep class ** {
+    @com.cretin.www.cretinautoupdatelibrary.** *;
+}
+
+# Keep all callback interfaces and listeners
+-keep interface com.cretin.www.cretinautoupdatelibrary.interfaces.** { *; }

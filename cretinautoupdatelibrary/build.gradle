@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 27
-        versionName "2.0.7"
+        versionCode 28
+        versionName "2.0.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,43 +44,43 @@ repositories {
     mavenCentral()
 }
 
-// JitPack 发布配置
-afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = 'com.github.MZCretin'
-                artifactId = 'cretinautoupdatelibrary'
-                version = '2.0.7'
+// JitPack 发布配置 - 使用现代组件发布以包含依赖信息
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.github.MZCretin'
+            artifactId = 'cretinautoupdatelibrary'
+            version = '2.0.8'
+            
+            // 使用组件发布，这会自动包含依赖信息
+//            afterEvaluate {
+//                from components.release
+//            }
+            
+            pom {
+                name = 'CretinAutoUpdateLibrary'
+                description = 'Android Auto Update Library'
+                url = 'https://github.com/MZCretin/AutoUpdateProject'
                 
-                // 在发布前确保 AAR 已构建
-                artifact(bundleReleaseAar)
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
                 
-                pom {
-                    name = 'CretinAutoUpdateLibrary'
-                    description = 'Android Auto Update Library'
+                developers {
+                    developer {
+                        id = 'cretin'
+                        name = 'Cretin'
+                        email = 'mxnzp_life@163.com'
+                    }
+                }
+                
+                scm {
+                    connection = 'scm:git:git://github.com/MZCretin/AutoUpdateProject.git'
+                    developerConnection = 'scm:git:ssh://github.com/MZCretin/AutoUpdateProject.git'
                     url = 'https://github.com/MZCretin/AutoUpdateProject'
-                    
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-                    
-                    developers {
-                        developer {
-                            id = 'cretin'
-                            name = 'Cretin'
-                            email = 'mxnzp_life@163.com'
-                        }
-                    }
-                    
-                    scm {
-                        connection = 'scm:git:git://github.com/MZCretin/AutoUpdateProject.git'
-                        developerConnection = 'scm:git:ssh://github.com/MZCretin/AutoUpdateProject.git'
-                        url = 'https://github.com/MZCretin/AutoUpdateProject'
-                    }
                 }
             }
         }

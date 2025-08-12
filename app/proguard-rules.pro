@@ -15,3 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Keep FileDownloader classes to prevent NoClassDefFoundError
+-keep class com.liulishuo.filedownloader.** { *; }
+-keepclassmembers class com.liulishuo.filedownloader.** { *; }
+
+# Keep AutoUpdate library classes
+-keep class com.cretin.www.cretinautoupdatelibrary.** { *; }
+-keepclassmembers class com.cretin.www.cretinautoupdatelibrary.** { *; }
