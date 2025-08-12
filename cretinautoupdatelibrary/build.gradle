@@ -53,9 +53,9 @@ publishing {
             version = '2.0.8'
             
             // 使用组件发布，这会自动包含依赖信息
-//            afterEvaluate {
-//                from components.release
-//            }
+            afterEvaluate {
+                from components.release
+            }
             
             pom {
                 name = 'CretinAutoUpdateLibrary'
