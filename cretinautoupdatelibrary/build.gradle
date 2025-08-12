@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 26
-        versionName "2.0.6"
+        versionCode 27
+        versionName "2.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,7 +51,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'com.github.MZCretin'
                 artifactId = 'cretinautoupdatelibrary'
-                version = '2.0.6'
+                version = '2.0.7'
                 
                 // 在发布前确保 AAR 已构建
                 artifact(bundleReleaseAar)
