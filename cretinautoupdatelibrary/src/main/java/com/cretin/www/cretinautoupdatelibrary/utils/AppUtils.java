@@ -10,8 +10,8 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
@@ -35,17 +35,35 @@ public class AppUtils {
      * @param file
      */
     public static void installApkFile(Context context, File file) {
+        // Android 8.0及以上版本需要检查REQUEST_INSTALL_PACKAGES权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!context.getPackageManager().canRequestPackageInstalls()) {
+                // 没有安装权限，需要引导用户开启
+                return;
+            }
+        }
+        
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri = null;
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // Android 7.0及以上使用FileProvider
             uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } else {
             uri = Uri.fromFile(file);
         }
+        
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        
+        // 添加Android 15兼容性检查
+        if (Build.VERSION.SDK_INT >= 35) {
+            // Android 15特定的处理
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        
         if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
             context.startActivity(intent);
         }

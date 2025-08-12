@@ -2,25 +2,42 @@
 
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/discovery' }
+        maven { url 'https://maven.aliyun.com/repository/android' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:8.7.2'
 
-        classpath 'com.novoda:bintray-release:0.9.1'
+        // classpath 'com.novoda:bintray-release:0.9.1' // 暂时注释，该插件与Gradle 8.x不兼容
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
+
 allprojects {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/discovery' }
+        maven { url 'https://maven.aliyun.com/repository/android' }
+    }
+    
+    // 全局依赖管理，解决Kotlin版本冲突
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22'
+        }
     }
 }
 

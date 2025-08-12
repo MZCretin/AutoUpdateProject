@@ -1,8 +1,8 @@
 
 package com.cretin.www.autoupdateproject;
 
-import android.support.v4.text.util.LinkifyCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.text.util.LinkifyCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;

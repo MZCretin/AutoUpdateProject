@@ -9,11 +9,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType1Activity;
@@ -38,6 +38,7 @@ public abstract class RootActivity extends AppCompatActivity {
 
     public static final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final int PERMISSION_CODE = 1001;
+    private static final int NOTIFICATION_PERMISSION_CODE = 1002;
 
     public DownloadInfo downloadInfo;
 
@@ -99,12 +100,11 @@ public abstract class RootActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_CODE) {
-            if ((grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                //权限已经获取
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //存储权限已经获取
                 checkDownload();
             } else {
                 //权限未被给予
-                // 显示无权限弹窗
                 AppUtils.showDialog(this, ResUtils.getString(R.string.permission_to_store), new OnDialogClickListener() {
                     @Override
                     public void onOkClick(DialogInterface dialog) {
@@ -118,6 +118,14 @@ public abstract class RootActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 }, true, "", ResUtils.getString(R.string.cancel), ResUtils.getString(R.string.go_to));
+            }
+        } else if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //通知权限已经获取，继续检查存储权限
+                requestPermission();
+            } else {
+                //通知权限被拒绝，但仍可以继续下载（只是无法显示通知）
+                checkDownload();
             }
         }
     }
@@ -162,20 +170,33 @@ public abstract class RootActivity extends AppCompatActivity {
      * 获取权限
      */
     public void requestPermission() {
-        checkDownload();
-//        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M)) {
-//
-//        } else {
-//            //下载权限
-//            int writePermission = ContextCompat.checkSelfPermission(this, permission);
-//            if (writePermission == PackageManager.PERMISSION_GRANTED) {
-//                //拥有权限则直接下载
-//                checkDownload();
-//            } else {
-//                // 申请权限
-//                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_CODE);
-//            }
-//        }
+        // Android 15 (API 35) 及以上版本的权限处理
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ 需要通知权限
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) 
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, 
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
+                return;
+            }
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ 不再需要WRITE_EXTERNAL_STORAGE权限
+            // 使用应用专属存储目录
+            checkDownload();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6.0-10 需要存储权限
+            int writePermission = ContextCompat.checkSelfPermission(this, permission);
+            if (writePermission == PackageManager.PERMISSION_GRANTED) {
+                checkDownload();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_CODE);
+            }
+        } else {
+            // Android 6.0以下直接执行
+            checkDownload();
+        }
     }
 
     @Override

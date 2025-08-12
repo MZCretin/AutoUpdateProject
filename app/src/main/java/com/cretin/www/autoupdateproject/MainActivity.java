@@ -2,9 +2,9 @@ package com.cretin.www.autoupdateproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -62,41 +62,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_01:
-                //使用说明
-                startActivity(new Intent(this, InfoActivity.class));
-                break;
-            case R.id.action_02:
-                //清除本地缓存
-                clear();
-                break;
-            case R.id.action_03:
-                //自定义UI
-                AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_CUSTOM);//类型为自定义样式类型
-                AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
-                AppUpdateUtils.getInstance().checkUpdate(recyclerviewAdapter.jsonDataUnForce);
-                Toast.makeText(this, "为了展示是真的可以自定义UI的，我写了个很丑的页面", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.action_04:
-                //获取文件MD5检验码工具
-                startActivity(new Intent(this, MD5HelperActivity.class));
-                break;
-            case R.id.action_05:
-                //带提示的更新
-                AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_A);//类型为自定义样式类型
-                AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
-                AppUpdateUtils.getInstance().addAppUpdateInfoListener(new AppUpdateInfoListener() {
-                    @Override
-                    public void isLatestVersion(boolean isLatest) {
-                        if(isLatest){
-                            Toast.makeText(MainActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(MainActivity.this, "发现新版本，将会提示更新", Toast.LENGTH_SHORT).show();
-                        }
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_01) {
+            //使用说明
+            startActivity(new Intent(this, InfoActivity.class));
+        } else if (itemId == R.id.action_02) {
+            //清除本地缓存
+            clear();
+        } else if (itemId == R.id.action_03) {
+            //自定义UI
+            AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_CUSTOM);//类型为自定义样式类型
+            AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
+            AppUpdateUtils.getInstance().checkUpdate(recyclerviewAdapter.jsonDataUnForce);
+            Toast.makeText(this, "为了展示是真的可以自定义UI的，我写了个很丑的页面", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.action_04) {
+            //获取文件MD5检验码工具
+            startActivity(new Intent(this, MD5HelperActivity.class));
+        } else if (itemId == R.id.action_05) {
+            //带提示的更新
+            AppUpdateUtils.getInstance().getUpdateConfig().setUiThemeType(TypeConfig.UI_THEME_A);//类型为自定义样式类型
+            AppUpdateUtils.getInstance().getUpdateConfig().setDataSourceType(TypeConfig.DATA_SOURCE_TYPE_JSON); //使用本地json提供数据
+            AppUpdateUtils.getInstance().addAppUpdateInfoListener(new AppUpdateInfoListener() {
+                @Override
+                public void isLatestVersion(boolean isLatest) {
+                    if(isLatest){
+                        Toast.makeText(MainActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, "发现新版本，将会提示更新", Toast.LENGTH_SHORT).show();
                     }
-                }).checkUpdate(recyclerviewAdapter.jsonDataNoUpdate);
-                break;
+                }
+            }).checkUpdate(recyclerviewAdapter.jsonDataNoUpdate);
         }
         return super.onOptionsItemSelected(item);
     }

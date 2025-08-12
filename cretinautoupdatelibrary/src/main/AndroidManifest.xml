@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cretin.www.cretinautoupdatelibrary">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" 
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -53,8 +57,12 @@
             android:name=".activity.UpdateType1Activity"
             android:theme="@style/DialogActivityTheme" />
 
-        <service android:name=".service.UpdateService" /> <!-- 老版本的服务 -->
-        <service android:name=".utils.DownloadService" />
+        <service android:name=".service.UpdateService" 
+            android:foregroundServiceType="dataSync"
+            android:exported="false" /> <!-- 老版本的服务 -->
+        <service android:name=".utils.DownloadService" 
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
 
         <provider
             android:name=".utils.InstallFileProvider"

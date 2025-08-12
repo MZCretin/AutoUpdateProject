@@ -1,0 +1,13 @@
+# GitHub Packages 凭据配置
+# 将此文件重命名为 gradle.properties 并填入您的GitHub凭据
+# 注意：不要将 gradle.properties 提交到版本控制，添加到 .gitignore
+
+# GitHub用户名
+gpr.user=YOUR_GITHUB_USERNAME
+
+# GitHub Personal Access Token (需要 write:packages 权限)
+gpr.key=YOUR_GITHUB_TOKEN
+
+# Maven Central 凭据 (如果需要发布到Maven Central)
+# ossrhUsername=YOUR_OSSRH_USERNAME  
+# ossrhPassword=YOUR_OSSRH_PASSWORD

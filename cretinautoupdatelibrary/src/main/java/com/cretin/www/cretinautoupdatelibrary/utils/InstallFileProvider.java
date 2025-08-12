@@ -1,6 +1,6 @@
 package com.cretin.www.cretinautoupdatelibrary.utils;
 
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 /**
  * @date: on 2019-10-11
